@@ -24,18 +24,16 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Left side: Logos and Back to Home Button */}
           <div className="flex items-center space-x-4">
-            <Link
-              href="/"
-            >
+            <Link href="/">
               <Image
-              src={gatLogo}
-              alt="GAT Logo"
-              width={180}
-              height={100}
-              className="object-contain"
-            />
+                src={gatLogo}
+                alt="GAT Logo"
+                width={180}
+                height={100}
+                className="object-contain"
+              />
             </Link>
-            
+
             {/* <Image
               src={vtulogo}
               alt="VTU Logo"
@@ -46,7 +44,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-4">
+          {/* <div className="hidden md:flex md:items-center md:space-x-4">
             <Link href="/auth/teampage" className={buttonClasses}>
               Our Team
             </Link>
@@ -56,7 +54,7 @@ const Navbar = () => {
             <Link href="/auth/results" className={buttonClasses}>
               FAQs
             </Link>
-          </div>
+          </div> */}
 
           {/* Right side: Login/Logout and Mobile Menu Toggle */}
           <div className="flex items-center space-x-4">
@@ -82,8 +80,8 @@ const Navbar = () => {
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link href="/auth/teampage" className={`${buttonClasses} block`}>
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+            {/* <Link href="/auth/teampage" className={`${buttonClasses} block`}>
               Our Team
             </Link>
             <Link
@@ -94,7 +92,7 @@ const Navbar = () => {
             </Link>
             <Link href="/auth/results" className={`${buttonClasses} block`}>
               FAQs
-            </Link>
+            </Link> */}
             <div className="pt-2">
               <LoginLogoutButton />
             </div>

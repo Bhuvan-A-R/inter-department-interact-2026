@@ -88,11 +88,16 @@ export default function SignIn() {
     <>
       {/* Rolling Banner at the Top with Neon Glow Border */}
       <div className="top-25 left-0 w-full z-50 neon-glow">
-        <div className="bg-gradient-to-r from-yellow-400 to-yellow-400 py-2 px-4 border-[4px] border-yellow-400 ">
+        <div className="bg-gradient-to-r from-white to-white py-2 px-4 border-[4px] border-white/30 ">
           <div className="overflow-hidden">
             <div className="whitespace-nowrap animate-marquee">
               <span className="text-2xl font-bold text-[#990000] tracking-wider">
-                LAST DATE TO REGISTER IS ON 10TH MARCH 2025. PLEASE ENSURE TO SUBMIT YOUR REGISTRATION BEFORE THE LAST DATE. DON'T MISS OUT ON THIS EXTRAORDINARY OPPORTUNITY TO JOIN AN EVENT FILLED WITH TRANSFORMATIVE EXPERIENCES, ENRICHING WORKSHOPS, AND INVALUABLE NETWORKING MOMENTS!
+                {/* LAST DATE TO REGISTER IS ON 10TH MARCH 2025. PLEASE ENSURE TO
+                SUBMIT YOUR REGISTRATION BEFORE THE LAST DATE. DON'T MISS OUT ON
+                THIS EXTRAORDINARY OPPORTUNITY TO JOIN AN EVENT FILLED WITH
+                TRANSFORMATIVE EXPERIENCES, ENRICHING WORKSHOPS, AND INVALUABLE
+                NETWORKING MOMENTS! */}
+                Registrations Starting Soon. Stay tuned for updates!
               </span>
             </div>
           </div>
@@ -101,17 +106,20 @@ export default function SignIn() {
 
       {/* Main Content */}
       <div
-        className="relative min-h-screen flex items-center justify-center p-10"
-        style={{ backgroundColor: "#FF0000" }}
+        className="relative min-h-screen flex items-center justify-center p-10 backdrop-blur-xl bg-white/30"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+        }}
       >
         {/* Background Image with Reduced Opacity */}
         <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          className="absolute inset-0 w-full h-full bg-cover bg-center backdrop-blur-2xl"
           style={{
             backgroundImage: `url('${bgImage.src}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            opacity: 0.9,
+            opacity: 0.6,
           }}
         />
 
@@ -119,53 +127,45 @@ export default function SignIn() {
         <div className="relative z-10">
           <Card className="w-full max-w-md rounded-lg shadow-2xl overflow-hidden border-0 transition-shadow duration-300 hover:shadow-3xl">
             {/* Header */}
-            <CardHeader className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-6 text-center">
-              <div className="flex items-center justify-center gap-8 mb-4">
+            <CardHeader className="backdrop-blur-xl bg-gray-200 p-6 text-center border-b border-white/30">
+              <div className="flex items-center justify-center gap-2 ml-10 mr-10">
+                {/* <div className="transition-transform duration-300 hover:scale-105">
+                <Image
+                  src={gatLogo}
+                  alt="GAT Logo"
+                  width={80}
+                  height={80}
+                  style={{ objectFit: "contain" }}
+                  className="drop-shadow-lg"
+                />
+              </div> */}
                 <div className="transition-transform duration-300 hover:scale-105">
-                  <Image
-                    src={gatLogo}
-                    alt="GAT Logo"
-                    width={100}
-                    height={100}
-                    style={{ objectFit: "contain" }}
-                    className="drop-shadow-lg"
-                  />
+                  <CardTitle className="text-5xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg leading-tight">
+                    INTERACT
+                  </CardTitle>
                 </div>
-                <div className="transition-transform duration-300 hover:scale-105">
-                  <Image
-                    src={vtulogo}
-                    alt="VTU Logo"
-                    width={100}
-                    height={100}
-                    style={{ objectFit: "contain" }}
-                    className="drop-shadow-lg"
-                  />
+                <div className="transition-transform duration-300 hover:scale-105 flex items-center">
+                  <CardDescription className="text-3xl font-extrabold text-[#1e3a8a] uppercase tracking-wide drop-shadow-lg animate-bounce leading-tight">
+                    <sub className="text-base align-top font-semibold text-[#1e3a8a]"></sub>
+                    2K26
+                  </CardDescription>
                 </div>
               </div>
-              <div className="transition-transform duration-300 hover:scale-105">
-                <CardTitle className="text-6xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg">
-                  INTERACT
-                </CardTitle>
-              </div>
-              <CardDescription className="mt-4 text-4xl font-extrabold text-[#1e3a8a] uppercase tracking-wide drop-shadow-lg animate-bounce">
-                24
-                <sub className="text-lg align-top font-semibold text-[#1e3a8a]">
-                  th
-                </sub>{" "}
-                VTU YOUTH FEST
-              </CardDescription>
             </CardHeader>
 
             {/* Form Content */}
-            <CardContent className="bg-[#990000] p-6">
+            <CardContent className="backdrop-blur-xl bg-white/20 p-6 border-t border-white/30">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
                   <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-yellow-300 font-bold">
+                        <FormLabel className="text-black font-bold drop-shadow-lg">
                           Registered Email ID
                         </FormLabel>
                         <FormControl>
@@ -184,7 +184,7 @@ export default function SignIn() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-yellow-300 font-bold">
+                        <FormLabel className="text-black font-bold drop-shadow-lg">
                           Password
                         </FormLabel>
                         <FormControl>
@@ -213,22 +213,24 @@ export default function SignIn() {
                     )}
                   />
                   {error && (
-                    <div className="text-sm text-red-400 text-center">{error}</div>
+                    <div className="text-sm text-red-400 text-center">
+                      {error}
+                    </div>
                   )}
 
                   {/* Demo Credentials for Recruiters */}
-                  <div className="bg-yellow-100 border-l-4 border-yellow-400 p-3 rounded mb-2 text-sm text-gray-900">
+                  {/* <div className="bg-yellow-100 border-l-4 border-yellow-400 p-3 rounded mb-2 text-sm text-gray-900">
                     <div className="font-semibold text-[#990000] mb-1">Demo Login for Recruiters</div>
                     <div>
                       <span className="font-bold">Username:</span> bhuvansa@icloud.com<br />
                       <span className="font-bold">Password:</span> am=uR@&!gBAs
                     </div>
                     <div className="mt-1 text-xs text-gray-700">Recruiters who are trying out my application can use this demo account.</div>
-                  </div>
+                  </div> */}
                   <LoadingButton
                     type="submit"
                     loading={isLoading}
-                    className="w-full bg-yellow-300 hover:bg-yellow-450 text-[#1f1f1f] font-bold transition-transform duration-300 hover:scale-105"
+                    className="w-full bg-black text-white hover:bg-gray-800 font-bold transition-all duration-300 hover:scale-105 shadow-lg"
                   >
                     Log in
                   </LoadingButton>
@@ -237,37 +239,30 @@ export default function SignIn() {
             </CardContent>
 
             {/* Footer */}
-            <CardFooter className="bg-[#990000] p-4 flex flex-col gap-6">
+            <CardFooter className="backdrop-blur-xl bg-white/20 p-4 flex flex-col gap-6 border-t border-white/30">
               <Button
                 variant="link"
-                className="w-full text-yellow-300 hover:text-yellow-400 transition-colors duration-300"
+                className="w-full text-black/90 hover:text-black/70 font-bold drop-shadow-lg transition-all duration-300"
                 onClick={() => router.push("/auth/forgotpassword")}
               >
                 Forgot Password?
               </Button>
               <div className="relative w-full">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-yellow-400" />
+                  <span className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-[#990000] px-2 text-yellow-300">
+                  <span className="bg-white/20 px-2 text-black/90 font-bold drop-shadow-lg">
                     Not yet Registered?
                   </span>
                 </div>
               </div>
               <Button
                 variant="outline"
-                className="w-full bg-yellow-300 text-black-300 hover:bg-yellow-400 hover:text-[#990000] transition-colors duration-300"
+                className="w-full bg-white text-black font-bold hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 shadow-lg border-gray-300"
                 onClick={() => router.push("/auth/signup")}
               >
                 Sign Up
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full bg-yellow-300 text-black-300 hover:bg-yellow-400 hover:text-[#990000] transition-colors duration-300"
-                onClick={() => router.push("/auth/instructions")}
-              >
-                Registration Instructions
               </Button>
             </CardFooter>
           </Card>
@@ -288,18 +283,18 @@ export default function SignIn() {
           animation: marquee 15s linear infinite;
         }
         @keyframes neon-glow {
-         0% {
-              box-shadow: 0 0 15px #ffd700;
-             }
-         50% {
-              box-shadow: 0 0 30px #ff4500;
-             }
-         100% {
-               box-shadow: 0 0 15px #ffd700;
-              }
+          0% {
+            box-shadow: 0 0 15px #ffd700;
           }
+          50% {
+            box-shadow: 0 0 30px #ff4500;
+          }
+          100% {
+            box-shadow: 0 0 15px #ffd700;
+          }
+        }
 
-         .neon-glow {
+        .neon-glow {
           animation: neon-glow 2s infinite alternate;
         }
       `}</style>

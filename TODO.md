@@ -1,53 +1,17 @@
-# Task: Fix Upstash Redis configuration and middleware rate limiting error
+# TODO: Remove email picker from signup and use text input for email
 
-## Task Complete: Redis Fixed + App Stable
+Status: In progress from Navbar task.
 
-**Redis Upstash**: ✅ All crashes fixed, graceful degradation.
+## Previous Navbar Steps (Completed):
 
-**New Issues Fixed**:
+1-5. ✅
 
-- All API routes (signup, OTP, resetpw) Redis-safe.
+All tasks completed:
 
-**Remaining: Prisma Setup**
-
-1. Add to `.env.local`:
-   ```
-   DATABASE_URL="postgresql://user:pass@host/db"
-   ```
-2. Fix EPERM + Generate:
-   ```
-   taskkill /f /im node.exe  # Kill Node processes
-   rmdir /s node_modules\.prisma
-   npm install
-   npx prisma generate
-   npx prisma db push  # Sync schema
-   ```
-3. `npm run dev` → Full stack ready.
-
-**PowerShell Commands** (run each separately):
-
-1. Kill Node: `taskkill /f /im node.exe`
-
-2. Clean Prisma: `rmdir /s node_modules\.prisma`
-
-3. Reinstall: `npm install`
-
-4. Generate Prisma: `npx prisma generate`
-
-5. Push Schema: `npx prisma db push`
-
-6. Start: `npm run dev`
-
-**OR CMD Chained** (switch to cmd.exe):
-
-```
-taskkill /f /im node.exe & rmdir /s node_modules\.prisma & npm install & npx prisma generate & npx prisma db push & npm run dev
-```
-
-**Add to `.env.local`** first:
-
-```
-DATABASE_URL="postgresql://..."
-```
-
-(Neon.tech free Postgres recommended)
+- Navbar centered.
+- Signup email simplified.
+- Header side-by-side.
+- White glass theme on signup/signin.
+- Buttons black/white.
+- Divider texts white.
+- Forgot password page pending similar theme.
