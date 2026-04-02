@@ -4,16 +4,26 @@ import bcrypt from "bcrypt";
 import { Redis } from "@upstash/redis";
 import { resetPasswordSchema } from "@/lib/schemas/auth";
 
-// Initialize Upstash Redis client
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL as string,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
-});
+// Initialize Upstash Redis client (safe)
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+let redis: Redis | null = null;
+if (redisUrl && redisToken) {
+    redis = new Redis({
+        url: redisUrl,
+        token: redisToken
+    });
+} else {
+    console.warn("[ResetPassword Redis] Missing env vars, OTP verification skipped.");
+}
 
 async function verifyOtp(
     email: string,
     otp: string
 ): Promise<{ success: boolean; message: string }> {
+    if (!redis) {
+        return { success: false, message: "Service temporarily unavailable." };
+    }
     try {
         const storedOtp = await redis.get<string>(`otp:${email}`);
 

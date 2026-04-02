@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import insta from "@/public/images/flogo2.png";
 import yt from "@/public/images/flogo1.png";
@@ -7,120 +9,125 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer aria-label="Site Footer" className="bg-gradient-to-r from-yellow-300 to-yellow-500">
-      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {/* Logo and Header Section */}
-        <div className="flex flex-col items-center gap-5 lg:flex-row lg:justify-center lg:items-center">
-          {/* College Logo */}
-          <div className="w-full lg:w-1/3 flex justify-center">
-            <Image
-              src="/images/college-logo.png"
-              alt="Global Academy of Technology logo"
-              width={150}
-              height={150}
-              className="object-contain"
-            />
-          </div>
-          {/* Text Content */}
-          <div className="w-full lg:w-2/3 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-4xl lg:text-5xl uppercase font-serif font-bold leading-tight text-gray-900 mb-2">
-              Global Academy of Technology
-            </h1>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-2">
-              Growing Ahead of Time ....
-            </h2>
-            <p className="text-lg font-medium mb-2 text-gray-700">
-              Autonomous Institute, Affiliated to VTU
+    <footer
+      aria-label="Site Footer"
+      className="backdrop-blur-xl bg-white/90 dark:bg-black/80 shadow-2xl border-b border-white/20 text-black border-t border-black/20"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {/* Left block */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Image
+                src="/images/gat-logo.png"
+                alt="GAT logo"
+                width={60}
+                height={60}
+                className="object-contain"
+              />
+              <div>
+                <p className="text-xl font-bold text-black/90">
+                  Global Academy of Technology
+                </p>
+                <p className="text-sm text-black">Bengaluru, Karnataka</p>
+              </div>
+            </div>
+            {/* <div className="flex items-center gap-4">
+              <Image
+                src="/images/vtulogo.png"
+                alt="VTU logo"
+                width={60}
+                height={60}
+                className="object-contain"
+              />
+              <div>
+                <p className="text-xl font-bold">
+                  Visvesvaraya Technological University
+                </p>
+                <p className="text-sm text-black">VTU</p>
+              </div>
+            </div> */}
+            <p className="text-sm leading-relaxed text-black">
+              Growing Ahead of Time.
             </p>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900">
-              Institute of National Education Foundation
-            </h2>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:scale-110"
+              >
+                <Image src={linkedin} alt="LinkedIn" width={24} height={24} />
+              </a>
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:scale-110"
+              >
+                <Image src={insta} alt="Instagram" width={24} height={24} />
+              </a>
+              <a
+                href="https://www.youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:scale-110"
+              >
+                <Image src={yt} alt="YouTube" width={24} height={24} />
+              </a>
+            </div>
+          </div>
+
+          {/* Sitemap column */}
+          <div>
+            <h3 className="text-lg font-semibold text-black/90 mb-4">
+              Site Map
+            </h3>
+            <ul className="space-y-2 text-black">
+              <li>
+                <a href="/auth/teampage" className="hover:text-[#FFC25A]">
+                  Our Team
+                </a>
+              </li>
+              <li>
+                <a href="/auth/instructions" className="hover:text-[#FFC25A]">
+                  Registration Instructions
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal column */}
+          <div>
+            <h3 className="text-lg font-semibold text-black/90 mb-4">Legal</h3>
+            <ul className="space-y-2 text-black">
+              <li>
+                <a href="/privacy-policy" className="hover:text-[#FFC25A]">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="/terms-of-services" className="hover:text-[#FFC25A]">
+                  Terms of Services
+                </a>
+              </li>
+              {/* <li>
+                <a href="/lawyers-corners" className="hover:text-[#FFC25A]">
+                  Lawyer&apos;s Corners
+                </a>
+              </li> */}
+            </ul>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="mt-2 inline-flex items-center gap-2 border border-white/50 px-4 py-2 text-sm uppercase tracking-wide hover:bg-white/10 transition"
+            >
+              ↑ Back to Top
+            </button>
           </div>
         </div>
 
-        {/* Social Media Links */}
-        <ul className="mt-12 flex justify-center items-center gap-6">
-          <li>
-            <a
-              href="https://www.youtube.com/@GATINTERACT"
-              rel="noreferrer"
-              target="_blank"
-              className="transition hover:scale-110 inline-block"
-              aria-label="YouTube Channel"
-            >
-              <Image
-                src={yt}
-                width={50}
-                height={50}
-                alt="YouTube"
-                className="object-contain"
-              />
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="https://www.instagram.com/gatbengaluru/"
-              rel="noreferrer"
-              target="_blank"
-              className="transition hover:scale-110 inline-block"
-              aria-label="Instagram Profile"
-            >
-              <Image
-                src={insta}
-                width={50}
-                height={50}
-                alt="Instagram"
-                className="object-contain"
-              />
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="https://www.facebook.com/globalacademyoftech/"
-              rel="noreferrer"
-              target="_blank"
-              className="transition hover:scale-110 inline-block"
-              aria-label="Facebook Page"
-            >
-              <Image
-                src={facebook}
-                width={50}
-                height={50}
-                alt="Facebook"
-                className="object-contain"
-              />
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="https://www.linkedin.com/company/global-academy-of-technology/"
-              rel="noreferrer"
-              target="_blank"
-              className="transition hover:scale-110 inline-block"
-              aria-label="LinkedIn Page"
-            >
-              <Image
-                src={linkedin}
-                width={50}
-                height={50}
-                alt="LinkedIn"
-                className="object-contain"
-              />
-            </a>
-          </li>
-        </ul>
-
-        {/* Footer Bottom Section */}
-        <div className="mt-12 border-t border-gray-300 pt-6 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-lg text-gray-900 font-bold text-center">
-            © 2025 Global Academy of Technology
-          </p>
-          <p className="text-lg text-gray-900 font-bold text-center">
-            Developed by Interact-2025 Technical Team
-          </p>
+        <div className="mt-10 border-t border-[#1F6F62] pt-6 text-center text-sm text-black/70">
+          Copyright © 2026 interact2k26.com, All Rights Reserved.
         </div>
       </div>
     </footer>

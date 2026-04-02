@@ -2,7 +2,20 @@ import { NextResponse, NextRequest } from "next/server";
 import { verifySession } from "@/lib/session";
 import { Redis } from "@upstash/redis"; // Use Upstash Redis
 import arcjet, { shield } from "@arcjet/next"; // Import arcjet
-const redis = Redis.fromEnv(); // Upstash Redis, reads credentials from environment variables
+
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+if (!redisUrl || !redisToken) {
+  console.warn("[Redis] Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN. Rate limiting disabled.");
+}
+
+const redis = redisUrl && redisToken 
+  ? new Redis({ 
+      url: redisUrl, 
+      token: redisToken 
+    })
+  : null;
 
 const aj = arcjet({
     key: process.env.ARCJET_KEY!,
@@ -50,30 +63,42 @@ export async function middleware(request: NextRequest) {
         request.headers.get("x-real-ip") ||
         "unknown";
 
-    // Apply OTP-specific rate limiting
-    if (path === "/api/sendOtp") {
-        const otpRedisKey = `otp-rate-limit:${ip}`;
-        const currentOtpRequests = await redis.incr(otpRedisKey);
-        if (currentOtpRequests === 1) {
-            await redis.expire(otpRedisKey, OTP_RATE_LIMIT_WINDOW);
-        }
+    // Apply OTP-specific rate limiting (skip if Redis unavailable)
+    if (path === "/api/sendOtp" && redis) {
+        try {
+            const otpRedisKey = `otp-rate-limit:${ip}`;
+            const currentOtpRequests = await redis.incr(otpRedisKey);
+            if (currentOtpRequests === 1) {
+                await redis.expire(otpRedisKey, OTP_RATE_LIMIT_WINDOW);
+            }
 
-        if (currentOtpRequests > OTP_RATE_LIMIT_MAX) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: "Too many OTP requests, please try again later.",
-                },
-                { status: 429 }
-            );
+            if (currentOtpRequests > OTP_RATE_LIMIT_MAX) {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        message: "Too many OTP requests, please try again later.",
+                    },
+                    { status: 429 }
+                );
+            }
+        } catch (error) {
+            console.error("[Redis OTP Error]", error);
         }
     }
 
-    // Apply global rate limiting for all routes
-    const globalRedisKey = `rate-limit:${ip}:${path}`;
-    const currentGlobalRequests = await redis.incr(globalRedisKey);
-    if (currentGlobalRequests === 1) {
-        await redis.expire(globalRedisKey, GLOBAL_RATE_LIMIT_WINDOW);
+    // Apply global rate limiting for all routes (skip if Redis unavailable)
+    let currentGlobalRequests = 1;
+    if (redis) {
+        try {
+            const globalRedisKey = `rate-limit:${ip}:${path}`;
+            currentGlobalRequests = await redis.incr(globalRedisKey);
+            if (currentGlobalRequests === 1) {
+                await redis.expire(globalRedisKey, GLOBAL_RATE_LIMIT_WINDOW);
+            }
+        } catch (error) {
+            console.error("[Redis Rate Limit Error]", error);
+            // Continue without rate limiting
+        }
     }
 
     if (currentGlobalRequests > GLOBAL_RATE_LIMIT_MAX) {

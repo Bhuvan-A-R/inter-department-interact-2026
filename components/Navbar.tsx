@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react"; // Icons for mobile toggle
 
 // Import logos (ensure these paths match your project structure)
-import gatLogo from "@/public/images/gat-logo.png";
+import gatLogo from "@/public/gat-logos/GAT_Linear Logo.png";
 import vtulogo from "@/public/images/vtulogo.png";
 import LoginLogoutButton from "./LoginLogoutButton";
 
@@ -18,32 +18,31 @@ const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/90 dark:bg-black/80 shadow-2xl border-b border-white/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Increased height from h-16 to h-20 */}
+        {/* Floating navbar height */}
         <div className="flex items-center justify-between h-20">
           {/* Left side: Logos and Back to Home Button */}
           <div className="flex items-center space-x-4">
-            <Image
+            <Link
+              href="/"
+            >
+              <Image
               src={gatLogo}
               alt="GAT Logo"
-              width={80}
+              width={180}
               height={100}
               className="object-contain"
             />
-            <Image
+            </Link>
+            
+            {/* <Image
               src={vtulogo}
               alt="VTU Logo"
               width={80}
               height={80}
               className="object-contain"
-            />
-            <Link
-              href="https://vtufestinteract.com"
-              className="ml-2 px-4 py-2 bg-gradient-to-r from-red-600 via-[#800000] to-red-900 text-yellow-300 font-bold rounded-lg text-base"
-            >
-              Back to Home
-            </Link>
+            /> */}
           </div>
 
           {/* Desktop Navigation */}
@@ -87,7 +86,10 @@ const Navbar = () => {
             <Link href="/auth/teampage" className={`${buttonClasses} block`}>
               Our Team
             </Link>
-            <Link href="/auth/instructions" className={`${buttonClasses} block`}>
+            <Link
+              href="/auth/instructions"
+              className={`${buttonClasses} block`}
+            >
               Registration Instructions
             </Link>
             <Link href="/auth/results" className={`${buttonClasses} block`}>
