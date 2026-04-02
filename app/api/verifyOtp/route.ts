@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { z } from "zod";
 
-// Initialize Upstash Redis client
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL as string, // Upstash Redis URL
-    token: process.env.UPSTASH_REDIS_REST_TOKEN as string, // Upstash Redis Token
-});
+// Initialize Upstash Redis client (safe)
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+const redis = redisUrl && redisToken 
+    ? new Redis({ url: redisUrl, token: redisToken })
+    : null;
 
 // Zod schema for validation
 const verifyOtpSchema = z.object({
@@ -28,6 +29,13 @@ export async function POST(request: Request) {
         }
 
         const { email, otp } = validation.data;
+
+        if (!redis) {
+            return NextResponse.json(
+                { success: false, message: "Redis unavailable" },
+                { status: 503 }
+            );
+        }
 
         // Retrieve OTP from Redis
         const storedOtp = await redis.get<string>(`otp:${email}`);

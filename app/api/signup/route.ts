@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import bcrypt from "bcrypt";
@@ -8,11 +9,18 @@ import { generatePassword } from "@/lib/generator";
 import nodemailer from "nodemailer";
 import { emailList } from "@/data/emailList";
 
-// Initialize Upstash Redis client
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL as string, // Upstash Redis URL
-    token: process.env.UPSTASH_REDIS_REST_TOKEN as string, // Upstash Redis Token
-});
+// Initialize Upstash Redis client (safe)
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+let redis: Redis | null = null;
+if (redisUrl && redisToken) {
+    redis = new Redis({
+        url: redisUrl,
+        token: redisToken
+    });
+} else {
+    console.warn("[Signup Redis] Missing env vars, OTP verification skipped.");
+}
 
 // Function to map Zod errors to field-level error object
 function mapZodErrors(zodError: z.ZodError): Record<string, string> {
@@ -31,6 +39,10 @@ async function verifyOtp(
     email: string,
     otp: string
 ): Promise<{ success: boolean; message: string }> {
+    if (!redis) {
+        console.warn("[Redis OTP] Skipped due to unavailable client.");
+        return { success: false, message: "Service temporarily unavailable." };
+    }
     try {
         const storedOtp = await redis.get<string>(`otp:${email}`);
 
@@ -239,8 +251,12 @@ export async function POST(request: Request) {
             },
             { status: 200 }
         );
-    } catch (error: unknown) {
-        console.log("Error in registration process:", error);
+    } catch (error: any) {
+        try {
+            console.error("Error in registration process:", error);
+        } catch (logError) {
+            console.error("Failed to log error:", logError);
+        }
         return NextResponse.json(
             { success: false, errors: { general: "Internal Server Error" } },
             { status: 500 }

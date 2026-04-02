@@ -3,11 +3,18 @@ import { z } from "zod";
 import { Redis } from "@upstash/redis";
 import nodemailer from "nodemailer";
 
-// Initialize Upstash Redis client
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL as string, // Upstash Redis URL
-    token: process.env.UPSTASH_REDIS_REST_TOKEN as string, // Upstash Redis Token
-});
+// Initialize Upstash Redis client (safe)
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+let redis: Redis | null = null;
+if (redisUrl && redisToken) {
+    redis = new Redis({
+        url: redisUrl,
+        token: redisToken
+    });
+} else {
+    console.warn("[SendEmailOtp Redis] Missing env vars, rate limiting & storage skipped.");
+}
 
 // Zod schema for validation
 const emailOtpSchema = z.object({
@@ -34,29 +41,41 @@ export async function POST(request: Request) {
         const { email } = validation.data;
 
         // Rate limiting logic
-        const rateLimitKey = `email-otp-rate-limit:${email}`;
-        const rateLimitValue = await redis.incr(rateLimitKey);
+        if (redis) {
+            try {
+                const rateLimitKey = `email-otp-rate-limit:${email}`;
+                const rateLimitValue = await redis.incr(rateLimitKey);
 
-        if (rateLimitValue === 1) {
-            // Set expiration for the key if it's the first request
-            await redis.expire(rateLimitKey, 60); // 60 seconds window
+                if (rateLimitValue === 1) {
+                    await redis.expire(rateLimitKey, 60);
+                }
+
+                if (rateLimitValue > 5) {
+                    return NextResponse.json(
+                        {
+                            success: false,
+                            message: "Too many OTP requests, please try again later.",
+                        },
+                        { status: 429 }
+                    );
+                }
+
+                // Generate OTP
+                const otp = generateOtp();
+
+                // Save OTP to Redis
+                await redis.set(`otp:${email}`, otp, { ex: 300 });
+            } catch (error) {
+                console.error("[Redis SendEmailOtp]", error);
+                // Continue sending email without rate limit/OTP storage
+            }
         }
 
-        if (rateLimitValue > 5) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: "Too many OTP requests, please try again later.",
-                },
-                { status: 429 }
-            );
-        }
-
-        // Generate OTP
+        // Always generate OTP for email (even without Redis)
         const otp = generateOtp();
-
-        // Save OTP to Redis
-        await redis.set(`otp:${email}`, otp, { ex: 300 }); // OTP valid for 5 minutes
+        if (!redis) {
+            console.warn(`[SendEmailOtp] OTP ${otp} sent without Redis storage (add UPSTASH_* env vars for persistence).`);
+        }
 
         // Configure Nodemailer
         const transporter = nodemailer.createTransport({
