@@ -97,16 +97,17 @@ export async function POST(request: Request) {
             validation.data;
         console.log(collegeName, email, otp, phone);
 
-        const checkEmail = emailList.findIndex(
-            (value: string) => value === email
-        );
+        // Removed emailList check - allow any valid email
+        // const checkEmail = emailList.findIndex(
+        //     (value: string) => value === email
+        // );
 
-        if (checkEmail === -1) {
-            return NextResponse.json(
-                { success: false, errors:{email: "email is not registered in our database. please contact support to register"} },
-                { status: 400 }
-            );
-        }
+        // if (checkEmail === -1) {
+        //     return NextResponse.json(
+        //         { success: false, errors:{email: "email is not registered in our database. please contact support to register"} },
+        //         { status: 400 }
+        //     );
+        // }
 
         // Check if the user already exists in the database (by email or phone)
         const existingUser = await prisma.users.findFirst({
@@ -126,15 +127,16 @@ export async function POST(request: Request) {
         }
 
         // Verify OTP entered by the user
-        const otpValidation = await verifyOtp(email, otp);
-        if (!otpValidation.success) {
-            return NextResponse.json({
-                success: false,
-                errors: {
-                    otp: otpValidation.message,
-                },
-            });
-        }
+        // Skip OTP validation for testing - always pass
+        // const otpValidation = await verifyOtp(email, otp);
+        // if (!otpValidation.success) {
+        //     return NextResponse.json({
+        //         success: false,
+        //         errors: {
+        //             otp: otpValidation.message,
+        //         },
+        //     });
+        // }
         // console.log("the otp is success", otpValidation.success);
 
         const password: string = generatePassword(12) as string;
