@@ -8,7 +8,7 @@ import * as z from "zod";
 import { resetPasswordSchema } from "@/lib/schemas/auth";
 import axios from "axios";
 import { toast } from "sonner";
-import bgImage from "../../../components/images/GATBGIMG.png"; 
+import bgImage from "../../../components/images/GATBGIMG.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -78,7 +78,7 @@ export default function ResetPassword() {
       if (response.data.success) {
         form.clearErrors("email");
         toast.success(
-          "OTP sent successfully! Check your email. OTP is valid for 5 minutes."
+          "OTP sent successfully! Check your email. OTP is valid for 5 minutes.",
         );
         setResendTimer(60); // 60 seconds cooldown
       } else {
@@ -86,7 +86,7 @@ export default function ResetPassword() {
           message: response.data.message || "Failed to send OTP.",
         });
         toast.error(
-          response.data.message || "Failed to send OTP. Please try again."
+          response.data.message || "Failed to send OTP. Please try again.",
         );
       }
     } catch (error: unknown) {
@@ -116,7 +116,7 @@ export default function ResetPassword() {
           toast.error("No user found with this email.");
         } else {
           toast.error(
-            response.data.message || "Password reset failed. Please try again."
+            response.data.message || "Password reset failed. Please try again.",
           );
         }
       }
@@ -129,15 +129,18 @@ export default function ResetPassword() {
 
   return (
     <div
-      className="relative min-h-screen flex items-center justify-center p-10"
-      style={{ backgroundColor: "#FF0000" }}
+      className="relative min-h-screen flex items-center justify-center p-10 backdrop-blur-xl bg-white/30"
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+      }}
     >
       {/* Background Image with reduced opacity */}
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        className="absolute inset-0 w-full h-full bg-cover bg-center backdrop-blur-2xl"
         style={{
           backgroundImage: `url('${bgImage.src}')`,
-          opacity: 0.9,
+          opacity: 0.6,
         }}
       />
 
@@ -145,75 +148,70 @@ export default function ResetPassword() {
       <div className="relative z-10">
         <Card className="w-full max-w-md rounded-lg shadow-2xl overflow-hidden border-0 transition-shadow duration-300 hover:shadow-3xl">
           {/* Header */}
-          <CardHeader className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-6 text-center">
-          <div className="flex items-center justify-center gap-8 mb-4">
-              <div className="transition-transform duration-300 hover:scale-105">
+          <CardHeader className="backdrop-blur-xl bg-gray-200 p-6 text-center border-b border-white/30">
+            <div className="flex items-center justify-center gap-2 ml-10 mr-10">
+              {/* <div className="transition-transform duration-300 hover:scale-105">
                 <Image
-                  src="/images/gat-logo.png"
+                  src={gatLogo}
                   alt="GAT Logo"
-                  width={100}
-                  height={100}
+                  width={80}
+                  height={80}
                   style={{ objectFit: "contain" }}
                   className="drop-shadow-lg"
                 />
-              </div>
+              </div> */}
               <div className="transition-transform duration-300 hover:scale-105">
-                <Image
-                  src="/images/vtulogo.png"
-                  alt="VTU Logo"
-                  width={100}
-                  height={100}
-                  style={{ objectFit: "contain" }}
-                  className="drop-shadow-lg"
-                />
+                <CardTitle className="text-5xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg leading-tight">
+                  INTERACT
+                </CardTitle>
               </div>
-            </div> 
-        
-            
-            <CardTitle className="text-3xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg">
-              Reset Password
-            </CardTitle>
-            <CardDescription className="text-l font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg">
-              Enter your email to reset your password
-            </CardDescription>
+              <div className="transition-transform duration-300 hover:scale-105 flex items-center">
+                <CardDescription className="text-3xl font-extrabold text-[#1e3a8a] uppercase tracking-wide drop-shadow-lg animate-bounce leading-tight">
+                  <sub className="text-base align-top font-semibold text-[#1e3a8a]"></sub>
+                  2K26
+                </CardDescription>
+              </div>
+            </div>
           </CardHeader>
 
           {/* Form content */}
-          <CardContent className="bg-[#990000] p-7">
+          <CardContent className="backdrop-blur-xl bg-white/20 p-7 border-t border-white/30">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 {/* Email Field */}
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-yellow-300 font-bold">
+                      <FormLabel className="text-black font-bold drop-shadow-lg">
                         Email
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
+                        <div className="flex gap-2">
                           <Input
-                            className="bg-gray-200 border-gray-400 focus:border-yellow-400 text-gray-900 focus:ring-2 focus:ring-yellow-400 pr-24"
-                            placeholder="example@domain.com"
+                            className="flex-1 bg-gray-200 border border-gray-400 text-black placeholder-black-900 text-lg rounded-lg"
+                            placeholder="Enter your email"
                             {...field}
-                            disabled={isSendingOTP}
                           />
                           <Button
                             type="button"
                             onClick={sendOTP}
                             disabled={isSendingOTP || resendTimer > 0}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary/90"
+                            className="bg-black text-white hover:bg-gray-800 font-bold whitespace-nowrap px-4 shadow-lg"
                           >
                             {isSendingOTP
                               ? "Sending..."
                               : resendTimer > 0
-                              ? `Resend (${resendTimer}s)`
-                              : "Send OTP"}
+                                ? `Resend (${resendTimer}s)`
+                                : "Send OTP"}
                           </Button>
                         </div>
                       </FormControl>
-                      <FormMessage className="text-red-400" />
+                      <FormMessage className="text-gray-900" />
                     </FormItem>
                   )}
                 />
@@ -224,7 +222,7 @@ export default function ResetPassword() {
                   name="otp"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-yellow-300 font-bold">
+                      <FormLabel className="text-black-900 font-bold">
                         Enter OTP
                       </FormLabel>
                       <FormControl>
@@ -245,7 +243,7 @@ export default function ResetPassword() {
                                 className="bg-gray-200 border border-gray-400 text-black text-xl rounded-md"
                               />
                             </InputOTPGroup>
-                            <InputOTPSeparator className="text-yellow-300" />
+                            <InputOTPSeparator className="text-black-900" />
                             <InputOTPGroup>
                               <InputOTPSlot
                                 index={2}
@@ -256,7 +254,7 @@ export default function ResetPassword() {
                                 className="bg-gray-200 border border-gray-400 text-black text-xl rounded-md"
                               />
                             </InputOTPGroup>
-                            <InputOTPSeparator className="text-yellow-300" />
+                            <InputOTPSeparator className="text-black-900" />
                             <InputOTPGroup>
                               <InputOTPSlot
                                 index={4}
@@ -281,7 +279,7 @@ export default function ResetPassword() {
                   name="newPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-yellow-300 font-bold">
+                      <FormLabel className="text-black-900 font-bold">
                         New Password
                       </FormLabel>
                       <FormControl>
@@ -303,29 +301,31 @@ export default function ResetPassword() {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-yellow-300 font-bold">
+                      <FormLabel className="text-black-900 font-bold">
                         Confirm Password
                       </FormLabel>
                       <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={confirmVisibility ? "text" : "password"}
-                          className="bg-background border-input focus:border-primary text-gray-900 focus:ring-2 focus:ring-yellow-400 pr-10"
-                          placeholder="Confirm your new password"
-                          {...field}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setConfirmVisibility((prev) => !prev)}
-                          className="absolute right-2 top-2.5 text-gray-600 hover:text-gray-800"
-                        >
-                          {confirmVisibility ? (
-                            <EyeOff className="h-5 w-5" />
-                          ) : (
-                            <Eye className="h-5 w-5" />
-                          )}
-                        </button>
-                      </div>
+                        <div className="relative">
+                          <Input
+                            type={confirmVisibility ? "text" : "password"}
+                            className="bg-background border-input focus:border-primary text-gray-900 focus:ring-2 focus:ring-yellow-400 pr-10"
+                            placeholder="Confirm your new password"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setConfirmVisibility((prev) => !prev)
+                            }
+                            className="absolute right-2 top-2.5 text-gray-600 hover:text-gray-800"
+                          >
+                            {confirmVisibility ? (
+                              <EyeOff className="h-5 w-5" />
+                            ) : (
+                              <Eye className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage className="text-red-400" />
                     </FormItem>
@@ -335,7 +335,7 @@ export default function ResetPassword() {
                 <LoadingButton
                   type="submit"
                   loading={isLoading}
-                  className="w-full bg-yellow-300 hover:bg-yellow-450 text-[#1f1f1f] font-bold transition-transform duration-300 hover:scale-105"
+                  className="w-full bg-black text-white hover:bg-gray-800 font-bold transition-all duration-300 hover:scale-105 shadow-lg"
                 >
                   Reset Password
                 </LoadingButton>
@@ -347,7 +347,7 @@ export default function ResetPassword() {
           <CardFooter className="bg-[#990000] p-5 flex flex-col gap-6">
             <Button
               variant="outline"
-              className="w-full bg-yellow-300 hover:bg-yellow-450 text-[#1f1f1f] font-bold transition-transform duration-300 hover:scale-105"
+              className="w-full bg-white text-black font-bold hover:bg-gray-100 transition-all duration-300 shadow-lg border-gray-300"
               onClick={() => router.push("/auth/signin")}
             >
               Back to Sign In
@@ -358,4 +358,3 @@ export default function ResetPassword() {
     </div>
   );
 }
-
