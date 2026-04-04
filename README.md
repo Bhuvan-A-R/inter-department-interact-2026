@@ -1,6 +1,6 @@
 # VTU Fest 2025 - Brand Karnataka
 
-A comprehensive web application for managing the VTU Youth Fest 2025 at Global Academy of Technology, Bengaluru. This platform enables colleges to register, manage student participants, handle event registrations, process payments, and facilitate document verification for a seamless fest experience.
+A comprehensive web application for managing the INTERACT 2026 at Global Academy of Technology, Bengaluru. This platform enables colleges to register, manage student participants, handle event registrations, process payments, and facilitate document verification for a seamless fest experience.
 
 ## 🖼️ Demo Screenshots
 
@@ -9,7 +9,7 @@ A comprehensive web application for managing the VTU Youth Fest 2025 at Global A
 
 ## 🎯 Overview
 
-This application serves as the central hub for VTU Youth Fest 2025, themed "Brand Karnataka", celebrating Karnataka's rich cultural heritage and Bengaluru's innovative spirit. It provides a complete registration and management system for colleges, students, and administrators.
+This application serves as the central hub for INTERACT 2026, themed "Brand Karnataka", celebrating Karnataka's rich cultural heritage and Bengaluru's innovative spirit. It provides a complete registration and management system for colleges, students, and administrators.
 
 ## ✨ Key Features
 
@@ -275,4 +275,4 @@ For questions or support, please contact the development team at [bhuvansa@bhuva
 
 ---
 
-**Built with ❤️ for VTU Youth Fest 2025 - Brand Karnataka**
+**Built with ❤️ for INTERACT 2026**
