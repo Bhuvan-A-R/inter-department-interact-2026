@@ -1,4 +1,4 @@
-import { deleteEvent} from "@/app/prismaClient/queryFunction";
+import { deleteEventOfRegistrant } from "@/app/prismaClient/queryFunction";
 import { decrypt } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -26,7 +26,7 @@ export async function DELETE(request : Request){
     try{
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const deletedEvent = await deleteEvent(eventId as string);
+    const deletedEvent = await deleteEventOfRegistrant(eventId as string);
     return NextResponse.json({success:true,message:"Event Deleted"},{status:200});
     }
     catch(err){

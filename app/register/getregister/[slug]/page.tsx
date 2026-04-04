@@ -28,7 +28,7 @@ interface StudentData {
   usn: string;
   events: Event[];
   photoUrl: string;
-  idcardUrl: string;
+  idcardUrl?: string;
   userId: string;
   docStatus: "PENDING" | "PROCESSING" | "APPROVED" | "REJECTED";
   eventRegistrations: EventRegistrant[];
@@ -123,7 +123,7 @@ export default function GetRegistrant({
               {/* Profile Picture */}
               {studentData?.photoUrl ? (
                 <Image
-                  src={`https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${studentData.photoUrl}`}
+                  src={`https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${studentData.photoUrl}`}
                   alt="Profile"
                   width={500}
                   height={500}
@@ -151,9 +151,6 @@ export default function GetRegistrant({
                 </div>
               </div>
               <div className="text-gray-500">USN: {studentData?.usn}</div>
-              <div className="text-blue-600 font-medium">
-                {studentData?.type}
-              </div>
             </div>
           </div>
         </Card>
@@ -210,16 +207,7 @@ export default function GetRegistrant({
             <div className="grid grid-cols-2 gap-3 p-5">
               {/* Render document links if you have them */}
               <a
-                href={`https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${studentData?.aadharUrl}`}
-                className="bg-gray-100 p-3 rounded-lg flex items-center space-x-2 hover:bg-gray-200"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>📄</span>
-                <span>Aadhar Card</span>
-              </a>
-              <a
-                href={`https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${studentData?.idcardUrl}`}
+                href={`https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${studentData?.idcardUrl}`}
                 className="bg-gray-100 p-3 rounded-lg flex items-center space-x-2 hover:bg-gray-200"
                 target="_blank"
                 rel="noopener noreferrer"

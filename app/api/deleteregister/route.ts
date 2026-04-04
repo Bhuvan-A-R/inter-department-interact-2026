@@ -53,11 +53,6 @@ export async function DELETE(request: Request) {
                 const fileFields = [
                     registrant.photoUrl,
                     registrant.idcardUrl,
-                    registrant.sslcUrl,
-                    registrant.pucUrl,
-                    registrant.admission1Url,
-                    registrant.admission2Url,
-                    registrant.aadharUrl,
                 ];
 
                 fileFields.forEach((fileUrl) => {
@@ -74,11 +69,6 @@ export async function DELETE(request: Request) {
                         await tx.events.update({
                             where: { id: eventReg.eventId },
                             data: { registeredParticipant: { decrement: 1 } },
-                        });
-                    } else if (eventReg.type === "ACCOMPANIST") {
-                        await tx.events.update({
-                            where: { id: eventReg.eventId },
-                            data: { registeredAccompanist: { decrement: 1 } },
                         });
                     }
                 }

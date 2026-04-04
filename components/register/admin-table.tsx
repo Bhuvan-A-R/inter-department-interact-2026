@@ -590,7 +590,7 @@ const CollegeNameFilter: React.FC<CollegeNameFilterProps> = ({
   const allColleges = allRows.map(
     (row: any) => row.original.collegeName as string,
   );
-  const uniqueColleges = Array.from(new Set(allColleges));
+  const uniqueColleges = Array.from(new Set(allColleges)) as string[];
   const [searchQuery, setSearchQuery] = React.useState("");
   const filteredOptions = uniqueColleges.filter((college) =>
     college.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -949,7 +949,7 @@ export function DataTable({ data }: { data: Data[] }) {
         header: "Photo",
         cell: ({ row }) => {
           const photoUrl = row.getValue("photo") as string;
-          const imageUrl = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
+          const imageUrl = `https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
           return (
             <Image
               src={imageUrl}

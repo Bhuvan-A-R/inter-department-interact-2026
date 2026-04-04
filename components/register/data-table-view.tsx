@@ -59,140 +59,145 @@ export function DataTableView({ data }: { data: Data[] }) {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const columns = React.useMemo<ColumnDef<Data>[]>(() => [
-    {
-      accessorKey: "slno",
-      header: "SL No",
-      cell: ({ row }) => row.index + 1,
-    },
-    {
-      accessorKey: "photo",
-      header: "Photo",
-      cell: ({ row }) => {
-        const photoUrl = row.getValue("photo");
-        const imageUrl = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
-        return (
-          <Image
-            src={imageUrl}
-            alt="Profile"
-            width={80}
-            height={80}
-            className="rounded-full object-cover"
-          />
-        );
+  const columns = React.useMemo<ColumnDef<Data>[]>(
+    () => [
+      {
+        accessorKey: "slno",
+        header: "SL No",
+        cell: ({ row }) => row.index + 1,
       },
-    },
-    {
-      accessorKey: "name",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="p-1" />
-        </Button>
-      ),
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("name")}</div>
-      ),
-    },
-    {
-      accessorKey: "usn",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          USN
-          <ArrowUpDown className="p-1" />
-        </Button>
-      ),
-      cell: ({ row }) => <div className="uppercase">{row.getValue("usn")}</div>,
-    },
-    {
-      accessorKey: "type",
-      header: ({ column }) => {
-        const filterCycle = ["", "Participant"];
-        const currentFilter = (column.getFilterValue() as string) ?? "";
-        const currentIndex = filterCycle.indexOf(currentFilter);
-        const nextIndex = (currentIndex + 1) % filterCycle.length;
-        const nextFilter = filterCycle[nextIndex];
-
-        const handleFilterChange = () => {
-          if (nextFilter === "") {
-            column.setFilterValue(undefined); // Clears the filter
-          } else {
-            column.setFilterValue(nextFilter);
-          }
-        };
-
-        return (
-          <Button variant="ghost" onClick={handleFilterChange}>
-            Type <ListFilterIcon className="p-1" />{" "}
-            {currentFilter !== "" ? `: ${currentFilter}` : ""}
+      {
+        accessorKey: "photo",
+        header: "Photo",
+        cell: ({ row }) => {
+          const photoUrl = row.getValue("photo");
+          const imageUrl = `https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
+          return (
+            <Image
+              src={imageUrl}
+              alt="Profile"
+              width={80}
+              height={80}
+              className="rounded-full object-cover"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "name",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="p-1" />
           </Button>
-        );
+        ),
+        cell: ({ row }) => (
+          <div className="capitalize">{row.getValue("name")}</div>
+        ),
       },
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("type")}</div>
-      ),
-      filterFn: (row, columnId, filterValue) => {
-        if (!filterValue || filterValue === "") return true;
-
-        const type = row.getValue(columnId);
-        return type === filterValue;
-      },
-    },
-    {
-      accessorKey: "events",
-      header: ({ column, table }) => {
-        const allRows = table.getPreFilteredRowModel().rows;
-        const allEvents = allRows.flatMap((row) =>
-          row.original.events.map((e) => e.eventName),
-        );
-        const uniqueEvents = Array.from(new Set(allEvents));
-        const filterCycle = ["ALL", ...uniqueEvents];
-        const currentFilter = (column.getFilterValue() as string) ?? "ALL";
-        const currentIndex = filterCycle.indexOf(currentFilter);
-        const nextIndex = (currentIndex + 1) % filterCycle.length;
-        const nextFilter = filterCycle[nextIndex];
-
-        const handleFilterChange = () => {
-          if (nextFilter === "ALL") {
-            column.setFilterValue(undefined);
-          } else {
-            column.setFilterValue(nextFilter);
-          }
-        };
-
-        return (
-          <Button variant="ghost" onClick={handleFilterChange}>
-            Events <ListFilterIcon className="p-1" />{" "}
-            {currentFilter !== "ALL" ? `: ${currentFilter}` : ""}
+      {
+        accessorKey: "usn",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            USN
+            <ArrowUpDown className="p-1" />
           </Button>
-        );
+        ),
+        cell: ({ row }) => (
+          <div className="uppercase">{row.getValue("usn")}</div>
+        ),
       },
-      cell: ({ row }) => {
-        const events = row.getValue("events") as {
-          eventName: string;
-          role: string;
-        }[];
-        return (
-          <div className="capitalize">
-            {events.map((e) => e.eventName).join(", ")}
-          </div>
-        );
+      {
+        accessorKey: "type",
+        header: ({ column }) => {
+          const filterCycle = ["", "Participant"];
+          const currentFilter = (column.getFilterValue() as string) ?? "";
+          const currentIndex = filterCycle.indexOf(currentFilter);
+          const nextIndex = (currentIndex + 1) % filterCycle.length;
+          const nextFilter = filterCycle[nextIndex];
+
+          const handleFilterChange = () => {
+            if (nextFilter === "") {
+              column.setFilterValue(undefined); // Clears the filter
+            } else {
+              column.setFilterValue(nextFilter);
+            }
+          };
+
+          return (
+            <Button variant="ghost" onClick={handleFilterChange}>
+              Type <ListFilterIcon className="p-1" />{" "}
+              {currentFilter !== "" ? `: ${currentFilter}` : ""}
+            </Button>
+          );
+        },
+        cell: ({ row }) => (
+          <div className="capitalize">{row.getValue("type")}</div>
+        ),
+        filterFn: (row, columnId, filterValue) => {
+          if (!filterValue || filterValue === "") return true;
+
+          const type = row.getValue(columnId);
+          return type === filterValue;
+        },
       },
-      filterFn: (row, columnId, filterValue) => {
-        if (!filterValue || filterValue === "ALL") return true;
-        const events = row.getValue(columnId) as {
-          eventName: string;
-        }[];
-        return events.some((e) => e.eventName === filterValue);
+      {
+        accessorKey: "events",
+        header: ({ column, table }) => {
+          const allRows = table.getPreFilteredRowModel().rows;
+          const allEvents = allRows.flatMap((row) =>
+            row.original.events.map((e) => e.eventName),
+          );
+          const uniqueEvents = Array.from(new Set(allEvents));
+          const filterCycle = ["ALL", ...uniqueEvents];
+          const currentFilter = (column.getFilterValue() as string) ?? "ALL";
+          const currentIndex = filterCycle.indexOf(currentFilter);
+          const nextIndex = (currentIndex + 1) % filterCycle.length;
+          const nextFilter = filterCycle[nextIndex];
+
+          const handleFilterChange = () => {
+            if (nextFilter === "ALL") {
+              column.setFilterValue(undefined);
+            } else {
+              column.setFilterValue(nextFilter);
+            }
+          };
+
+          return (
+            <Button variant="ghost" onClick={handleFilterChange}>
+              Events <ListFilterIcon className="p-1" />{" "}
+              {currentFilter !== "ALL" ? `: ${currentFilter}` : ""}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const events = row.getValue("events") as {
+            eventName: string;
+            role: string;
+          }[];
+          return (
+            <div className="capitalize">
+              {events.map((e) => e.eventName).join(", ")}
+            </div>
+          );
+        },
+        filterFn: (row, columnId, filterValue) => {
+          if (!filterValue || filterValue === "ALL") return true;
+          const events = row.getValue(columnId) as {
+            eventName: string;
+          }[];
+          return events.some((e) => e.eventName === filterValue);
+        },
       },
-    },
-  ]);
+    ],
+    [],
+  );
 
   const table = useReactTable({
     data: rows,
@@ -219,10 +224,10 @@ export function DataTableView({ data }: { data: Data[] }) {
     const filteredSortedRows = table.getRowModel().rows;
 
     // Prepare data for PDF
-    const exportData = filteredSortedRows.map((row) => [
-      row.getValue("name"),
-      row.getValue("usn"),
-      row.getValue("type"),
+    const exportData: (string | number)[][] = filteredSortedRows.map((row) => [
+      String(row.getValue("name")),
+      String(row.getValue("usn")),
+      String(row.getValue("type")),
       (row.getValue("events") as { eventName: string }[])
         .map((event) => event.eventName)
         .join(", "),

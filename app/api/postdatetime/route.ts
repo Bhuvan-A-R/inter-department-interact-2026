@@ -2,47 +2,38 @@ import { saveDateTimeOfArrival } from "@/app/prismaClient/queryFunction";
 import { decrypt } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-    try {
-        await saveDateTimeOfArrival(
-            userId as string,
-            dateOfArrival as string,
-            timeOfArrival as string
-        );
+
+export async function POST(request: Request) {
+    const cookie = (await cookies()).get("session")?.value;
+    const session = await decrypt(cookie);
+
+    if (!session) {
         return NextResponse.json(
-            { success: true, message: "DateTime added" },
-            { status: 200 }
+            { success: false, message: "unauthorized" },
+            { status: 401 }
         );
-    } catch (error) {
+    }
+
+    const userId = session.id as string;
+    const { dateOfArrival, timeOfArrival } = await request.json();
+
+    if (!dateOfArrival || !timeOfArrival) {
         return NextResponse.json(
-            {
-                success: false,
-                message:
-                    "Arrival date/time fields are not available in the current schema.",
-            },
+            { success: false, message: "date/time is missing" },
             { status: 400 }
         );
     }
 
-    if (!dateOfArrival || !timeOfArrival) {
-        return NextResponse.json(
-            { success: false, message: "date /time is missing" },
-            { status: 404 }
-        );
-    }
-
     try {
-        await saveDateTimeOfArrival(
-            userId,
-            dateOfArrival as string,
-            timeOfArrival as string
-        );
+        await saveDateTimeOfArrival(userId, dateOfArrival, timeOfArrival);
         return NextResponse.json(
             { success: true, message: "saved successfully" },
             { status: 200 }
         );
     } catch (error) {
+        const message = error instanceof Error ? error.message : "unknown error";
         return NextResponse.json(
-            { success: false, message: error },
+            { success: false, message },
             { status: 400 }
         );
     }

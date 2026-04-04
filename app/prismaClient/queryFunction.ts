@@ -216,6 +216,31 @@ export async function getRegistrant(usn: string) {
     }
 }
 
+export async function getRegistrantById(registrantId: string) {
+    try {
+        const registrant = await prisma.registrants.findUnique({
+            where: {
+                id: registrantId,
+            },
+            include: {
+                events: true,
+                eventRegistrations: true,
+            },
+        });
+        return registrant;
+    } catch (err: unknown) {
+        if (err instanceof Prisma.PrismaClientKnownRequestError) {
+            throw new Error(`Database error occurred: ${err.message}`);
+        } else if (err instanceof Prisma.PrismaClientValidationError) {
+            throw new Error(`Validation error occurred: ${err.message}`);
+        } else if (err instanceof Error) {
+            throw new Error(`Unexpected error occurred: ${err.message}`);
+        } else {
+            throw new Error("An unknown error occurred while fetching registrant.");
+        }
+    }
+}
+
 export async function getRegistrantByPhone(id: string) {
     try {
         const registerant = await prisma.registrants.findFirst({

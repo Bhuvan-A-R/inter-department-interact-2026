@@ -47,7 +47,7 @@ const REQUIRED_DOCUMENTS = [
     label: "College ID Card",
     hint: "College Identification Card of the student",
   },
-];
+] as const;
 
 type SelectRolesAndEventsProps = {
   allEvents: Event[];
@@ -382,6 +382,10 @@ export default function SelectRolesAndEvents({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {REQUIRED_DOCUMENTS.map((doc) => {
                 const isUploaded = !!documentUrls[doc.id];
+                const documentErrors = errors.documents as
+                  | Record<string, { message?: string } | undefined>
+                  | undefined;
+                const errorMessage = documentErrors?.[doc.id]?.message;
                 return (
                   <div
                     key={doc.id}
@@ -407,7 +411,7 @@ export default function SelectRolesAndEvents({
                             Upload Complete <VerifiedIcon />
                           </p>
                           <Image
-                            src={`https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${documentUrls[doc.id]}`}
+                            src={`https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${documentUrls[doc.id]}`}
                             width={60}
                             height={60}
                             alt="uploaded image"
@@ -441,16 +445,8 @@ export default function SelectRolesAndEvents({
                         }}
                       />
                     )}
-                    {errors.documents?.[
-                      doc.id as keyof typeof errors.documents
-                    ] && (
-                      <p className="text-red-500 text-sm">
-                        {
-                          errors.documents[
-                            doc.id as keyof typeof errors.documents
-                          ]?.message
-                        }
-                      </p>
+                    {errorMessage && (
+                      <p className="text-red-500 text-sm">{errorMessage}</p>
                     )}
                   </div>
                 );

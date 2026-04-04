@@ -216,7 +216,7 @@ export function DataTable({ data }: { data: Data[] }) {
         header: "Photo",
         cell: ({ row }) => {
           const photoUrl = row.getValue("photo");
-          const imageUrl = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
+          const imageUrl = `https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
           return (
             <Image
               src={imageUrl}
@@ -404,10 +404,10 @@ export function DataTable({ data }: { data: Data[] }) {
     const filteredSortedRows = table.getRowModel().rows;
 
     // Prepare data for PDF
-    const exportData = filteredSortedRows.map((row) => [
-      row.getValue("name"),
-      row.getValue("usn"),
-      row.getValue("type"),
+    const exportData: (string | number)[][] = filteredSortedRows.map((row) => [
+      String(row.getValue("name")),
+      String(row.getValue("usn")),
+      String(row.getValue("type")),
       (row.getValue("events") as { eventName: string }[])
         .map((event) => event.eventName)
         .join(", "),

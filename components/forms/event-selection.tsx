@@ -18,10 +18,10 @@ interface EventSelectionProps {
 export function EventSelection({ events, onChange }: EventSelectionProps) {
   const handleEventChange = (eventName: string, checked: boolean) => {
     const existingEvent = events.find((e) => e.name === eventName);
-    
+
     if (existingEvent) {
       const updatedEvents = events.map((event) =>
-        event.name === eventName ? { ...event, attended: checked } : event
+        event.name === eventName ? { ...event, attended: checked } : event,
       );
       onChange(updatedEvents);
     } else {
@@ -38,7 +38,11 @@ export function EventSelection({ events, onChange }: EventSelectionProps) {
   const leftCategories = categories.slice(0, midpoint);
   const rightCategories = categories.slice(midpoint);
 
-  const CategorySection = ({ categories }: { categories: [string, string[]][] }) => (
+  const CategorySection = ({
+    categories,
+  }: {
+    categories: [string, readonly string[]][];
+  }) => (
     <div className="space-y-6">
       {categories.map(([category, categoryEvents]) => (
         <div key={category} className="space-y-3">

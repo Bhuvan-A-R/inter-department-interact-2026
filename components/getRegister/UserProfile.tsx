@@ -1,5 +1,5 @@
-import UserData from '@/lib/user';
-import React, { useEffect, useState } from 'react';
+import UserData from "@/lib/user";
+import React, { useEffect, useState } from "react";
 
 // // Define the UserData type
 // interface UserData {
@@ -12,8 +12,8 @@ import React, { useEffect, useState } from 'react';
 // }
 
 // Fetch and display user data
-export function UserProfile({usn}:{usn:string}) {
-  const [user, setUser] = useState<  null>(null);
+export function UserProfile({ usn }: { usn: string }) {
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,12 +23,12 @@ export function UserProfile({usn}:{usn:string}) {
       try {
         const response = await fetch(`/api/getregister/${usn}`); // Replace with your API endpoint
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error("Failed to fetch user data");
         }
         const data: UserData = await response.json();
         setUser(data);
       } catch (err: any) {
-        setError(err.message || 'An unknown error occurred');
+        setError(err.message || "An unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -61,7 +61,11 @@ export function UserProfile({usn}:{usn:string}) {
         <div>
           <h2 className="text-2xl font-bold text-gray-800">{user.name}</h2>
           <p className="text-gray-600">USN: {user.usn}</p>
-          <p className="text-blue-600 font-semibold">{user.type}</p>
+          {user.events && user.events.length > 0 && (
+            <p className="text-blue-600 font-semibold">
+              Events: {user.events.length}
+            </p>
+          )}
         </div>
       </div>
     </div>

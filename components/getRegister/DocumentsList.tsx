@@ -1,7 +1,6 @@
-import React from 'react';
-import { FileText } from 'lucide-react';
-import { User } from '../types/user';
-import { UserData } from '@/lib/user';
+import React from "react";
+import { FileText } from "lucide-react";
+import UserData from "@/lib/user";
 
 interface DocumentsListProps {
   user: UserData;
@@ -9,12 +8,9 @@ interface DocumentsListProps {
 
 export function DocumentsList({ user }: DocumentsListProps) {
   const documents = [
-    { name: 'Aadhar Card', url: user.aadharUrl },
-    { name: 'SSLC Certificate', url: user.sslcUrl },
-    { name: 'PUC Certificate', url: user.pucUrl },
-    { name: 'Admission Document', url: user.admissionUrl },
-    { name: 'ID Card', url: user.idcardUrl },
-  ];
+    { name: "Photo", url: user.photoUrl },
+    { name: "ID Card", url: user.idcardUrl },
+  ].filter((doc): doc is { name: string; url: string } => !!doc.url);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
