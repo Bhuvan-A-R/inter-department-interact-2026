@@ -17,15 +17,15 @@ export async function POST(request: Request) {
     const userId = session.id as string;
     const { dateOfArrival, timeOfArrival } = await request.json();
 
-    if (!dateOfArrival || !timeOfArrival) {
+    if (!dateOfArrival) {
         return NextResponse.json(
-            { success: false, message: "date/time is missing" },
+            { success: false, message: "date is missing" },
             { status: 400 }
         );
     }
 
     try {
-        await saveDateTimeOfArrival(userId, dateOfArrival, timeOfArrival);
+        await saveDateTimeOfArrival(userId, dateOfArrival, timeOfArrival || "");
         return NextResponse.json(
             { success: true, message: "saved successfully" },
             { status: 200 }
