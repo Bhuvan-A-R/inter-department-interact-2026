@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { eventCategories } from "@/data/eventCategories";
 import { LoadingButton } from "@/components/LoadingButton";
 type RegisteredEvent = {
-  id: number;
+  id: string;
   eventNo: number;
   eventName: string;
 };
@@ -39,11 +39,11 @@ export default function EventRegister() {
   const [isLoading, setIsLoading] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<{
-    id: number;
+    id: string;
     name: string;
   } | null>(null);
 
-  const handleDelete = async (id: number, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     setEventToDelete({ id, name });
     setDeleteDialogOpen(true);
   };
@@ -60,10 +60,18 @@ export default function EventRegister() {
         body: JSON.stringify({ eventId: eventToDelete.id }),
       });
       const data = await response.json();
+      const message =
+        typeof data?.message === "string"
+          ? data.message
+          : "Failed to delete event.";
+      if (!response.ok) {
+        toast.error(message);
+        return;
+      }
       setRegisteredEvents((prev) =>
         prev.filter((event) => event.id !== eventToDelete.id),
       );
-      toast.success(data.message);
+      toast.success(message);
     } catch (error) {
       console.error("Error deleting event:", error);
       toast.error("Failed to delete event. Please try again.");

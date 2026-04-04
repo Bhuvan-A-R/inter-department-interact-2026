@@ -1,4 +1,4 @@
-import { deleteEventOfRegistrant } from "@/app/prismaClient/queryFunction";
+import prisma from "@/lib/db";
 import { decrypt } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -24,12 +24,27 @@ export async function DELETE(request : Request){
     }  
 
     try{
-    
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const deletedEvent = await deleteEventOfRegistrant(eventId as string);
-    return NextResponse.json({success:true,message:"Event Deleted"},{status:200});
+        const result = await prisma.events.deleteMany({
+            where: {
+                id: String(eventId),
+                userId: session.id as string,
+            },
+        });
+        if (result.count === 0) {
+            return NextResponse.json(
+                { success: false, message: "Event not found" },
+                { status: 404 }
+            );
+        }
+        return NextResponse.json(
+            { success: true, message: "Event Deleted" },
+            { status: 200 }
+        );
     }
     catch(err){
-        return NextResponse.json({success:false,message:err},{status:400});
+        return NextResponse.json(
+            { success: false, message: (err as Error).message ?? "Delete failed" },
+            { status: 400 }
+        );
     }
 }

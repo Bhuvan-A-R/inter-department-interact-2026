@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from ".././components/Footer";
-import "./globals.css";
+import "./styles/globals.css";
 import AuthContextProvider from "@/contexts/auth-context";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { Toaster } from "sonner";
@@ -11,15 +11,15 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata = {
   metadataBase: new URL("https://www.vtufestinteract.com"),
   title: {
-    default: "Home - VTU Fest 2025",
-    template: "%s - VTU Fest 2025",
+    default: "Home - INTERACT 2026",
+    template: "%s - INTERACT 2026",
   },
   description:
-    "Join Global Academy of Technology for VTU Fest 2025 – a celebration of innovation, creativity, and technology at one of the biggest college fests. Explore events, workshops, and performances designed for a memorable experience.",
+    "Join Global Academy of Technology for INTERACT 2026 – a celebration of innovation, creativity, and technology at one of the biggest college fests. Explore events, workshops, and performances designed for a memorable experience.",
   keywords: [
-    "VTU Fest 2025",
+    "INTERACT 2026",
     "Global Academy of Technology",
-    "gat fest 2025",
+    "gat fest 2026",
     "college fest",
     "tech fest",
     "university festival",
@@ -32,26 +32,26 @@ export const metadata = {
   publisher: "Global Academy of Technology",
   openGraph: {
     url: "https://www.vtufestinteract.com",
-    siteName: "VTU Fest 2025",
+    siteName: "INTERACT 2026",
     type: "website",
-    title: "VTU Fest 2025",
+    title: "INTERACT 2026",
     description:
-      "Join Global Academy of Technology for VTU Fest 2025 – a celebration of innovation, creativity, and technology with events, workshops, and performances designed for an unforgettable experience.",
+      "Join Global Academy of Technology for INTERACT 2026 – a celebration of innovation, creativity, and technology with events, workshops, and performances designed for an unforgettable experience.",
     images: [
       {
         url: "https://www.vtufestinteract.com/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "VTU Fest 2025",
+        alt: "INTERACT 2026",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "VTU Fest 2025",
+    title: "INTERACT 2026",
     description:
-      "Experience the best of innovation and creativity at VTU Fest 2025 hosted by Global Academy of Technology.",
-    site: "@vtufest2025",
+      "Experience the best of innovation and creativity at INTERACT 2026 hosted by Global Academy of Technology.",
+    site: "@vtufest2026",
     creator: "@bhuvansa",
     images: ["https://www.vtufestinteract.com/images/og-image.jpg"],
   },

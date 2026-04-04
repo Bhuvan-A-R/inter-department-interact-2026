@@ -20,9 +20,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import { eventCategories } from "@/data/eventCategories";
 
 interface MyCustomEvent {
   id: number;
+  eventNo: number;
   eventName: string;
   amount?: number;
 }
@@ -50,7 +52,19 @@ export default function EventsPage() {
         const response = await fetch("/api/getalleventregister"); // Replace with your backend API URL
         const data = await response.json();
         console.log(data.userEvents);
-        setEvents(data.userEvents);
+        const amountByEventNo = new Map(
+          eventCategories.map((event) => [event.eventNo, event.amount ?? 0]),
+        );
+        const normalizedEvents = (data.userEvents ?? []).map(
+          (event: MyCustomEvent) => {
+            const eventNo = Number(event.eventNo);
+            const fallbackAmount = amountByEventNo.get(eventNo) ?? 0;
+            const amount =
+              event.amount && event.amount > 0 ? event.amount : fallbackAmount;
+            return { ...event, eventNo, amount };
+          },
+        );
+        setEvents(normalizedEvents);
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }
@@ -62,14 +76,19 @@ export default function EventsPage() {
         const r = await response.json();
         console.log(r);
         let paymentStatus = false;
-        if (r.paymentInfo.paymentUrl === null) {
+        if (!r?.paymentInfo || r.paymentInfo.paymentUrl === null) {
           paymentStatus = false;
           setPaymentStatus(false);
         } else {
           paymentStatus = true;
           setPaymentStatus(true);
           console.log("fdas", r.paymentInfo.PaymentVerified);
-          setPaymentStatusInfo(r.paymentInfo.PaymentVerified);
+          const statusValue = r.paymentInfo.PaymentVerified;
+          setPaymentStatusInfo(
+            typeof statusValue === "string"
+              ? statusValue
+              : JSON.stringify(statusValue ?? ""),
+          );
           setPaymentDone(true);
         }
       } catch (error: unknown) {
