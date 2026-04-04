@@ -17,15 +17,18 @@ const redis = redisUrl && redisToken
     })
   : null;
 
-const aj = arcjet({
-    key: process.env.ARCJET_KEY!,
-    rules: [
-      // Shield protects your app from common attacks
-      shield({
-        mode: "LIVE", // Change to "LIVE" in production
-      }),
-    ],
-  });
+const arcjetKey = process.env.ARCJET_KEY;
+const aj = arcjetKey
+    ? arcjet({
+            key: arcjetKey,
+            rules: [
+                // Shield protects your app from common attacks
+                shield({
+                    mode: "LIVE", // Change to "LIVE" in production
+                }),
+            ],
+        })
+    : null;
 
 const GLOBAL_RATE_LIMIT_WINDOW = 60; // Time window in seconds
 const GLOBAL_RATE_LIMIT_MAX = 100; // Maximum requests allowed per window
@@ -116,24 +119,30 @@ export async function middleware(request: NextRequest) {
         );
     }
 
-     // Apply arcjet protection for security
-     const decision = await aj.protect(request);
-     for (const result of decision.results) {
-         console.log("Rule Result", result);
-     }
- 
-     console.log("Conclusion", decision.conclusion);
- 
-     if (decision.isDenied() && decision.reason.isShield()) {
-         return NextResponse.json(
-             {
-                 error: "You are suspicious!",
-                 // Useful for debugging, but don't return it to the client in production
-                 // reason: decision.reason,
-             },
-             { status: 403 },
-         );
-     }
+    // Apply arcjet protection for security
+    if (aj) {
+        try {
+            const decision = await aj.protect(request);
+            for (const result of decision.results) {
+                console.log("Rule Result", result);
+            }
+
+            console.log("Conclusion", decision.conclusion);
+
+            if (decision.isDenied() && decision.reason.isShield()) {
+                return NextResponse.json(
+                    {
+                        error: "You are suspicious!",
+                        // Useful for debugging, but don't return it to the client in production
+                        // reason: decision.reason,
+                    },
+                    { status: 403 },
+                );
+            }
+        } catch (error) {
+            console.error("[Arcjet Error]", error);
+        }
+    }
 
     const session = await verifySession();
 

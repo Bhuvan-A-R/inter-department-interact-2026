@@ -58,7 +58,13 @@ export default function SelectRolesAndEvents({
 }: SelectRolesAndEventsProps) {
   const router = useRouter();
   const [selectedEvents, setSelectedEvents] = useState<
-    { eventNo: number; eventName: string; type: "PARTICIPANT" }[]
+    {
+      eventId: string;
+      eventNo: number;
+      eventName: string;
+      teamNumber?: number | null;
+      type: "PARTICIPANT";
+    }[]
   >([]);
   const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -95,13 +101,22 @@ export default function SelectRolesAndEvents({
     });
   }, [documentUrls, setValue]);
 
-  const onToggleSelect = (eventNo: number, eventName: string) => {
+  const onToggleSelect = (event: Event) => {
     setSelectedEvents((prev) => {
-      const idx = prev.findIndex((item) => item.eventNo === eventNo);
+      const idx = prev.findIndex((item) => item.eventId === event.id);
       if (idx >= 0) {
-        return prev.filter((item) => item.eventNo !== eventNo);
+        return prev.filter((item) => item.eventId !== event.id);
       }
-      return [...prev, { eventName, eventNo, type: "PARTICIPANT" }];
+      return [
+        ...prev,
+        {
+          eventId: event.id,
+          eventName: event.eventName,
+          eventNo: event.eventNo,
+          teamNumber: event.teamNumber ?? null,
+          type: "PARTICIPANT",
+        },
+      ];
     });
   };
 
@@ -163,6 +178,12 @@ export default function SelectRolesAndEvents({
     },
     {} as Record<string, Event[]>,
   );
+
+  const formatEventLabel = (event: Event) => {
+    const dept = event.deptCode ? ` ${event.deptCode}` : "";
+    const team = event.teamNumber ? ` Team ${event.teamNumber}` : "";
+    return `${event.eventName}${dept}${team}`.trim();
+  };
 
   return (
     <Card className="shadow-xl w-full px-10">
@@ -313,24 +334,19 @@ export default function SelectRolesAndEvents({
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-1.5">
                         {events.map((event) => {
                           const selectedObj = selectedEvents.find(
-                            (item) => item.eventNo === event.eventNo,
+                            (item) => item.eventId === event.id,
                           );
                           const isSelected = !!selectedObj;
                           return (
                             <div
-                              key={event.eventNo}
+                              key={event.id}
                               role="button"
                               tabIndex={0}
                               aria-pressed={isSelected}
-                              onClick={() =>
-                                onToggleSelect(event.eventNo, event.eventName)
-                              }
+                              onClick={() => onToggleSelect(event)}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === " ") {
-                                  onToggleSelect(
-                                    event.eventNo,
-                                    event.eventName,
-                                  );
+                                  onToggleSelect(event);
                                 }
                               }}
                               className={`p-4 border-2 rounded-lg cursor-pointer transition duration-300 flex flex-col h-full ${
@@ -340,7 +356,7 @@ export default function SelectRolesAndEvents({
                               }`}
                             >
                               <h3 className="text-lg font-semibold mb-2">
-                                {event.eventName}
+                                {formatEventLabel(event)}
                               </h3>
                               <div className="mt-auto flex items-end justify-between">
                                 <div>

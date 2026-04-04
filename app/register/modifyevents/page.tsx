@@ -26,11 +26,15 @@ type RegisteredEvent = {
   id: string;
   eventNo: number;
   eventName: string;
+  deptCode?: string | null;
+  teamNumber?: number | null;
 };
 
 export default function EventRegister() {
   const router = useRouter();
-  const [selectedEvents, setSelectedEvents] = useState<number[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<Record<number, number>>(
+    {},
+  );
   // const [responseBody, setResponseBody] = useState<object | null>(null);
 
   const [registeredEvents, setRegisteredEvents] = useState<RegisteredEvent[]>(
@@ -104,10 +108,7 @@ export default function EventRegister() {
     fetchRegisteredEvents();
   }, [selectedEvents]);
 
-  const availableEvents = eventCategories.filter(
-    (event) =>
-      !registeredEvents?.some((regEvent) => regEvent.eventNo === event.eventNo),
-  );
+  const availableEvents = eventCategories;
 
   const groupedEvents = availableEvents.reduce(
     (acc, event) => {
@@ -119,39 +120,61 @@ export default function EventRegister() {
   );
 
   const toggleSelection = (eventNo: number) => {
-    setSelectedEvents((prev) =>
-      prev.includes(eventNo)
-        ? prev.filter((id) => id !== eventNo)
-        : [...prev, eventNo],
-    );
+    setSelectedEvents((prev) => {
+      const next = { ...prev };
+      if (next[eventNo]) {
+        delete next[eventNo];
+      } else {
+        next[eventNo] = 1;
+      }
+      return next;
+    });
+  };
+
+  const updateTeamCount = (eventNo: number, delta: number) => {
+    setSelectedEvents((prev) => {
+      if (!prev[eventNo]) return prev;
+      const nextCount = Math.max(1, prev[eventNo] + delta);
+      return { ...prev, [eventNo]: nextCount };
+    });
+  };
+
+  const formatEventLabel = (event: RegisteredEvent) => {
+    const dept = event.deptCode ? ` ${event.deptCode}` : "";
+    const team = event.teamNumber ? ` Team ${event.teamNumber}` : "";
+    return `${event.eventName}${dept}${team}`.trim();
   };
 
   const generateResponse = async () => {
     setIsLoading(true);
     try {
-      const body = JSON.stringify({
-        events: eventCategories
-          .filter((event) => selectedEvents.includes(event.eventNo))
-          .map((event) => ({
-            eventNo: event.eventNo,
-            eventName: event.eventName,
-            category: event.category,
-            maxParticipant: event.maxParticipant,
-            amount: event.amount ?? 0,
-          })),
-      });
+      const selectedEventList = eventCategories.filter(
+        (event) => selectedEvents[event.eventNo],
+      );
+      if (selectedEventList.length === 0) {
+        toast.error("Select at least one event.");
+        return;
+      }
+      const eventPayload = selectedEventList.map((event) => ({
+        eventNo: event.eventNo,
+        eventName: event.eventName,
+        category: event.category,
+        maxParticipant: event.maxParticipant,
+        amount: event.amount ?? 0,
+        teamCount: selectedEvents[event.eventNo] ?? 1,
+      }));
       const config = {
         method: "post",
         maxBodyLength: Infinity,
         url: "/api/eventsregister",
-        data: { events: body },
+        data: { events: eventPayload },
       };
 
       const response = await axios.request(config);
       if (response.status === 200 || response.status === 201) {
         console.log("Response successfully sent:", response.data);
         toast.success("Response sent successfully!");
-        setSelectedEvents([]);
+        setSelectedEvents({});
       } else {
         console.error("Unexpected response status:", response.status);
         toast.error("Something went wrong! Please try again.");
@@ -197,7 +220,7 @@ export default function EventRegister() {
               <Accordion type="single" collapsible className="w-full">
                 {Object.keys(groupedEvents).map((category) => {
                   const selectedCount = groupedEvents[category].filter(
-                    (event) => selectedEvents.includes(event.eventNo),
+                    (event) => selectedEvents[event.eventNo],
                   ).length;
                   const totalEvents = groupedEvents[category].length;
 
@@ -215,33 +238,65 @@ export default function EventRegister() {
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 m-4">
-                          {groupedEvents[category].map((event) => (
-                            <motion.div
-                              key={event.eventNo}
-                              onClick={() => toggleSelection(event.eventNo)}
-                              className={`p-4 border-2 rounded-lg shadow-md cursor-pointer transition duration-300 ${
-                                selectedEvents.includes(event.eventNo)
-                                  ? "border-primary bg-primary/10"
-                                  : "border-border bg-card hover:border-primary/50"
-                              }`}
-                              whileHover={{
-                                scale: 1.03,
-                              }}
-                              whileTap={{
-                                scale: 0.98,
-                              }}
-                            >
-                              <h3 className="text-lg font-semibold text-foreground mb-2">
-                                {event.eventName}
-                              </h3>
-                              <p className="text-sm text-muted-foreground">
-                                Max Participants:{" "}
-                                <span className="font-medium text-foreground">
-                                  {event.maxParticipant}
-                                </span>
-                              </p>
-                            </motion.div>
-                          ))}
+                          {groupedEvents[category].map((event) => {
+                            const isSelected = !!selectedEvents[event.eventNo];
+                            const teamCount =
+                              selectedEvents[event.eventNo] ?? 1;
+                            return (
+                              <motion.div
+                                key={event.eventNo}
+                                onClick={() => toggleSelection(event.eventNo)}
+                                className={`p-4 border-2 rounded-lg shadow-md cursor-pointer transition duration-300 ${
+                                  isSelected
+                                    ? "border-primary bg-primary/10"
+                                    : "border-border bg-card hover:border-primary/50"
+                                }`}
+                                whileHover={{
+                                  scale: 1.03,
+                                }}
+                                whileTap={{
+                                  scale: 0.98,
+                                }}
+                              >
+                                <h3 className="text-lg font-semibold text-foreground mb-2">
+                                  {event.eventName}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                  Max Participants:{" "}
+                                  <span className="font-medium text-foreground">
+                                    {event.maxParticipant}
+                                  </span>
+                                </p>
+                                <div className="mt-3 flex items-center gap-3">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      updateTeamCount(event.eventNo, -1);
+                                    }}
+                                    disabled={!isSelected || teamCount <= 1}
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="min-w-6 text-center font-medium">
+                                    {teamCount}
+                                  </span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      updateTeamCount(event.eventNo, 1);
+                                    }}
+                                    disabled={!isSelected}
+                                  >
+                                    +
+                                  </Button>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -270,16 +325,16 @@ export default function EventRegister() {
                   {registeredEvents?.length > 0 ? (
                     registeredEvents?.map((event, index) => (
                       <li
-                        key={event.eventNo}
+                        key={event.id}
                         className="flex items-center justify-between p-2 rounded-md hover:bg-secondary/80 transition-colors duration-200"
                       >
                         <span className="">
                           <span className="font-medium">{index + 1}. </span>
-                          {event.eventName}
+                          {formatEventLabel(event)}
                         </span>
                         <button
                           onClick={() =>
-                            handleDelete(event.id, event.eventName)
+                            handleDelete(event.id, formatEventLabel(event))
                           }
                           className="text-red-500 hover:text-red-700 transition-colors duration-200"
                           disabled={isLoading}
@@ -302,16 +357,16 @@ export default function EventRegister() {
                   <h2 className="text-xl font-semibold text-foreground">
                     Selected Events
                   </h2>
-                  {selectedEvents.length > 0 && (
+                  {Object.keys(selectedEvents).length > 0 && (
                     <span className="bg-primary/20 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm">
-                      {selectedEvents.length}
+                      {Object.keys(selectedEvents).length}
                     </span>
                   )}
                 </div>
                 <ul className="space-y-2">
-                  {selectedEvents.length > 0 ? (
+                  {Object.keys(selectedEvents).length > 0 ? (
                     eventCategories
-                      .filter((event) => selectedEvents.includes(event.eventNo))
+                      .filter((event) => selectedEvents[event.eventNo])
                       .map((event, index) => (
                         <li
                           key={event.eventNo}
@@ -319,7 +374,8 @@ export default function EventRegister() {
                         >
                           <span className="">
                             <span className="font-medium">{index + 1}. </span>
-                            {event.eventName}
+                            {event.eventName} (Teams:{" "}
+                            {selectedEvents[event.eventNo]})
                           </span>
                         </li>
                       ))
@@ -330,7 +386,7 @@ export default function EventRegister() {
                 <LoadingButton
                   loading={isLoading}
                   onClick={generateResponse}
-                  disabled={selectedEvents.length === 0}
+                  disabled={Object.keys(selectedEvents).length === 0}
                 >
                   Submit
                 </LoadingButton>

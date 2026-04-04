@@ -15,9 +15,7 @@ export async function insertRegistrant(
         const eventList: any[] = [];
 
         arg.events.forEach((x) => {
-            const selectedEvent = userEvents.find(
-                (y) => y.eventNo === x.eventNo
-            );
+            const selectedEvent = userEvents.find((y) => y.id === x.eventId);
 
             if (selectedEvent) {
                 if (x.type === "PARTICIPANT") {
@@ -54,10 +52,7 @@ export async function insertRegistrant(
                     eventList.map((event: any) =>
                         prisma.events.update({
                             where: {
-                                userId_eventNo: {
-                                    userId: arg.userId,
-                                    eventNo: event.eventNo,
-                                },
+                                id: event.id,
                             },
                             data: {
                                 registrants: {
@@ -71,9 +66,7 @@ export async function insertRegistrant(
                 );
 
                 const updatedEvents = events.map((x: any) => {
-                    const findEvent = eventList.find(
-                        (y) => y.eventNo === x.eventNo
-                    );
+                    const findEvent = eventList.find((y) => y.id === x.id);
                     return { ...x, type: findEvent.type };
                 });
 
@@ -353,15 +346,41 @@ export async function registerUserEvents(
     events: EventCreate[]
 ) {
     try {
-        const userEvents = await prisma.events.createMany({
-            data: events.map((event: EventCreate) => ({
+        const user = await prisma.users.findUnique({
+            where: { id: userId },
+            select: { deptCode: true },
+        });
+
+        const existingTeams = await prisma.events.groupBy({
+            by: ["eventNo"],
+            where: { userId },
+            _max: { teamNumber: true },
+        });
+
+        const teamMap = new Map<number, number>();
+        existingTeams.forEach((row) => {
+            teamMap.set(row.eventNo, row._max.teamNumber ?? 0);
+        });
+
+        const createData = events.flatMap((event) => {
+            const teamCount = event.teamCount ?? 1;
+            const startAt = (teamMap.get(event.eventNo) ?? 0) + 1;
+            const items = Array.from({ length: teamCount }, (_, index) => ({
                 userId,
                 eventName: event.eventName,
                 eventNo: event.eventNo,
                 maxParticipant: event.maxParticipant,
                 category: event.category,
                 amount: event.amount,
-            })),
+                teamNumber: startAt + index,
+                deptCode: user?.deptCode ?? null,
+            }));
+            teamMap.set(event.eventNo, startAt + teamCount - 1);
+            return items;
+        });
+
+        const userEvents = await prisma.events.createMany({
+            data: createData,
         });
         return userEvents;
     } catch (err: unknown) {
@@ -542,10 +561,7 @@ export async function updateEventRole(data: UpdateRole) {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const updateEventCount = await prisma.events.update({
                     where: {
-                        userId_eventNo: {
-                            userId: updateRole.event.userId,
-                            eventNo: updateRole.event.eventNo,
-                        },
+                        id: updateRole.event.id,
                     },
                     data: {
                         registeredParticipant: {

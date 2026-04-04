@@ -23,6 +23,10 @@ export async function PUT(request: Request) {
     const body: ReplaceRegistrationsRequest = await request.json();
     const { events } = body;
     const userId = session.id as string;
+    const user = await prisma.users.findUnique({
+        where: { id: userId },
+        select: { deptCode: true },
+    });
 
     if (!userId || !Array.isArray(events)) {
         return NextResponse.json(
@@ -70,6 +74,8 @@ export async function PUT(request: Request) {
                         maxParticipant: evt.maxParticipant,
                         amount: evt.amount,
                         registeredParticipant: 0,
+                        teamNumber: 1,
+                        deptCode: user?.deptCode ?? null,
                     })),
                     skipDuplicates: true,
                 });

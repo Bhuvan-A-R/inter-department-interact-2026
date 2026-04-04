@@ -29,8 +29,20 @@ interface AggregatedRow {
   registrations: Array<{
     type: Type | null;
     eventName: string | null;
+    deptCode?: string | null;
+    teamNumber?: number | null;
   }>;
 }
+
+const formatEventLabel = (
+  eventName: string,
+  deptCode?: string | null,
+  teamNumber?: number | null,
+) => {
+  const dept = deptCode ? ` ${deptCode}` : "";
+  const team = teamNumber ? ` Team ${teamNumber}` : "";
+  return `${eventName}${dept}${team}`.trim();
+};
 
 export default async function Page() {
   const session = await verifySession();
@@ -54,7 +66,12 @@ export default async function Page() {
       u."collegeCode" AS "collegeCode",
       COALESCE(
         json_agg(
-          json_build_object('type', er.type, 'eventName', e."eventName")
+          json_build_object(
+            'type', er.type,
+            'eventName', e."eventName",
+            'deptCode', e."deptCode",
+            'teamNumber', e."teamNumber"
+          )
         )
         FILTER (WHERE er.id IS NOT NULL),
         '[]'
@@ -77,7 +94,7 @@ export default async function Page() {
     const participantEvents = row.registrations
       .filter((r) => r.type === "PARTICIPANT" && r.eventName)
       .map((r) => ({
-        eventName: r.eventName!,
+        eventName: formatEventLabel(r.eventName!, r.deptCode, r.teamNumber),
         role: "Participant" as const,
       }));
 

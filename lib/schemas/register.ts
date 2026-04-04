@@ -6,6 +6,7 @@ export const EventSchema = z.array(
         maxParticipant: z.number({ message: "max participant is required" }),
         category: z.string({ message: "category of event is required" }),
         amount: z.number({ message: "amount is required" }).min(0),
+        teamCount: z.number().int().min(1).optional(),
     })
 );
 
@@ -19,8 +20,10 @@ export const participantFormSchema = z.object({
     events: z
         .array(
             z.object({
+                eventId: z.string().min(1, "Event id is required"),
                 eventName: z.string(),
                 eventNo: z.number(),
+                teamNumber: z.number().int().min(1).optional(),
                 type: z.enum(["PARTICIPANT"]),
             })
         )

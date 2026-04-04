@@ -19,16 +19,20 @@ export type Registrant = {
     blood: string;
     email: string;
     events: {
+        eventId: string;
         eventNo: number;
         eventName: string;
+        teamNumber?: number;
         type: "PARTICIPANT";
     }[];
 };
 // filepath: /Users/bhuvansa/Desktop/new/types/UserEventsType.ts
 export interface UserEventsType {
+    id: string;
     eventNo: number;
     maxParticipant: number;
     registeredParticipant: number;
+    teamNumber: number;
 }
 
 export async function POST(request: Request) {

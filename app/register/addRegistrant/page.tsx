@@ -15,6 +15,8 @@ export type Event = {
   registeredParticipant: number;
   maxParticipant: number;
   category: string;
+  deptCode?: string | null;
+  teamNumber?: number | null;
 };
 
 export default async function Page() {

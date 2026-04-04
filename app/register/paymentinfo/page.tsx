@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Image, { StaticImageData } from "next/image";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -21,9 +21,10 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { eventCategories } from "@/data/eventCategories";
+import QRCode from "qrcode";
 
 interface MyCustomEvent {
-  id: number;
+  id: string;
   eventNo: number;
   eventName: string;
   amount?: number;
@@ -45,6 +46,7 @@ export default function EventsPage() {
   const [paymentStatus, setPaymentStatus] = useState<boolean>(false);
   const [paymentDone, setPaymentDone] = useState<boolean>(false);
   const [paymentStatusInfo, setPaymentStatusInfo] = useState<string>("");
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
   // Fetch events from backend
   useEffect(() => {
     const fetchEvents = async () => {
@@ -103,7 +105,37 @@ export default function EventsPage() {
     (sum, event) => sum + (event.amount ?? 0),
     0,
   );
+  const upiLink = useMemo(() => {
+    const amount = Number(paymentAmount || 0).toFixed(2);
+    const params = new URLSearchParams({
+      pa: "71159801@ubin",
+      pn: "Global Academy Of Technology",
+      am: amount,
+      cu: "INR",
+    });
+    return `upi://pay?${params.toString()}`;
+  }, [paymentAmount]);
   const imageSrc = image1;
+
+  useEffect(() => {
+    let isActive = true;
+    const generateQr = async () => {
+      try {
+        const dataUrl = await QRCode.toDataURL(upiLink, {
+          width: 260,
+          margin: 1,
+        });
+        if (isActive) setQrDataUrl(dataUrl);
+      } catch (error) {
+        console.error("Failed to generate QR:", error);
+        if (isActive) setQrDataUrl("");
+      }
+    };
+    generateQr();
+    return () => {
+      isActive = false;
+    };
+  }, [upiLink]);
 
   async function handleDeleteFromUploadThing(fileId: string) {
     try {
@@ -164,7 +196,12 @@ export default function EventsPage() {
         <CardContent className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <EventsList events={events} />
-            <PaymentDetails paymentAmount={paymentAmount} imageSrc={imageSrc} />
+            <PaymentDetails
+              paymentAmount={paymentAmount}
+              imageSrc={imageSrc}
+              qrDataUrl={qrDataUrl}
+              upiLink={upiLink}
+            />
           </div>
           {!paymentDone ? (
             <>
@@ -336,22 +373,45 @@ function EventsList({ events }: { events: MyCustomEvent[] }) {
 function PaymentDetails({
   paymentAmount,
   imageSrc,
+  qrDataUrl,
+  upiLink,
 }: {
   paymentAmount: number;
   imageSrc: StaticImageData;
+  qrDataUrl: string;
+  upiLink: string;
 }) {
   return (
     <div className="border rounded-lg p-4 space-y-4">
       <h2 className="text-xl font-semibold">Payment Details</h2>
       <p className="text-lg">Amount To Be Paid: ₹{paymentAmount}</p>
       <div className="flex justify-center">
-        <Image
-          src={imageSrc}
-          alt="Payment illustration"
-          className="rounded-lg border border-border"
-          width={200}
-          height={200}
-        />
+        {qrDataUrl ? (
+          <div className="flex flex-col items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrDataUrl}
+              alt="UPI QR code"
+              className="rounded-lg border border-border"
+              width={200}
+              height={200}
+            />
+            <a
+              href={upiLink}
+              className="text-xs text-muted-foreground hover:text-foreground underline"
+            >
+              Open in UPI app
+            </a>
+          </div>
+        ) : (
+          <Image
+            src={imageSrc}
+            alt="Payment illustration"
+            className="rounded-lg border border-border"
+            width={200}
+            height={200}
+          />
+        )}
       </div>
       <BankDetails />
     </div>

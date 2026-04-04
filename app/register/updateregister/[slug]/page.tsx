@@ -61,10 +61,12 @@ interface Registrant {
 
 interface Event {
   id: string;
-  eventNo: string;
+  eventNo: number;
   eventName: string;
   maxParticipant: number;
   registeredParticipant: number;
+  deptCode?: string | null;
+  teamNumber?: number | null;
 }
 
 interface EventRegistration {
@@ -107,6 +109,12 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
   const [allRegisteredEvents, setAllRegisteredEvents] = useState<Event[]>([]);
   const [handleAddEventEffect, setHandleAddEventEffect] =
     useState<boolean>(false);
+
+  const formatEventLabel = (event: Event) => {
+    const dept = event.deptCode ? ` ${event.deptCode}` : "";
+    const team = event.teamNumber ? ` Team ${event.teamNumber}` : "";
+    return `${event.eventName}${dept}${team}`.trim();
+  };
 
   async function handleDeleteFromUploadThing(fileId: string) {
     console.log(fileId);
@@ -542,10 +550,10 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         <SelectContent>
                           {allRegisteredEvents.map((event) => (
                             <SelectItem
-                              key={event.eventNo}
+                              key={event.id}
                               value={JSON.stringify(event)}
                             >
-                              {event.eventName}
+                              {formatEventLabel(event)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -576,13 +584,13 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                             className="mb-4"
                           >
                             <AccordionTrigger className="text-primary text-lg font-semibold">
-                              {event.eventName}
+                              {formatEventLabel(event)}
                             </AccordionTrigger>
                             <AccordionContent>
                               <div className="p-4 border-2 rounded-lg cursor-pointer transition duration-300 flex flex-col h-full">
                                 <div className="flex justify-between items-center mb-4">
                                   <p className="text-sm text-gray-500 font-bold ">
-                                    {event.eventName}
+                                    {formatEventLabel(event)}
                                   </p>
                                 </div>
 
@@ -626,10 +634,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         <SelectValue placeholder="Select Field" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="idcardUrl">ID Card</SelectItem>
-                        <SelectItem value="aadharUrl">Aadhar</SelectItem>
                         <SelectItem value="photoUrl">Photo</SelectItem>
-                        <SelectItem value="sslcUrl">SSLC</SelectItem>
                       </SelectContent>
                     </Select>
 

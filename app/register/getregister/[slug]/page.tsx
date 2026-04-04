@@ -13,6 +13,8 @@ interface Event {
   maxParticipant: number;
   registeredParticipant: number;
   category: string;
+  deptCode?: string | null;
+  teamNumber?: number | null;
 }
 
 interface EventRegistrant {
@@ -41,6 +43,12 @@ export default function GetRegistrant({
 }) {
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const [isVerified, setIsVerified] = useState<boolean>(false);
+
+  const formatEventLabel = (event: Event) => {
+    const dept = event.deptCode ? ` ${event.deptCode}` : "";
+    const team = event.teamNumber ? ` Team ${event.teamNumber}` : "";
+    return `${event.eventName}${dept}${team}`.trim();
+  };
 
   useEffect(() => {
     async function fetchRegistrant() {
@@ -176,7 +184,7 @@ export default function GetRegistrant({
                       registration.prize === 1 ? "bg-blue-50" : "bg-gray-50"
                     } flex justify-between items-center`}
                   >
-                    <span>{event.eventName}</span>
+                    <span>{formatEventLabel(event)}</span>
                     <div className="flex space-x-2 items-center">
                       <Button
                         // onClick={() =>

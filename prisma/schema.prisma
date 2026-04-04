@@ -40,6 +40,8 @@ model Events {
   id                    String               @id @default(uuid())
   eventNo               Int
   eventName             String
+  deptCode              String?
+  teamNumber            Int                  @default(1)
   userId                String
   registrants           Registrants[]        @relation("EventRegistrations")
   user                  Users                @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -49,7 +51,7 @@ model Events {
   amount                Int                  @default(0)
   category              String
 
-  @@unique([userId, eventNo])
+  @@unique([userId, eventNo, teamNumber])
 }
 
 model Registrants {
