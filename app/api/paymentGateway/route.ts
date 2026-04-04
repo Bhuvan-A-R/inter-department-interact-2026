@@ -24,9 +24,10 @@ export async function POST(request: Request) {
         const eventNotRegisterList = await PaymentValid(userId);
 
         const userEvents = await getAllEventsByUser(userId);
-        
-        const amount:number = userEvents.length > 10? 8000 : 4000;
-        console.log(amount);
+        const amount = userEvents.reduce(
+            (sum, event) => sum + (event.amount ?? 0),
+            0
+        );
         
 
         if(eventNotRegisterList.length>0){

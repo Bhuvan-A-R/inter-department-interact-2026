@@ -360,6 +360,7 @@ export async function registerUserEvents(
                 eventNo: event.eventNo,
                 maxParticipant: event.maxParticipant,
                 category: event.category,
+                amount: event.amount,
             })),
         });
         return userEvents;

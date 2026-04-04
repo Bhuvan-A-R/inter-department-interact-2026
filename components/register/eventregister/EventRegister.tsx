@@ -65,6 +65,7 @@ export default function EventRegister({
           eventName: e.eventName,
           category: e.category,
           maxParticipant: e.maxParticipant,
+          amount: e.amount ?? 0,
         })),
       });
 

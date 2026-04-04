@@ -46,6 +46,7 @@ model Events {
   eventRegistrations    EventRegistrations[]
   maxParticipant        Int
   registeredParticipant Int                  @default(0)
+  amount                Int                  @default(0)
   category              String
 
   @@unique([userId, eventNo])

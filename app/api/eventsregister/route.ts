@@ -10,6 +10,7 @@ export interface EventCreate {
     eventName: string;
     maxParticipant: number;
     category: string;
+    amount: number;
 }
 
 export async function POST(request: Request) {

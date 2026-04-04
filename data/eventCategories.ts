@@ -6,6 +6,7 @@ export interface EventCategory {
     maxParticipant: number;
     registeredParticipant: number;
     category: string;
+    amount?: number;
 }
 
 export const interDepartmentEvents: EventCategory[] = [
@@ -19,6 +20,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 2,
@@ -28,6 +30,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 3,
@@ -37,6 +40,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 4,
@@ -46,6 +50,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 
     // DANCE
@@ -57,6 +62,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 6,
@@ -66,6 +72,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 7,
@@ -75,6 +82,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 8,
@@ -84,6 +92,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 9,
@@ -93,6 +102,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 10,
@@ -102,6 +112,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 11,
@@ -111,6 +122,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 
     // MUSIC
@@ -122,6 +134,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 13,
@@ -131,6 +144,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 14,
@@ -140,6 +154,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 15,
@@ -149,6 +164,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 16,
@@ -158,6 +174,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 17,
@@ -167,6 +184,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 18,
@@ -176,6 +194,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 
     // FASHION
@@ -187,6 +206,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 20,
@@ -196,6 +216,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 21,
@@ -205,6 +226,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 22,
@@ -214,6 +236,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 
     // LITERARY
@@ -225,6 +248,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 24,
@@ -234,6 +258,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 25,
@@ -243,6 +268,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 26,
@@ -252,6 +278,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 27,
@@ -261,6 +288,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 
     // FINE ARTS
@@ -272,6 +300,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 29,
@@ -281,6 +310,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 30,
@@ -290,6 +320,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 31,
@@ -299,6 +330,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 32,
@@ -308,6 +340,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 33,
@@ -317,6 +350,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 34,
@@ -326,6 +360,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 
     // GENERAL EVENTS
@@ -337,6 +372,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 36,
@@ -346,6 +382,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 37,
@@ -355,6 +392,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 38,
@@ -364,6 +402,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 39,
@@ -373,6 +412,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 40,
@@ -382,6 +422,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
     {
         eventNo: 41,
@@ -391,6 +432,7 @@ export const interDepartmentEvents: EventCategory[] = [
         id: "",
         userId: "",
         registeredParticipant: 0,
+        amount: 100,
     },
 ];
 

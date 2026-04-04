@@ -129,6 +129,7 @@ export default function EventRegister() {
             eventName: event.eventName,
             category: event.category,
             maxParticipant: event.maxParticipant,
+            amount: event.amount ?? 0,
           })),
       });
       const config = {
