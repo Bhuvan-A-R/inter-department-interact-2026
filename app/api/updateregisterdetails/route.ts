@@ -15,21 +15,17 @@ const registerSchema = z.object({
         }),
     usn: z.string({ message: "usn is required" }),
     gender: z.string({ message: "gender is required" }),
-    accomodation: z.boolean({ message: "accomodation is required" }),
     blood: z.string({ message: "date of birth is required" }),
     email: z.string({ message: "email is required" }),
-    designation: z.string({ message: "designation is required" }),
 
 });
 
 export interface RegistrantDetailUpdate {
     id: string;
     name: string;
-    designation?: string;
     phone: string;
     usn: string;
     gender: string;
-    accomodation: boolean;
     blood: string;
     email: string;
 }

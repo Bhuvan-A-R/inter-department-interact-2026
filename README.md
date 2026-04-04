@@ -14,24 +14,28 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 ## ✨ Key Features
 
 ### 🔐 Authentication & Authorization
+
 - **JWT-based Authentication**: Secure login system using JSON Web Tokens with jose library
 - **Role-based Access Control**: Different permissions for colleges, students, and administrators
 - **Session Management**: Stateless sessions with configurable expiration times
 - **Password Security**: Bcrypt hashing for secure password storage
 
 ### 📝 Registration System
+
 - **College Registration**: Colleges can register with their details and manage their profile
 - **Student Registration**: Individual student registration with comprehensive profile management
 - **Event Registration**: Flexible event registration system supporting participants and accompanists
 - **Document Upload**: Secure file upload system for verification documents (Aadhar, SSLC, PUC, etc.)
 
 ### 📤 File Upload & Management
+
 - **Uploadthing Integration**: Robust file upload service for images and documents
 - **File Validation**: Size and type restrictions (max 256KB per image)
 - **Secure Access**: Authenticated file uploads with user-specific permissions
 - **Cloud Storage**: Reliable file storage with CDN delivery
 
 ### 📊 Admin Dashboard
+
 - **User Management**: Comprehensive user and college management
 - **Event Oversight**: Monitor and manage all registered events
 - **Document Verification**: Review and approve/reject submitted documents
@@ -40,17 +44,20 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 - **Reporting**: Generate reports and export data to Excel/PDF
 
 ### 🎪 Event Management
+
 - **Event Categories**: Organized events by cultural categories
 - **Participant Limits**: Configurable maximum participants per event
 - **Registration Tracking**: Real-time registration counts and availability
 - **Prize Management**: Track winners and prize distributions
 
 ### 📧 Communication
+
 - **Email Notifications**: Automated emails for registration confirmations, updates, and reminders
 - **OTP Verification**: Secure email-based OTP system for account verification
 - **Bulk Communications**: Mass email capabilities for important announcements
 
 ### 🔍 Advanced Features
+
 - **Search & Filtering**: Advanced search across registrations, events, and users
 - **Data Export**: Export data to Excel and PDF formats
 - **Real-time Updates**: Live dashboard with real-time statistics
@@ -60,6 +67,7 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **Next.js 15**: React framework with App Router
 - **TypeScript**: Type-safe JavaScript
 - **Tailwind CSS**: Utility-first CSS framework
@@ -70,6 +78,7 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 - **Zod**: Schema validation
 
 ### Backend
+
 - **Next.js API Routes**: Server-side API endpoints
 - **Prisma**: Database ORM with type safety
 - **PostgreSQL**: Primary database
@@ -78,12 +87,13 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 - **Bcrypt**: Password hashing
 
 ### External Services
+
 - **Uploadthing**: File upload and storage
 - **Nodemailer**: Email service
 - **Vercel Analytics**: Usage analytics
-- **Arcjet**: Security and rate limiting
 
 ### Development Tools
+
 - **ESLint**: Code linting
 - **TypeScript**: Type checking
 - **Prisma Studio**: Database management
@@ -92,18 +102,21 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 ## 🏗️ Architecture
 
 ### Database Schema
+
 - **Users**: College accounts with payment and verification status
 - **Registrants**: Student participants with document links
 - **Events**: Event definitions with capacity management
 - **EventRegistrations**: Junction table for participant-event relationships
 
 ### Security Features
-- **Rate Limiting**: API rate limiting with Arcjet
+
+- **Rate Limiting**: API rate limiting with Redis
 - **Input Validation**: Comprehensive input sanitization with Zod
 - **Authentication Middleware**: Protected routes with session verification
 - **File Upload Security**: Authenticated and validated file uploads
 
 ### Performance Optimizations
+
 - **Database Indexing**: Optimized queries with proper indexing
 - **Caching**: Redis caching for frequently accessed data
 - **Image Optimization**: Next.js image optimization
@@ -112,6 +125,7 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL database
 - Redis instance
@@ -121,18 +135,21 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/BhuvanSA/vtufest.git
    cd vtufest
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Environment Setup**
    Create a `.env.local` file with the following variables:
+
    ```env
    DATABASE_URL="postgresql://username:password@localhost:5432/vtufest"
    JWT_SECRET="your-super-secret-jwt-key"
@@ -148,12 +165,14 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
    ```
 
 4. **Database Setup**
+
    ```bash
    npx prisma generate
    npx prisma db push
    ```
 
 5. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -184,20 +203,24 @@ vtufest/
 ## 🔧 API Endpoints
 
 ### Authentication
+
 - `POST /api/login` - User login
 - `POST /api/signup` - User registration
 - `POST /api/logout` - User logout
 - `POST /api/resetpassword` - Password reset
 
 ### Registration
+
 - `POST /api/register` - College registration
 - `POST /api/eventsregister` - Event registration
 - `GET /api/getallregister` - Get all registrations
 
 ### File Upload
+
 - `POST /api/uploadthing/*` - File upload endpoints
 
 ### Admin
+
 - `GET /api/getalleventregister` - Get all event registrations
 - `POST /api/markverified` - Verify documents
 - `POST /api/markattendance` - Mark attendance

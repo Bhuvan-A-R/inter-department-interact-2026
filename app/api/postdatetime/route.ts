@@ -6,39 +6,34 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     const cookie = (await cookies()).get("session")?.value;
     const session = await decrypt(cookie);
-    // verify the jwt
+
     if (!session) {
         return NextResponse.json(
             { success: false, message: "unauthorized" },
             { status: 401 }
         );
     }
-    const userId: string = session.id as string;
 
+    const userId = session.id as string;
     const { dateOfArrival, timeOfArrival } = await request.json();
-    // console.log(dateOfArrival, timeOfArrival);
-    // get all the registerants with the userId of the signup
 
-    if (!dateOfArrival || !timeOfArrival) {
+    if (!dateOfArrival) {
         return NextResponse.json(
-            { success: false, message: "date /time is missing" },
-            { status: 404 }
+            { success: false, message: "date is missing" },
+            { status: 400 }
         );
     }
 
     try {
-        await saveDateTimeOfArrival(
-            userId,
-            dateOfArrival as string,
-            timeOfArrival as string
-        );
+        await saveDateTimeOfArrival(userId, dateOfArrival, timeOfArrival || "");
         return NextResponse.json(
             { success: true, message: "saved successfully" },
             { status: 200 }
         );
     } catch (error) {
+        const message = error instanceof Error ? error.message : "unknown error";
         return NextResponse.json(
-            { success: false, message: error },
+            { success: false, message },
             { status: 400 }
         );
     }

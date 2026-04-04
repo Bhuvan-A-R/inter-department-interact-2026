@@ -5,7 +5,7 @@ export async function GET(){
 
     const test = await prisma.registrants.findMany({
         where:{
-            teamManager : false
+            userId: { not: "" }
         },
         include :{
             user : true,

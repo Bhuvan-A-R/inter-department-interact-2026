@@ -20,8 +20,6 @@ export function ParticipantTypeSelect({ onValueChange }: ParticipantTypeSelectPr
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="PARTICIPANT">Participant</SelectItem>
-        <SelectItem value="TEAMMANAGER">Team Manager</SelectItem>
-        <SelectItem value="ACCOMPANIST">Accompanist</SelectItem>
       </SelectContent>
     </Select>
   );

@@ -8,9 +8,10 @@ import { redirect } from "next/navigation";
 export interface EventCreate {
     eventNo: number;
     eventName: string;
-    maxAccompanist: number;
     maxParticipant: number;
     category: string;
+    amount: number;
+    teamCount?: number;
 }
 
 export async function POST(request: Request) {
@@ -20,23 +21,25 @@ export async function POST(request: Request) {
     }
     const { events } = await request.json();
 
-    if (events.length === 0 || !events) {
+    if (!events || (Array.isArray(events) && events.length === 0)) {
         return NextResponse.json(
             { success: false, message: "No events selected" },
             { status: 400 }
         );
     }
 
-    const eventData = JSON.parse(events);
+    const eventList = Array.isArray(events)
+        ? events
+        : JSON.parse(events).events;
 
-    if (!eventData.events || eventData.events.length === 0) {
+    if (!eventList || eventList.length === 0) {
         return NextResponse.json(
             { success: false, message: "No events selected" },
             { status: 400 }
         );
     }
 
-    const result = EventSchema.safeParse(eventData.events);
+    const result = EventSchema.safeParse(eventList);
 
     if (!result.success) {
         return NextResponse.json(
@@ -47,8 +50,11 @@ export async function POST(request: Request) {
 
     const userId: string = session.id as string;
     try {
-        // console.log(userId, result.data);
-        await registerUserEvents(userId, result.data);
+        const normalizedEvents = result.data.map((event) => ({
+            ...event,
+            teamCount: event.teamCount ?? 1,
+        }));
+        await registerUserEvents(userId, normalizedEvents);
         return NextResponse.json(
             { success: true, message: "events are registered " },
             { status: 200 }

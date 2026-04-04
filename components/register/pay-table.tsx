@@ -63,7 +63,7 @@ export function PaymentScreenshotTable({
         cell: ({ row }) => {
           // Create an image URL based on your upload service
           const paymentUrl = row.getValue("paymentUrl") as string;
-          const imageUrl = `https://${process.env.UPLOADTHING_APP_ID}.ufs.sh/f/${paymentUrl}`;
+          const imageUrl = `https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${paymentUrl}`;
           return (
             <Image
               src={imageUrl}
@@ -93,7 +93,7 @@ export function PaymentScreenshotTable({
         },
       },
     ],
-    [router]
+    [router],
   );
 
   // Initialize the table with pagination
@@ -119,7 +119,7 @@ export function PaymentScreenshotTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -134,7 +134,7 @@ export function PaymentScreenshotTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

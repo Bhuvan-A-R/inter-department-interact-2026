@@ -1,7 +1,12 @@
-import React from 'react';
+import React from "react";
+
+type EventItem = {
+  name: string;
+  attended: boolean;
+};
 
 interface EventsListProps {
-  events: [];
+  events: EventItem[];
 }
 
 export function EventsList({ events }: EventsListProps) {
@@ -14,7 +19,7 @@ export function EventsList({ events }: EventsListProps) {
             key={index}
             className="bg-blue-50 text-blue-700 px-4 py-2 rounded-md"
           >
-            {event.name} - {event.attended? "Attended":"unattended"}
+            {event.name} - {event.attended ? "Attended" : "unattended"}
           </div>
         ))}
       </div>

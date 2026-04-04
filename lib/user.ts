@@ -4,16 +4,11 @@ type Event = {
 };
 
 export default interface UserData {
-  id: number;
+  id: string;
   name: string;
   usn: string;
-  type: string;
   events?: Event[];
   photoUrl: string;
-  aadharUrl: string;
-  sslcUrl: string;
-  pucUrl: string;
-  admissionUrl: string;
-  idcardUrl: string;
+  idcardUrl?: string;
   userId: string;
 };

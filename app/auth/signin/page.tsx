@@ -64,7 +64,16 @@ export default function SignIn() {
         toast.success("Login successful!", {
           description: "You have been logged in successfully",
         });
-        router.push("/register/firstEventSelection");
+
+        // Role-based redirect
+        const role = response.data.role;
+        if (role === "ADMIN") {
+          router.push("/adminDashboard");
+        } else if (role === "SPOC") {
+          router.push("/register/firstEventSelection");
+        } else {
+          router.push("/register/firstEventSelection");
+        }
       } else {
         form.setError("email", {
           type: "manual",
@@ -128,27 +137,34 @@ export default function SignIn() {
           <Card className="w-full max-w-md rounded-lg shadow-2xl overflow-hidden border-0 transition-shadow duration-300 hover:shadow-3xl">
             {/* Header */}
             <CardHeader className="backdrop-blur-xl bg-gray-200 p-6 text-center border-b border-white/30">
-              <div className="flex items-center justify-center gap-2 ml-10 mr-10">
+              <div className="flex flex-col items-center justify-center gap-2 px-2 sm:px-6">
                 {/* <div className="transition-transform duration-300 hover:scale-105">
-                <Image
-                  src={gatLogo}
-                  alt="GAT Logo"
-                  width={80}
-                  height={80}
-                  style={{ objectFit: "contain" }}
-                  className="drop-shadow-lg"
-                />
-              </div> */}
-                <div className="transition-transform duration-300 hover:scale-105">
-                  <CardTitle className="text-5xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg leading-tight">
-                    INTERACT
-                  </CardTitle>
+                  <Image
+                    src={gatLogo}
+                    alt="GAT Logo"
+                    width={80}
+                    height={80}
+                    style={{ objectFit: "contain" }}
+                    className="drop-shadow-lg"
+                  />
+                </div> */}
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <div className="transition-transform duration-300 hover:scale-105">
+                    <CardTitle className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg leading-tight">
+                      INTERACT
+                    </CardTitle>
+                  </div>
+                  <div className="transition-transform duration-300 hover:scale-105 flex items-center">
+                    <CardDescription className="text-2xl sm:text-3xl font-extrabold text-[#1e3a8a] uppercase tracking-wide drop-shadow-lg animate-bounce leading-tight">
+                      <sub className="text-base align-top font-semibold text-[#1e3a8a]"></sub>
+                      2K26
+                    </CardDescription>
+                  </div>
                 </div>
-                <div className="transition-transform duration-300 hover:scale-105 flex items-center">
-                  <CardDescription className="text-3xl font-extrabold text-[#1e3a8a] uppercase tracking-wide drop-shadow-lg animate-bounce leading-tight">
-                    <sub className="text-base align-top font-semibold text-[#1e3a8a]"></sub>
-                    2K26
-                  </CardDescription>
+                <div className="transition-transform duration-300 hover:scale-105">
+                  <CardTitle className="text-xs sm:text-base md:text-lg lg:text-xl font-semibold uppercase tracking-wide text-black drop-shadow-md leading-snug text-center">
+                    Inter - Department Event Registration Portal
+                  </CardTitle>
                 </div>
               </div>
             </CardHeader>
@@ -240,7 +256,14 @@ export default function SignIn() {
 
             {/* Footer */}
             <CardFooter className="backdrop-blur-xl bg-white/20 p-4 flex flex-col gap-6 border-t border-white/30">
-              <Button
+              <div className="relative flex justify-center text-sm uppercase">
+                <span className="px-2 text-red-600 drop-shadow-lg">
+                  Note: Only SPOCs can log in. We Request Participants to reach
+                  out to their respective department SPOCs for any
+                  registrations.
+                </span>
+              </div>
+              {/* <Button
                 variant="link"
                 className="w-full text-black/90 hover:text-black/70 font-bold drop-shadow-lg transition-all duration-300"
                 onClick={() => router.push("/auth/forgotpassword")}
@@ -263,7 +286,7 @@ export default function SignIn() {
                 onClick={() => router.push("/auth/signup")}
               >
                 Sign Up
-              </Button>
+              </Button> */}
             </CardFooter>
           </Card>
         </div>

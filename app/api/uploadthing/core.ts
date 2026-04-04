@@ -28,16 +28,16 @@ export const ourFileRouter = {
             if (!session?.id) throw new UploadThingError("Unauthorized");
 
             // Whatever is returned here is accessible in onUploadComplete as `metadata`
-            return { userId: session.id };
+            return { userId: String(session.id) };
         })
         .onUploadComplete(async ({ metadata, file }) => {
             // This code RUNS ON YOUR SERVER after upload
             console.log("Upload complete for userId:", metadata.userId);
 
-            console.log("file url", file.url, file.key);
+            console.log("file url", file.ufsUrl, file.key);
 
             // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-            return { uploadedBy: metadata.userId };
+            return { uploadedBy: String(metadata.userId) };
         }),
 } satisfies FileRouter;
 

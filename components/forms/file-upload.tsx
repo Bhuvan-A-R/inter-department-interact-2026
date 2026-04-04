@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileUpload, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 
 interface FileUploadFieldProps {
   label: string;
@@ -11,7 +11,11 @@ interface FileUploadFieldProps {
   error?: string;
 }
 
-export function FileUploadField({ label, onChange, error }: FileUploadFieldProps) {
+export function FileUploadField({
+  label,
+  onChange,
+  error,
+}: FileUploadFieldProps) {
   const [fileName, setFileName] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

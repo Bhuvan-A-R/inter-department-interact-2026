@@ -20,19 +20,29 @@ interface AggregatedRow {
   usn: string;
   collegeName: string;
   photoUrl: string;
-  accomodation : string;
-  teamManager: boolean;
   docStatus: keyof typeof docStatusMap;
-  gender : string;
-  phone : string;
-  email : string;
-  blood : string;
-  collegeCode : string;
+  gender: string;
+  phone: string;
+  email: string;
+  blood: string;
+  collegeCode: string;
   registrations: Array<{
     type: Type | null;
     eventName: string | null;
+    deptCode?: string | null;
+    teamNumber?: number | null;
   }>;
 }
+
+const formatEventLabel = (
+  eventName: string,
+  deptCode?: string | null,
+  teamNumber?: number | null,
+) => {
+  const dept = deptCode ? ` ${deptCode}` : "";
+  const team = teamNumber ? ` Team ${teamNumber}` : "";
+  return `${eventName}${dept}${team}`.trim();
+};
 
 export default async function Page() {
   const session = await verifySession();
@@ -50,15 +60,18 @@ export default async function Page() {
       r.email,
       r.gender,
       r.blood,
-      r.accomodation,
-      r."teamManager",
       r."docStatus",
       r.phone,
       u."collegeName" AS "collegeName",
       u."collegeCode" AS "collegeCode",
       COALESCE(
         json_agg(
-          json_build_object('type', er.type, 'eventName', e."eventName")
+          json_build_object(
+            'type', er.type,
+            'eventName', e."eventName",
+            'deptCode', e."deptCode",
+            'teamNumber', e."teamNumber"
+          )
         )
         FILTER (WHERE er.id IS NOT NULL),
         '[]'
@@ -77,52 +90,15 @@ export default async function Page() {
 
   for (const row of aggregatedData) {
     const hasEvents = row.registrations && row.registrations.length > 0;
-    // If Team Manager => single "Team Manager" row
-    if (row.teamManager) {
-      results.push({
-        id: `${row.registrantId}#TEAMMANAGER`,
-        collegeName: row.collegeName,
-        name: row.name,
-        usn: row.usn,
-        accomodation : row.accomodation,
-        photo: row.photoUrl,
-        email : row.email,
-        blood : row.blood,
-        collegeCode : row.collegeCode,
-        phone : row.phone,
-        gender : row.gender,
-        type: "Team Manager",
-        events: [],
-        status: docStatusMap[row.docStatus],
-      });
-      console.log(row.registrantId, "is a team manager");
-      continue;
-    }
-
-    // Otherwise gather participant + accompanist events
+    // Gather participant events
     const participantEvents = row.registrations
       .filter((r) => r.type === "PARTICIPANT" && r.eventName)
       .map((r) => ({
-        eventName: r.eventName!,
+        eventName: formatEventLabel(r.eventName!, r.deptCode, r.teamNumber),
         role: "Participant" as const,
       }));
 
-    const accompanistEvents = row.registrations
-      .filter((r) => r.type === "ACCOMPANIST" && r.eventName)
-      .map((r) => ({
-        eventName: r.eventName!,
-        role: "Accompanist" as const,
-      }));
-
-    // Determine type label based on available events
-    let typeLabel = "";
-    if (participantEvents.length > 0 && accompanistEvents.length > 0) {
-      typeLabel = "Participant/Accompanist";
-    } else if (participantEvents.length > 0) {
-      typeLabel = "Participant";
-    } else if (accompanistEvents.length > 0) {
-      typeLabel = "Accompanist";
-    }
+    const typeLabel = participantEvents.length > 0 ? "Participant" : "";
 
     // If no events or type not determined, push a blank record
     if (!hasEvents || typeLabel === "") {
@@ -130,15 +106,14 @@ export default async function Page() {
         id: row.registrantId,
         name: row.name,
         usn: row.usn,
-        accomodation : row.accomodation,
         collegeCode: row.collegeCode,
-        phone : row.phone,
+        phone: row.phone,
         collegeName: row.collegeName,
         photo: row.photoUrl,
         type: "",
-        blood : row.blood,
-        email : row.email,
-        gender : row.gender,
+        blood: row.blood,
+        email: row.email,
+        gender: row.gender,
         events: [],
         status: docStatusMap[row.docStatus],
       });
@@ -146,7 +121,7 @@ export default async function Page() {
     }
 
     // Combine events with role information
-    const combinedEvents = [...participantEvents, ...accompanistEvents];
+    const combinedEvents = participantEvents;
 
     results.push({
       id: `${row.registrantId}#${typeLabel.toUpperCase()}`,
@@ -155,12 +130,11 @@ export default async function Page() {
       collegeName: row.collegeName,
       collegeCode: row.collegeCode,
       photo: row.photoUrl,
-      accomodation : row.accomodation,
-      phone : row.phone,
+      phone: row.phone,
       type: typeLabel,
-      blood : row.blood,
-      email : row.email,
-      gender : row.gender,
+      blood: row.blood,
+      email: row.email,
+      gender: row.gender,
       events: combinedEvents,
       status: docStatusMap[row.docStatus],
     });
@@ -169,7 +143,6 @@ export default async function Page() {
   return (
     <div className="relative bg-background min-h-screen pt-10">
       {/* Watermark */}
-      
 
       {/* Main Content */}
       <div className="relative z-10">

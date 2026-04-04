@@ -1,12 +1,11 @@
 import React from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import convener1 from "@/public/images/convener1.png";
 import convener2 from "@/public/images/convener2.png";
 import convener3 from "@/public/images/IMG_0101 - Akshith M.jpeg";
 import convener5 from "@/public/images/Screenshot_20241112_141230_Instagram - Bhuvan Sudhakar.jpg";
 import domain1 from "@/public/images/1710529304549.jpeg.jpg"
 import domain2 from "@/public/images/image4 (2).jpg"
-import domain3 from ""
 import domain4 from "@/public/images/WhatsApp Image 2025-02-28 at 11.30.48.jpeg"
 import domain5 from "@/public/images/IMG_20250228_112313.jpg"
 import faculty1 from"@/public/dignitaries/snr.jpeg"
@@ -17,44 +16,44 @@ import faculty5 from"@/public/images/WhatsApp Image 2025-02-28 at 12.32.21.jpeg"
 import placeholder from "@/public/images/placeholder.jpg";
 
 // Define the Member type to accept StaticImageData
-type Member = { name: string; designation: string; image: StaticImageData };
+type Member = { name: string; role: string; image: StaticImageData };
 
 const conveners: Member[] = [
-  { name: "Abhay Surya L R", designation: "Student Convener", image: convener1 },
-  { name: "Manya S", designation: "Student Convener", image: convener2 },
-  { name: "Akshith M", designation: "Student Convener", image: convener3 },
-  { name: "Bhumika Ganesh", designation: "Student Convener", image: placeholder },
-  { name: "Bhuvan Sudhakar", designation: "Student Convener", image: convener5 },
+  { name: "Abhay Surya L R", role: "Student Convener", image: convener1 },
+  { name: "Manya S", role: "Student Convener", image: convener2 },
+  { name: "Akshith M", role: "Student Convener", image: convener3 },
+  { name: "Bhumika Ganesh", role: "Student Convener", image: placeholder },
+  { name: "Bhuvan Sudhakar", role: "Student Convener", image: convener5 },
 ];
 
 const domainHeads: Member[] = [
-  { name: "Bhuvan S A", designation: "Domain Head", image: domain1 },
-  { name: "Sohan K E", designation: "Domain Head", image: domain2 },
-  { name: "Chalana B Arun", designation: "Domain Head", image: placeholder },
-  { name: "Keerthan K Acharya", designation: "Domain Head", image: domain4 },
-  { name: "Bhavya Bhosale", designation: "Domain Head", image: domain5 },
+  { name: "Bhuvan S A", role: "Domain Head", image: domain1 },
+  { name: "Sohan K E", role: "Domain Head", image: domain2 },
+  { name: "Chalana B Arun", role: "Domain Head", image: placeholder },
+  { name: "Keerthan K Acharya", role: "Domain Head", image: domain4 },
+  { name: "Bhavya Bhosale", role: "Domain Head", image: domain5 },
 ];
 
 const coreCommittee: Member[] = [
-  { name: "TBA", designation: "Core Committee", image: placeholder },
-  { name: "TBA", designation: "Core Committee", image: placeholder },
-  { name: "TBA", designation: "Core Committee", image: placeholder },
-  { name: "TBA", designation: "Core Committee", image: placeholder },
+  { name: "TBA", role: "Core Committee", image: placeholder },
+  { name: "TBA", role: "Core Committee", image: placeholder },
+  { name: "TBA", role: "Core Committee", image: placeholder },
+  { name: "TBA", role: "Core Committee", image: placeholder },
 ];
 
 const subCoreCommittee: Member[] = [
-  { name: "TBA", designation: "Sub-Core Committee", image: placeholder },
-  { name: "TBA", designation: "Sub-Core Committee", image: placeholder },
-  { name: "TBA", designation: "Sub-Core Committee", image: placeholder },
-  { name: "TBA", designation: "Sub-Core Committee", image: placeholder },
+  { name: "TBA", role: "Sub-Core Committee", image: placeholder },
+  { name: "TBA", role: "Sub-Core Committee", image: placeholder },
+  { name: "TBA", role: "Sub-Core Committee", image: placeholder },
+  { name: "TBA", role: "Sub-Core Committee", image: placeholder },
 ];
 
 const facultyCoordinators: Member[] = [
-  { name: "Lt. Saravanan R", designation: "Organizing Secretary", image: faculty1 },
-  { name: "Dr. Girish Rao Salnke", designation: "Faculty Co-Convener", image: faculty2 },
-  { name: "Prof. Anand Panduranga", designation: "Faculty Co-Convener", image: faculty3 },
-  { name: "Prof. Shyam Sundar Bhushan", designation: "Faculty Co-Convener", image: faculty4 },
-  { name: "Dr Vimuktha Evangeleen Salis", designation: "Faculty Co-Convener", image: faculty5 },
+  { name: "Lt. Saravanan R", role: "Organizing Secretary", image: faculty1 },
+  { name: "Dr. Girish Rao Salnke", role: "Faculty Co-Convener", image: faculty2 },
+  { name: "Prof. Anand Panduranga", role: "Faculty Co-Convener", image: faculty3 },
+  { name: "Prof. Shyam Sundar Bhushan", role: "Faculty Co-Convener", image: faculty4 },
+  { name: "Dr Vimuktha Evangeleen Salis", role: "Faculty Co-Convener", image: faculty5 },
 ];
 
 interface TeamSectionProps {
@@ -87,7 +86,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ title, members, columns }) =>
               <h3 className="text-xl font-bold bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent">
                 {member.name}
               </h3>
-              <p className="text-gray-700">{member.designation}</p>
+              <p className="text-gray-700">{member.role}</p>
             </div>
           </div>
         ))}

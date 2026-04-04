@@ -4,17 +4,12 @@ import { z } from "zod";
 
 const UpdateRoleSchema = z.object({
     eventRegistrantId : z.string({message :"eventRegistrant Id is missing"}).min(1),
-    type : z.enum(["PARTICIPANT","ACCOMPANIST"],{message:"invalid Type"})
+    type : z.enum(["PARTICIPANT"],{message:"invalid Type"})
 }).strict();
-
- enum RoleType {
-    ACCOMPANIST = "ACCOMPANIST",
-    PARTICIPANT = "PARTICIPANT",
-}
 
 export interface UpdateRole{
     eventRegistrantId : string;
-    type : RoleType
+    type : "PARTICIPANT"
 } 
 
 export async function PATCH(request:Request) {

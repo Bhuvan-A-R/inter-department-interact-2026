@@ -14,9 +14,9 @@ export type Event = {
   userId: string;
   registeredParticipant: number;
   maxParticipant: number;
-  registeredAccompanist: number;
-  maxAccompanist: number;
   category: string;
+  deptCode?: string | null;
+  teamNumber?: number | null;
 };
 
 export default async function Page() {
@@ -34,14 +34,12 @@ export default async function Page() {
     WHERE "userId" = ${userIdFromSession}
       AND (
           "registeredParticipant" < "maxParticipant"
-          OR "registeredAccompanist" < "maxAccompanist"
       )
   `;
 
   return (
     <div className="relative bg-background min-h-screen pt-12">
       {/* Watermark */}
-   
 
       {/* Page Content */}
       <div className="relative z-10">

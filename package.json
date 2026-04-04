@@ -8,11 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "prisma generate",
-    "generate-admin": "node scripts/generate-admin-hash.js"
-
+    "generate-admin": "node scripts/generate-admin-hash.js",
+    "seed:admins": "tsx scripts/seed-admin-users.ts"
   },
   "dependencies": {
-    "@arcjet/next": "^1.0.0-beta.2",
     "@headlessui/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/adapter-pg": "^6.0.1",
@@ -74,6 +73,7 @@
     "next": "15.1.9",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.16",
+    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-cookie": "^7.2.2",
     "react-countdown": "^2.3.6",

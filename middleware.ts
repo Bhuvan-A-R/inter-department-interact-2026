@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { verifySession } from "@/lib/session";
 import { Redis } from "@upstash/redis"; // Use Upstash Redis
-import arcjet, { shield } from "@arcjet/next"; // Import arcjet
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -16,16 +15,6 @@ const redis = redisUrl && redisToken
       token: redisToken 
     })
   : null;
-
-const aj = arcjet({
-    key: process.env.ARCJET_KEY!,
-    rules: [
-      // Shield protects your app from common attacks
-      shield({
-        mode: "LIVE", // Change to "LIVE" in production
-      }),
-    ],
-  });
 
 const GLOBAL_RATE_LIMIT_WINDOW = 60; // Time window in seconds
 const GLOBAL_RATE_LIMIT_MAX = 100; // Maximum requests allowed per window
@@ -50,8 +39,13 @@ const protectedRoutes: string[] = [
     "/register/getallregister",
     "/register/getregister",
     "/register/updateregister",
-    "/api/getPaymentInfo"
+    "/api/getPaymentInfo",
 ];
+
+const adminRoutes: string[] = [
+    "/adminDashboard",
+];
+
 
 export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
@@ -111,26 +105,13 @@ export async function middleware(request: NextRequest) {
         );
     }
 
-     // Apply arcjet protection for security
-     const decision = await aj.protect(request);
-     for (const result of decision.results) {
-         console.log("Rule Result", result);
-     }
- 
-     console.log("Conclusion", decision.conclusion);
- 
-     if (decision.isDenied() && decision.reason.isShield()) {
-         return NextResponse.json(
-             {
-                 error: "You are suspicious!",
-                 // Useful for debugging, but don't return it to the client in production
-                 // reason: decision.reason,
-             },
-             { status: 403 },
-         );
-     }
-
     const session = await verifySession();
+
+    // Admin-only routes
+    if (adminRoutes.some(route => path.startsWith(route)) && (!session?.id || session?.role !== "ADMIN")) {
+        return NextResponse.redirect(new URL("/auth/signin", request.nextUrl));
+    }
+
 
     if(protectedRoutes.includes(path) && session?.id && session?.paymentUrl){
         return NextResponse.redirect(new URL("/auth/countdown", request.nextUrl));
@@ -153,5 +134,6 @@ export const config = {
         "/register/getallregister",
         "/register/getregister",
         "/register/updateregister",
+        "/adminDashboard",
     ],
 };

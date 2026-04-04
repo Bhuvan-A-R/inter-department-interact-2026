@@ -152,7 +152,7 @@ export async function POST(request: Request) {
                 email,
                 phone,
                 password: hashedPassword, // Store the hashed password
-                collegeCode: collegeCode,
+                deptCode: collegeCode,
                 region: region,
             },
         });

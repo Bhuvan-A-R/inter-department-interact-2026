@@ -21,7 +21,7 @@ export const eventSchema = z.object({
 export const registrantSchema = z.object({
     name: z.string().min(1, "Name cannot be empty"),
     usn: z.string().min(1, "Usn cannot be empty"),
-    type: z.enum(["PARTICIPANT", "TEAMMANAGER", "ACCOMPANIST"], "Invalid type"),
+    type: z.enum(["PARTICIPANT"], "Invalid type"),
     events: z.array(eventSchema),
     photo: fileSchema,
     aadhar: fileSchema,

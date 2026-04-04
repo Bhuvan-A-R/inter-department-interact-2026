@@ -21,18 +21,9 @@ const Page = () => {
               For beyond 10 events: ₹8,000/-
             </li>
             <li>An additional refundable caution deposit of ₹3,000/- shall be paid at the registration desk along with the documents of the students.</li>
-            <li>
-              <strong>Accommodation Facilities:</strong> <br />
-              Provided for contingents opting for it on a need basis only. Accommodation will only be provided to the
-              registered contingent members during the dates of the fest.
-            </li>
             <li><strong>Food Arrangements:</strong> <br />
               Food will be provided to all the participants and the officials.</li>
             <li>All necessary musical instruments and other materials required for performances shall be brought by the participants/contingent members.</li>
-            <li>
-              The accompanying Team Manager shall be a faculty member with a minimum of 5 years of experience and/or be the
-              Cultural Coordinator or Physical Education Director.
-            </li>
             <li>Usage of any form of Tobacco, Alcohol, or Narcotic substances is strictly prohibited.</li>
             <li>
               All members of the contingent are expected to maintain discipline and decorum inside and outside the college
