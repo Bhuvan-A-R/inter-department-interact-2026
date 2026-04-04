@@ -8,7 +8,6 @@ import { redirect } from "next/navigation";
 export interface EventCreate {
     eventNo: number;
     eventName: string;
-    maxAccompanist: number;
     maxParticipant: number;
     category: string;
 }

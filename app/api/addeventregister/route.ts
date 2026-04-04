@@ -1,10 +1,7 @@
 import { AddEvent } from "@/app/prismaClient/queryFunction";
 import { NextResponse } from "next/server";
 
-enum ParticipantType {
-    ACCOMPANIST = "ACCOMPANIST",
-    PARTICIPANT = "PARTICIPANT",
-}
+type ParticipantType = "PARTICIPANT";
 export interface AddEvent {
     registrantId: string;
     event: {

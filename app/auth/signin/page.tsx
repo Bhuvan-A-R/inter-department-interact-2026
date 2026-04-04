@@ -64,7 +64,16 @@ export default function SignIn() {
         toast.success("Login successful!", {
           description: "You have been logged in successfully",
         });
-        router.push("/register/firstEventSelection");
+
+        // Role-based redirect
+        const role = response.data.role;
+        if (role === "ADMIN") {
+          router.push("/adminDashboard");
+        } else if (role === "SPOC") {
+          router.push("/register/firstEventSelection");
+        } else {
+          router.push("/register/firstEventSelection");
+        }
       } else {
         form.setError("email", {
           type: "manual",

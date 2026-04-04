@@ -90,7 +90,7 @@ const instructions = [
     stepNumber: 4,
     title: "Add Individual Participants",
     description:
-      "Use the 'Add Registrant' option to register individual students. Ensure each student's event selection is correct. If you are a Team Manager, select the appropriate option before adding registrants.",
+      "Use the 'Add Registrant' option to register individual students. Ensure each student's event selection is correct.",
     icon: <User className="h-10 w-10 text-red-700" />,
   },
   {
@@ -104,7 +104,7 @@ const instructions = [
     stepNumber: 6,
     title: "Proceed to Payment",
     description:
-      "Once all registrations are complete, click the 'Go to Payments' button. Provide your contingent's date & time of arrival to help us arrange accommodations and smooth event coordination.",
+      "Once all registrations are complete, click the 'Go to Payments' button.",
     icon: <CreditCard className="h-10 w-10 text-red-700" />,
   },
   {

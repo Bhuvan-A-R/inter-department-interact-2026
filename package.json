@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "prisma generate",
-    "generate-admin": "node scripts/generate-admin-hash.js"
-
+    "generate-admin": "node scripts/generate-admin-hash.js",
+    "seed:admins": "tsx scripts/seed-admin-users.ts"
   },
   "dependencies": {
     "@arcjet/next": "^1.0.0-beta.2",

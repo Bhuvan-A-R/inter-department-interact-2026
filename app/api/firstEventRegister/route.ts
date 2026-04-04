@@ -7,7 +7,6 @@ interface RegisterEvent {
     eventName: string;
     category: string;
     maxParticipant: number;
-    maxAccompanist: number;
 }
 
 interface ReplaceRegistrationsRequest {
@@ -69,8 +68,6 @@ export async function PUT(request: Request) {
                         category: evt.category,
                         maxParticipant: evt.maxParticipant,
                         registeredParticipant: 0,
-                        maxAccompanist: evt.maxAccompanist,
-                        registeredAccompanist: 0,
                     })),
                     skipDuplicates: true,
                 });

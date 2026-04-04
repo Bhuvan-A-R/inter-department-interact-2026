@@ -25,11 +25,8 @@ interface Registrant {
   usn: string;
   phone: string;
   email: string;
-  teamManager: boolean;
   gender: string;
-  accomodation: boolean;
   blood: string;
-  designation?: string;
   events: Event[];
   eventRegistrations: EventRegistration[];
   [key: string]: any; // For dynamic access to file URLs
@@ -40,9 +37,7 @@ interface Event {
   eventNo: string;
   eventName: string;
   maxParticipant: number;
-  maxAccompanist: number;
   registeredParticipant: number;
-  registeredAccompanist: number;
 }
 
 interface EventRegistration {
@@ -53,9 +48,7 @@ interface EventRegistration {
 }
 
 interface MergedEvent extends Event, EventRegistration {
-  editing: boolean;
-  editRole: string;
-}
+interface MergedEvent extends Event, EventRegistration {}
 
 interface UpdateRegisterProps {
   params: Promise<{ slug: string }>;
@@ -66,29 +59,24 @@ interface UpdateRegisterProps {
 const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
 
 
-  const [isOther, setIsOther] = useState<boolean>(false);
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
       name: "",
       phone: "",
       usn: "",
       email: "",
-      accomodation: false,
       gender: "",
       blood: "",
-      designation: "",
     },
   })
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [id, setId] = useState<string>("");
-  const [isTeamManager, setIsTeamManager] = useState<boolean>(false);
   const [editOne, setEditOne] = useState<boolean>(false);
   const [field, setField] = useState<string>("");
   const [events, setEvents] = useState<MergedEvent[]>([]);
   const [registrant, setRegistrant] = useState<Registrant | null>(null);
   const [fileUrl, setFileUrl] = useState<string>("");
   const [addEvent, setAddEvent] = useState<Event | null>(null);
-  const [addEventType, setAddEventType] = useState<string>("");
   const [allRegisteredEvents, setAllRegisteredEvents] = useState<Event[]>([]);
   const [handleAddEventEffect, setHandleAddEventEffect] = useState<boolean>(false);
 
@@ -126,12 +114,9 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
       setValue('name', registrant.name);
       setValue('phone', registrant.phone);
       setValue('usn', registrant.usn);
-      setValue('accomodation', registrant.accomodation);
       setValue('gender', registrant.gender);
       setValue("email", registrant.email);
       setValue('blood', registrant.blood);
-      setValue('designation', registrant.designation || "");
-      setIsTeamManager(registrant.teamManager);
       setId(registrant.id);
       setRegistrant(registrant);
       const fetchResponse = await fetch("/api/getalleventregister", {
@@ -148,8 +133,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
         return {
           ...event,
           ...registration,
-          editing: false,
-          editRole: "",
         };
       });
 
@@ -159,8 +142,8 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
 
       const updateUserEvent = userEvents.filter((event: Event) => {
         return (
-          (event.registeredParticipant < event.maxParticipant ||
-            event.registeredAccompanist < event.maxAccompanist) && !mergedEvents.some((events: Event) => events.eventNo === event.eventNo)
+          event.registeredParticipant < event.maxParticipant &&
+          !mergedEvents.some((events: Event) => events.eventNo === event.eventNo)
         );
       });
 
@@ -186,10 +169,8 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
         email: formData.email,
         phone: formData.phone,
         name: formData.name,
-        accomodation: formData.accomodation,
         gender: formData.gender,
         blood: formData.blood,
-        designation: formData.designation
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -207,23 +188,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
   };
 
   // Handle role change for selected events
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>, eventNo: string) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.eventNo === eventNo ? { ...event, editRole: e.target.value } : event
-      )
-    );
-  };
-
-  // Handle Edit button click (per event)
-  const handleEditClick = (eventNo: string) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.eventNo === eventNo ? { ...event, editing: true } : event
-      )
-    );
-  };
-
 
   const handleDocumentUpdate = async (event: any) => {
     event.preventDefault();
@@ -246,37 +210,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
     }
   }
 
-  // Handle Save button click (per event)
-  const handleSaveRole = async (event: MergedEvent) => {
-    const updatedEvent = { ...event, type: event.editRole };
-    setEvents((prevEvents) =>
-      prevEvents.map((e) => (e.eventNo === event.eventNo ? updatedEvent : e))
-    );
-
-    const response = await fetch("/api/updateroleinevent", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        eventRegistrantId: event.id,
-        type: event.editRole,
-      }),
-    });
-
-    const data = await response.json();
-    console.log(data);
-    if (data.success) {
-      toast.success(`Role for ${event.eventName} saved as ${event.editRole}`);
-      setEvents((prevEvents) =>
-        prevEvents.map((e) =>
-          e.eventNo === event.eventNo ? { ...e, editing: false } : e
-        )
-      );
-    } else {
-      toast.error(`Failed to save role for ${event.eventName}. Please try again.`);
-    }
-  };
 
   const handleEventDelete = async (event: MergedEvent) => {
     const response = await fetch("/api/deleteregistrantevent", {
@@ -313,14 +246,14 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!addEvent || !addEventType || !registrant) return;
+    if (!addEvent || !registrant) return;
 
     const response = await fetch("/api/addeventregister", {
       method: "POST",
       body: JSON.stringify({
         registrantId: registrant.id,
         event: addEvent,
-        type: addEventType,
+        type: "PARTICIPANT",
       }),
       headers: {
         "Content-Type": "application/json",
@@ -344,7 +277,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
 
           <Card className="w-full">
             <CardDescription className="text-center mt-8 mb-10 text-red-500">
-              Update details for Registrant for <span className=" ">{isTeamManager ? "Team Manager" : "Participant/Accompanist"}</span>
+              Update details for Registrant for <span className=" ">Participant</span>
             </CardDescription>
             <CardContent>
               <div className="flex flex-col gap-4 mb-6">
@@ -369,82 +302,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         />
                         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                       </div>
-                      {isTeamManager && (
-                        <div className="w-full md:w-1/3 space-y-1.5">
-                          <Label htmlFor="designation">
-                            Designation <small className="text-red-600">*</small>
-                          </Label>
-                          <Controller
-                            control={control}
-                            name="designation"
-                            rules={{ required: "Designation is required" }}
-                            render={({ field: { onChange, value, ref } }) => (
-                              <>
-                                {!isOther ? (
-                                  <Select
-                                    onValueChange={(selectedValue) => {
-                                      if (selectedValue === "others") {
-                                        setIsOther(true);
-                                        // Clear the field to allow custom input.
-                                        onChange("");
-                                      } else {
-                                        setIsOther(false);
-                                        onChange(selectedValue);
-                                      }
-                                    }}
-                                    disabled={!editOne}
-                                  >
-                                    <SelectTrigger id="managerdesignation">
-                                      <SelectValue placeholder="Select Designation" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectGroup>
-                                        <SelectLabel>Designation</SelectLabel>
-                                        <SelectItem value="Professor">Professor</SelectItem>
-                                        <SelectItem value="Associate Professor">
-                                          Associate Professor
-                                        </SelectItem>
-                                        <SelectItem value="Assistant Professor">
-                                          Assistant Professor
-                                        </SelectItem>
-                                        <SelectItem value="P.E.Director">
-                                          P.E.Director
-                                        </SelectItem>
-                                        <SelectItem value="others">Others</SelectItem>
-                                      </SelectGroup>
-                                    </SelectContent>
-                                  </Select>
-                                ) : (
-                                  <>
-                                    <Input
-                                      id="managerdesignation"
-                                      value={value}
-                                      onChange={(e) => onChange(e.target.value)}
-                                      placeholder="Please specify your designation"
-                                      disabled={!editOne}
-                                      ref={ref}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        // Optionally clear the designation field before switching back.
-                                        onChange("");
-                                        setIsOther(false);
-                                      }}
-                                      className="text-sm text-blue-600 underline mt-1"
-                                    >
-                                      Back to selection
-                                    </button>
-                                  </>
-                                )}
-                              </>
-                            )}
-                          />
-                          {errors.designation && (
-                            <p className="text-red-500">{errors.designation.message}</p>
-                          )}
-                        </div>
-                      )}
 
                       <div className="w-full md:w-1/3 space-y-1.5">
                         <Label htmlFor="usn">USN / ID Number <small className="text-red-600">*</small></Label>
@@ -518,34 +375,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         {errors.gender && <p className="text-red-500">{errors.gender.message}</p>}
 
                       </div>
-                      <div className="w-full md:w-1/3 space-y-1.5">
-                        <Label htmlFor="accomodation">Need Accommodation <small className="text-red-600">*</small></Label>
-                        <Controller
-                          control={control}
-                          name="accomodation"
-                          render={({ field }) => (
-                            <Select
-                              value={field.value ? "yes" : "no"}
-                              onValueChange={(value) => setValue('accomodation', value === "yes")}
-                              disabled={!editOne}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select Accommodation" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Accommodation</SelectLabel>
-                                  <SelectItem value="yes">Yes</SelectItem>
-                                  <SelectItem value="no">No</SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {errors.accomodation && (
-                          <p className="text-red-500">{errors.accomodation.message}</p>
-                        )}
-                      </div>
 
                       <div className="w-full md:w-1/3 space-y-1.5">
                         <Label htmlFor="blood">Date Of Birth <small className="text-red-600">*</small></Label>
@@ -608,8 +437,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                 </form>
 
 
-                {!isTeamManager && (
-                  <>
+                <>
                     <h2 className="text-primary text-2xl font-semibold mt-6">
                       Select Event
                     </h2>
@@ -629,20 +457,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                           </SelectContent>
                         </Select>
 
-                        <Label className="block text-sm font-medium text-primary mb-1">Select Type</Label>
-                        <Select onValueChange={(value) => setAddEventType(value)}>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {addEvent && addEvent.registeredParticipant < addEvent.maxParticipant && (
-                              <SelectItem value="PARTICIPANT">Participant</SelectItem>
-                            )}
-                            {addEvent && addEvent.registeredAccompanist < addEvent.maxAccompanist && (
-                              <SelectItem value="ACCOMPANIST">Accompanist</SelectItem>
-                            )}
-                          </SelectContent>
-                        </Select>
                         <div className="flex flex-wrap w-full justify-end">
                           <Button className="bg-primary  px-4 rounded-sm  text-lg" type="submit">
                             <PlusIcon />Add Event
@@ -670,51 +484,13 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
 
                                   <div className="flex items-center mb-3">
                                     <label className="text-lg  text-primary mr-6">Role:</label>
-                                    {event.editing ? (
-                                      <Select
-                                        onValueChange={(value) =>
-                                          handleRoleChange({ target: { value } } as React.ChangeEvent<HTMLSelectElement>, event.eventNo)
-                                        }
-                                        defaultValue={event.editRole || event.type}
-                                      >
-                                        <SelectTrigger className="w-full text-gray-500 ">
-                                          <SelectValue placeholder="Select Type" className="text-gray-500" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          {event.type === "PARTICIPANT" &&
-                                            event.registeredAccompanist < event.maxAccompanist && (
-                                              <SelectItem value="ACCOMPANIST">ACCOMPANIST</SelectItem>
-                                            )}
-                                          {event.type === "ACCOMPANIST" &&
-                                            event.registeredParticipant < event.maxParticipant && (
-                                              <SelectItem value="PARTICIPANT">PARTICIPANT</SelectItem>
-                                            )}
-                                        </SelectContent>
-                                      </Select>
-                                    ) : (
-                                      <span className="text-sm text-gray-500">{event.type}</span>
-                                    )}
+                                    <span className="text-sm text-gray-500">Participant</span>
                                   </div>
 
                                   <div className="flex justify-end gap-2">
-                                    {event.editing ? (
-                                      <>
-                                        <Button onClick={() => handleSaveRole(event)} className="bg-primary text-lg text-white hover:scale-105" variant="primary">
-                                          Save
-                                        </Button>
-                                        <Button onClick={() => handleEventDelete(event)} variant="destructive" className="bg-red-500  text-lg text-white hover:scale-105">
-                                          Delete
-                                        </Button>
-                                      </>
-                                    ) : (
-                                      <Button
-                                        onClick={() => handleEditClick(event.eventNo)}
-                                        variant="primary"
-                                        className="bg-primary text-white hover:scale-105 text-lg"
-                                      >
-                                        Edit
-                                      </Button>
-                                    )}
+                                    <Button onClick={() => handleEventDelete(event)} variant="destructive" className="bg-red-500  text-lg text-white hover:scale-105">
+                                      Delete
+                                    </Button>
                                   </div>
                                 </div>
                               </AccordionContent>
@@ -725,8 +501,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         )}
                       </Accordion>
                     </div>
-                  </>
-                )}
+                </>
 
                 <div className="flex flex-col">
                   <div className="">
@@ -739,21 +514,10 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         <SelectValue placeholder="Select Field" />
                       </SelectTrigger>
                       <SelectContent>
-                        {!isTeamManager && (
-                          <>
-                            <SelectItem value="idcardUrl">ID Card</SelectItem>
-                            <SelectItem value="aadharUrl">Aadhar</SelectItem>
-                            <SelectItem value="photoUrl">Photo</SelectItem>
-                            <SelectItem value="sslcUrl">SSLC</SelectItem>
-
-                          </>
-                        )}
-                        {isTeamManager && (
-                          <>
-                            <SelectItem value="photoUrl">Photo</SelectItem>
-                            <SelectItem value="idcardUrl">ID Card</SelectItem>
-                          </>
-                        )}
+                        <SelectItem value="idcardUrl">ID Card</SelectItem>
+                        <SelectItem value="aadharUrl">Aadhar</SelectItem>
+                        <SelectItem value="photoUrl">Photo</SelectItem>
+                        <SelectItem value="sslcUrl">SSLC</SelectItem>
                       </SelectContent>
                     </Select>
 

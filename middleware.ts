@@ -50,8 +50,13 @@ const protectedRoutes: string[] = [
     "/register/getallregister",
     "/register/getregister",
     "/register/updateregister",
-    "/api/getPaymentInfo"
+    "/api/getPaymentInfo",
 ];
+
+const adminRoutes: string[] = [
+    "/adminDashboard",
+];
+
 
 export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
@@ -132,6 +137,12 @@ export async function middleware(request: NextRequest) {
 
     const session = await verifySession();
 
+    // Admin-only routes
+    if (adminRoutes.some(route => path.startsWith(route)) && (!session?.id || session?.role !== "ADMIN")) {
+        return NextResponse.redirect(new URL("/auth/signin", request.nextUrl));
+    }
+
+
     if(protectedRoutes.includes(path) && session?.id && session?.paymentUrl){
         return NextResponse.redirect(new URL("/auth/countdown", request.nextUrl));
     }
@@ -153,5 +164,6 @@ export const config = {
         "/register/getallregister",
         "/register/getregister",
         "/register/updateregister",
+        "/adminDashboard",
     ],
 };

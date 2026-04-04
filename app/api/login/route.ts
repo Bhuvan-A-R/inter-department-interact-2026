@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
             success: true,
             message: "Login successful",
+            role: db.role,
         });
 
         // Unexpected error

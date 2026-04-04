@@ -20,7 +20,6 @@ interface AggregatedRow {
   name: string;
   usn: string;
   photoUrl: string;
-  teamManager: boolean;
   docStatus: keyof typeof docStatusMap;
   registrations: Array<{
     type: Type | null;
@@ -42,7 +41,6 @@ export default async function Page() {
       r.name,
       r.usn,
       r."photoUrl",
-      r."teamManager",
       r."docStatus",
       COALESCE(
         json_agg(
@@ -64,40 +62,11 @@ export default async function Page() {
 
   for (const row of aggregatedData) {
     const hasEvents = row.registrations && row.registrations.length > 0;
-
-    // If Team Manager => single "Team Manager" row
-    if (row.teamManager) {
-      results.push({
-        id: `${row.registrantId}#TEAMMANAGER`,
-        name: row.name,
-        usn: row.usn,
-        photo: row.photoUrl,
-        type: "Team Manager",
-        events: [],
-        status: docStatusMap[row.docStatus],
-      });
-      console.log(row.registrantId, "is a team manager");
-      continue;
-    }
-
-    // Otherwise gather participant + accompanist events
+    // Gather participant events
     const participantEvents = row.registrations
       .filter((r) => r.type === "PARTICIPANT" && r.eventName)
       .map((r) => ({ eventName: r.eventName!, role: "Participant" as const }));
-
-    const accompanistEvents = row.registrations
-      .filter((r) => r.type === "ACCOMPANIST" && r.eventName)
-      .map((r) => ({ eventName: r.eventName!, role: "Accompanist" as const }));
-
-    // Determine type label based on available events
-    let typeLabel = "";
-    if (participantEvents.length > 0 && accompanistEvents.length > 0) {
-      typeLabel = "Participant/Accompanist";
-    } else if (participantEvents.length > 0) {
-      typeLabel = "Participant";
-    } else if (accompanistEvents.length > 0) {
-      typeLabel = "Accompanist";
-    }
+    const typeLabel = participantEvents.length > 0 ? "Participant" : "";
 
     // If no events or type not determined, push a blank record
     if (!hasEvents || typeLabel === "") {
@@ -114,7 +83,7 @@ export default async function Page() {
     }
 
     // Combine events with role information
-    const combinedEvents = [...participantEvents, ...accompanistEvents];
+    const combinedEvents = participantEvents;
 
     results.push({
       id: `${row.registrantId}#${typeLabel.toUpperCase()}`,
@@ -161,9 +130,7 @@ export default async function Page() {
 
       <div className="flex flex-col items-center mt-8 mb-5 gap-4">
         {/* Render PaymentDialog only once. Assume PaymentDialog uses the trigger passed via children or className. */}
-        <PaymentDialog
-          className="border border-transparent bg-gradient-to-r from-green-500 to-green-700 text-white text-lg py-3 px-6 transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl"
-        />
+        <PaymentDialog className="border border-transparent bg-gradient-to-r from-green-500 to-green-700 text-white text-lg py-3 px-6 transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl" />
       </div>
     </div>
   );

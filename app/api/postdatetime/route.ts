@@ -2,22 +2,26 @@ import { saveDateTimeOfArrival } from "@/app/prismaClient/queryFunction";
 import { decrypt } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-
-export async function POST(request: Request) {
-    const cookie = (await cookies()).get("session")?.value;
-    const session = await decrypt(cookie);
-    // verify the jwt
-    if (!session) {
+    try {
+        await saveDateTimeOfArrival(
+            userId as string,
+            dateOfArrival as string,
+            timeOfArrival as string
+        );
         return NextResponse.json(
-            { success: false, message: "unauthorized" },
-            { status: 401 }
+            { success: true, message: "DateTime added" },
+            { status: 200 }
+        );
+    } catch (error) {
+        return NextResponse.json(
+            {
+                success: false,
+                message:
+                    "Arrival date/time fields are not available in the current schema.",
+            },
+            { status: 400 }
         );
     }
-    const userId: string = session.id as string;
-
-    const { dateOfArrival, timeOfArrival } = await request.json();
-    // console.log(dateOfArrival, timeOfArrival);
-    // get all the registerants with the userId of the signup
 
     if (!dateOfArrival || !timeOfArrival) {
         return NextResponse.json(
