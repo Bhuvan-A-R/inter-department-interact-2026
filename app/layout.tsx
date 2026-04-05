@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from ".././components/Footer";
-import "./styles/globals.css";
+import "./globals.css";
 import AuthContextProvider from "@/contexts/auth-context";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { Toaster } from "sonner";

@@ -44,17 +44,20 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          {/* <div className="hidden md:flex md:items-center md:space-x-4">
-            <Link href="/auth/teampage" className={buttonClasses}>
+          <div className="hidden md:flex md:items-center md:space-x-4">
+            {/* <Link href="/auth/teampage" className={buttonClasses}>
               Our Team
+            </Link> */}
+            <Link href="/events" className={buttonClasses}>
+              Events
             </Link>
-            <Link href="/auth/instructions" className={buttonClasses}>
+            {/* <Link href="/auth/instructions" className={buttonClasses}>
               Registration Instructions
-            </Link>
-            <Link href="/auth/results" className={buttonClasses}>
+            </Link> */}
+            {/* <Link href="/auth/results" className={buttonClasses}>
               FAQs
-            </Link>
-          </div> */}
+            </Link> */}
+          </div>
 
           {/* Right side: Login/Logout and Mobile Menu Toggle */}
           <div className="flex items-center space-x-4">
@@ -81,6 +84,12 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+            <Link href="/events" className={buttonClasses}>
+              Events
+            </Link>
+            {/* <Link href="/auth/instructions" className={buttonClasses}>
+              Registration Instructions
+            </Link> */}
             {/* <Link href="/auth/teampage" className={`${buttonClasses} block`}>
               Our Team
             </Link>
