@@ -449,7 +449,7 @@ export function DataTable({ data }: { data: Data[] }) {
   };
 
   return (
-    <div className="w-full px-5 rounded-xl my-12">
+    <div className="w-full px-5 rounded-xl my-12 text-foreground">
       <div className="flex items-center py-4 flex-wrap gap-3 ">
         <div className="relative max-w-sm ">
           <Search className="absolute left-2 top-3 h-4 w-5 text-muted-foreground " />
@@ -502,7 +502,7 @@ export function DataTable({ data }: { data: Data[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border overflow-auto  min-h-[18rem]">
+      <div className="rounded-md border border-white/10 overflow-auto min-h-[18rem] bg-white/[0.02]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -525,7 +525,7 @@ export function DataTable({ data }: { data: Data[] }) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className={`hover:bg-blue-50 text-black `}
+                  className={`hover:bg-white/5 text-foreground `}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >

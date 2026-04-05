@@ -56,14 +56,27 @@ export const metadata = {
     images: ["https://www.vtufestinteract.com/images/og-image.jpg"],
   },
 };
+
 // Global layout for pages
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* You can add custom head tags here, like meta tags, link to styles, etc. */}
+        {/* Inter Tight — premium heading font */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body>
+        {/* Persistent 5% grain / noise texture overlay */}
+        <div className="noise-overlay" aria-hidden="true" />
+
+        {/* Cursor radial spotlight — updated via --mx/--my CSS vars from useMouseSpotlight */}
+        <div className="cursor-spotlight" aria-hidden="true" />
+
         <ThemeProvider>
           <AuthContextProvider>
             <Navbar />
@@ -72,7 +85,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Analytics />
               <SpeedInsights />
             </main>
-            <Toaster />
+            <Toaster
+              theme="dark"
+              toastOptions={{
+                style: {
+                  background: "rgba(10,10,10,0.9)",
+                  backdropFilter: "blur(24px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#f4f4f5",
+                },
+              }}
+            />
             <Footer />
           </AuthContextProvider>
         </ThemeProvider>
