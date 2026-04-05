@@ -23,7 +23,6 @@ const cardVariants = {
 };
 
 const EventPage = () => {
-  // ─── All data logic unchanged ──────────────────────────────────────────────
   const grouped = eventCategories.reduce<Record<string, typeof eventCategories>>(
     (acc, event) => {
       acc[event.category] = acc[event.category] || [];
@@ -45,7 +44,7 @@ const EventPage = () => {
         }}
       />
 
-      {/* ── Hero header ────────────────────────────────────────────────────── */}
+      {/* ── Hero header ─────────────────────────────────────────────────────── */}
       <header className="relative z-10 py-24 md:py-32 text-center">
         <div className="max-w-4xl mx-auto px-4">
           <motion.p
@@ -74,8 +73,6 @@ const EventPage = () => {
             Dive into the world of creativity, passion, and competition. Find your stage.
           </motion.p>
         </div>
-
-        {/* Decorative separator */}
         <div className="mt-12 h-px max-w-sm mx-auto bg-gradient-to-r from-transparent via-[#00f2ff]/30 to-transparent" />
       </header>
 
@@ -107,7 +104,7 @@ const EventPage = () => {
               </span>
             </div>
 
-            {/* Event cards */}
+            {/* Event cards grid */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -116,43 +113,51 @@ const EventPage = () => {
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
             >
               {events.map((event) => (
-                <motion.div key={event.eventNo} variants={cardVariants}>
-                  <GlassCard
-                    className="h-full group cursor-default"
-                    showBeam
-                    beamDuration={2.5}
+                <motion.div key={event.eventNo} variants={cardVariants} className="h-full">
+                  <a
+                    href={`/events/${event.eventNo}`}
+                    style={{ textDecoration: "none", display: "block", height: "100%" }}
                   >
-                    {/* Event number badge */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#00f2ff]/8 border border-[#00f2ff]/20 text-[#00f2ff]/80">
-                        #{String(event.eventNo).padStart(2, "0")}
-                      </span>
-                      <span className="text-xs text-white/25 font-medium">
-                        {event.maxParticipant} participants
-                      </span>
-                    </div>
-
-                    {/* Event name */}
-                    <h3
-                      className="font-bold text-white/90 text-base mb-3 leading-snug group-hover:text-white transition-colors duration-200"
-                      style={{ fontFamily: "'Inter Tight', sans-serif" }}
+                    <GlassCard
+                      className="h-full group cursor-pointer"
+                      showBeam
+                      beamDuration={2.5}
                     >
-                      {event.eventName}
-                    </h3>
-
-                    {/* Meta row */}
-                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5">
-                      <span className="text-xs text-white/30">
-                        Fee:{" "}
-                        <span className="text-[#8b5cf6]/80 font-semibold">
-                          ₹{event.amount ?? 0}
+                      {/* Event number badge + hover hint */}
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#00f2ff]/8 border border-[#00f2ff]/20 text-[#00f2ff]/80">
+                          #{String(event.eventNo).padStart(2, "0")}
                         </span>
-                      </span>
-                      <span className="text-xs text-white/20">
-                        Max {event.maxParticipant}
-                      </span>
-                    </div>
-                  </GlassCard>
+                        <span className="text-[10px] text-[#00f2ff]/60 font-medium uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                          View Details
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                      </div>
+
+                      {/* Event name */}
+                      <h3
+                        className="font-bold text-white/90 text-base mb-3 leading-snug group-hover:text-white transition-colors duration-200"
+                        style={{ fontFamily: "'Inter Tight', sans-serif" }}
+                      >
+                        {event.eventName}
+                      </h3>
+
+                      {/* Meta row */}
+                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5">
+                        <span className="text-xs text-white/30">
+                          Fee:{" "}
+                          <span className="text-[#8b5cf6]/80 font-semibold">
+                            ₹{event.amount ?? 0}
+                          </span>
+                        </span>
+                        <span className="text-xs text-white/20">
+                          Max {event.maxParticipant}
+                        </span>
+                      </div>
+                    </GlassCard>
+                  </a>
                 </motion.div>
               ))}
             </motion.div>

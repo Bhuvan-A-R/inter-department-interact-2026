@@ -12,6 +12,7 @@ import MagneticButton from "./ui/MagneticButton";
 
 const navLinks = [
   { href: "/events", label: "Events" },
+  { href: "/schedule", label: "Schedule" },
 ];
 
 const Navbar = () => {
