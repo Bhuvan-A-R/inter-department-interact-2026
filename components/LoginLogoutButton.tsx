@@ -39,13 +39,13 @@ const LoginLogoutButton = () => {
 
   const primaryBtn =
     baseBtn +
-    "bg-gradient-to-r from-[#00f2ff]/10 to-[#8b5cf6]/10 border-[#00f2ff]/30 text-[#00f2ff] hover:from-[#00f2ff]/20 hover:to-[#8b5cf6]/20 hover:border-[#00f2ff]/60 hover:shadow-[0_0_20px_rgba(0,242,255,0.3)]";
+    "bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700 hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]";
 
   return (
     <div className="flex items-center gap-2">
       {isLoggedIn ? (
         <>
-          <Link id="dashboard-link" href="/register/getallregister" className={glassBtn}>
+          <Link id="dashboard-link" href="/register/getallregister" className={baseBtn}>
             Dashboard
           </Link>
           <Link id="logout-link" href="/auth/logout" className={primaryBtn}>

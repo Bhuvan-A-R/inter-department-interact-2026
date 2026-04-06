@@ -12,7 +12,7 @@ import LoginLogoutButton from "./LoginLogoutButton";
 
 const navLinks = [
   { href: "/events", label: "Events" },
-  { href: "/schedule", label: "Schedule" },
+  // { href: "/schedule", label: "Schedule" },
 ];
 
 const Navbar = () => {
@@ -28,11 +28,10 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
-          scrolled
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${scrolled
             ? "bg-gat-midnight text-white border-gat-cobalt/30 shadow-navy"
             : "bg-white/95 backdrop-blur-sm text-gat-charcoal border-gat-blue/10"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
@@ -43,7 +42,7 @@ const Navbar = () => {
                 alt="GAT Logo"
                 width={160}
                 height={90}
-                className={`object-contain h-10 md:h-12 w-auto transition-all duration-300 ${scrolled ? 'brightness-0 invert opacity-90' : 'opacity-100'}`}
+                className={`object-contain h-10 md:h-12 w-auto transition-all duration-300 ${scrolled ? 'opacity-90' : 'opacity-100'}`}
                 priority
               />
               <Image
@@ -51,7 +50,7 @@ const Navbar = () => {
                 alt="Interact Logo"
                 width={160}
                 height={90}
-                className={`object-contain h-10 md:h-12 w-auto transition-all duration-300 ${scrolled ? 'brightness-0 invert opacity-90' : 'opacity-100'}`}
+                className={`object-contain h-10 md:h-12 w-auto transition-all duration-300 ${scrolled ? 'opacity-90' : 'opacity-100'}`}
                 priority
               />
             </Link>
@@ -62,9 +61,8 @@ const Navbar = () => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`font-body font-semibold transition-colors hover:text-gat-blue ${
-                    scrolled ? "text-white/80" : "text-gat-charcoal"
-                  }`}
+                  className={`font-body font-semibold transition-colors hover:text-gat-blue ${scrolled ? "text-white/80" : "text-gat-charcoal"
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -73,18 +71,18 @@ const Navbar = () => {
 
             {/* Right Cluster */}
             <div className="hidden md:flex flex-row items-center gap-4">
-              <button className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors ${
+              {/* <button className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors ${
                 scrolled ? "border-gat-steel/30 text-gat-steel hover:text-white" : "border-gat-steel/30 text-gat-steel hover:text-gat-charcoal bg-transparent"
               }`}>
                 <Search className="w-4 h-4" />
                 <span>Search events...</span>
                 <kbd className="ml-2 px-1.5 py-0.5 text-[10px] uppercase border rounded bg-gat-steel/10 font-mono">⌘K</kbd>
-              </button>
-              
+              </button> */}
+
               <Link href="/register" className="px-5 py-2.5 text-sm font-bold rounded-lg bg-gat-blue text-white hover:bg-gat-midnight transition-colors shadow-blue">
                 Register Now
               </Link>
-              
+
               <LoginLogoutButton />
             </div>
 
@@ -118,7 +116,7 @@ const Navbar = () => {
                     {link.label}
                   </Link>
                 ))}
-                
+
                 <div className="pt-4 border-t border-gat-cobalt/30 flex flex-col gap-4">
                   <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="px-5 py-3 text-center text-sm font-bold rounded-lg bg-gat-gold text-gat-midnight hover:bg-gat-dark-gold transition-colors block">
                     Register Now

@@ -72,7 +72,7 @@ const Footer = () => {
           </div>
 
           {/* Column 3: Events */}
-          <div>
+          {/* <div>
             <h3 className="font-heading font-bold text-lg text-white mb-6 tracking-wide">Events</h3>
             <ul className="space-y-3 font-body text-sm">
               <li>
@@ -91,7 +91,7 @@ const Footer = () => {
                 <Link href="/schedule" className="text-gat-steel hover:text-gat-gold transition-colors">Full Schedule</Link>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Column 4: Legal & Contact */}
           <div>
@@ -121,7 +121,7 @@ const Footer = () => {
             Copyright © 2026 Global Academy of Technology · All Rights Reserved.
           </p>
           <p className="text-xs text-gat-steel font-body">
-            Developed with ♥ by the Tech Team
+            Developed with ♥ by the Interact 2026 Website Team
           </p>
         </div>
       </div>
