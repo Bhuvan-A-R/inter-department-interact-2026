@@ -124,18 +124,39 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── SCHEDULE TEASER SECTION ─────────────────────────────────────────── */}
-      <section className="py-24 bg-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <p className="text-sm font-bold tracking-[0.2em] uppercase text-gat-navy mb-4 font-heading">
-                The Itinerary
-              </p>
-              <h2 className="font-heading text-4xl md:text-5xl font-bold text-gat-midnight mb-6 leading-tight">
-                3 Days.<br />
-                50+ Events.<br />
-                <span className="text-gat-blue">Choose Your Adventure.</span>
+      {/* ══ SCHEDULE ═════════════════════════════════════════════════════ */}
+      <section
+        className="py-28 relative overflow-hidden"
+        style={{ background: "hsl(var(--background))", fontFamily: "'Outfit', sans-serif" }}
+      >
+        {/* ghost watermark */}
+        <div
+          className="font-display absolute left-[-2%] bottom-[4%] font-black leading-none select-none pointer-events-none"
+          style={{
+            fontSize: "clamp(90px,14vw,170px)",
+            color: "hsl(var(--primary) / 0.04)",
+            letterSpacing: "-0.02em",
+          }}
+          aria-hidden
+        >
+          INTERACT
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-16 items-start">
+
+            {/* left col — sticky */}
+            <div className="lg:sticky lg:top-28">
+              <span className="eyebrow">The Itinerary</span>
+              <h2
+                className="font-display text-5xl md:text-6xl font-black leading-[0.93] mb-6"
+                style={{ color: "hsl(var(--foreground))" }}
+              >
+                3 DAYS.
+                <br />
+                50+ EVENTS.
+                <br />
+                <span style={{ color: "hsl(var(--primary))" }}>YOUR CALL.</span>
               </h2>
               <p className="text-gat-charcoal text-lg mb-8 font-body leading-relaxed max-w-lg">
                 Our schedule is packed with events that challenge, entertain, and inspire. Plan your days ahead to make the most out of INTERACT 2026.
