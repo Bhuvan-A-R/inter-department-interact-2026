@@ -51,15 +51,23 @@ export default function EventDetailClient({ category, details }: Props) {
           </Link>
 
           <div className="flex items-center gap-3">
-            <button className="p-2 text-gat-steel hover:text-gat-blue bg-white rounded-lg border border-gat-blue/10 shadow-sm transition-colors">
+            {/* <button className="p-2 text-gat-steel hover:text-gat-blue bg-white rounded-lg border border-gat-blue/10 shadow-sm transition-colors">
               <Share2 className="w-4 h-4" />
-            </button>
-            <Link
+            </button> */}
+            {/* <Link
               href="/register"
               className="px-4 py-2 text-sm font-bold bg-gat-blue text-white rounded-lg hover:bg-gat-midnight transition-colors shadow-sm"
             >
               Register →
-            </Link>
+            </Link> */}
+            <button
+                disabled
+                className="btn-gold"
+                style={{ opacity: 1, cursor: "not-allowed", pointerEvents: "none" }}
+              >
+                Contact your Department SPOC's
+                {/* <ArrowRight size={16} /> */}
+              </button>
           </div>
         </div>
 
@@ -92,9 +100,9 @@ export default function EventDetailClient({ category, details }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* LEFT COLUMN: Meta & Actions */}
-          <div className="lg:col-span-1 space-y-6">
+          {/* <div className="lg:col-span-1 space-y-6">
             
-            {/* Prize Pool */}
+            // Prize Pool 
             <div className="bg-white p-6 rounded-2xl border border-gat-blue/10 shadow-sm">
               <h3 className="flex items-center gap-2 text-gat-midnight font-bold font-heading text-lg mb-4">
                 <Trophy className="w-5 h-5 text-gat-gold" /> Prize Pool
@@ -114,7 +122,7 @@ export default function EventDetailClient({ category, details }: Props) {
               </div>
             </div>
 
-            {/* Registration Progress */}
+            // Registration Progress 
             <div className="bg-white p-6 rounded-2xl border border-gat-blue/10 shadow-sm">
               <h3 className="flex items-center gap-2 text-gat-midnight font-bold font-heading text-lg mb-4">
                 <Users className="w-5 h-5 text-gat-blue" /> Registration Form
@@ -137,7 +145,7 @@ export default function EventDetailClient({ category, details }: Props) {
                 Register Now →
               </Link>
             </div>
-          </div>
+          </div> */}
 
           {/* RIGHT COLUMN: Details & Accordions */}
           <div className="lg:col-span-2 space-y-6">

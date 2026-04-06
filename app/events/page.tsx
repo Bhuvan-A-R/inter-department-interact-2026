@@ -143,7 +143,7 @@ const EventPage = () => {
                           {/* Footer Info */}
                           <div className="mt-auto pt-4 border-t border-gat-blue/5 flex items-center justify-between">
                             <div className="flex items-center gap-1.5 text-gat-dark-gold">
-                              <Trophy className="w-4 h-4" />
+                              {/* <Trophy className="w-4 h-4" /> */}
                               <span className="font-mono text-sm font-bold">
                                 {event.amount ? `₹${event.amount}` : "FREE"}
                               </span>

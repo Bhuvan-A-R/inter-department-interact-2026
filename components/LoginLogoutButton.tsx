@@ -54,7 +54,7 @@ const LoginLogoutButton = () => {
         </>
       ) : (
         <Link id="login-link" href="/auth/signin" className={primaryBtn}>
-          Login
+          SPOC Login
         </Link>
       )}
     </div>

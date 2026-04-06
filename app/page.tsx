@@ -139,7 +139,7 @@ export default function Home() {
 
         {/* ghost year watermark */}
         <div
-          className="absolute top-[12%] select-none pointer-events-none transition-all duration-500 max-[550px]:left-1/2 max-[550px]:-translate-x-1/2 max-[550px]:opacity-[0.2] min-[551px]:right-[-2%] min-[551px]:opacity-90"
+          className="absolute top-[12%] select-none pointer-events-none transition-all duration-500 max-[550px]:left-1/2 max-[550px]:-translate-x-1/2 max-[550px]:opacity-[0.05] min-[551px]:right-[-2%] min-[551px]:opacity-[0.05]"
           style={{ width: "clamp(280px, 40vw, 700px)" }}
           aria-hidden
         >
@@ -472,9 +472,17 @@ export default function Home() {
             Join 1000+ students across {categories.reduce((acc, c) => acc + c.count, 0)}+ events. Just bring your best game.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="btn-gold">
-              Register Now
-            </Link>
+            {/* <Link href="/auth/signin" className="btn-gold">
+              Contact your Department SPOC's
+            </Link> */}
+            <button
+                disabled
+                className="btn-gold"
+                style={{ opacity: 1, cursor: "not-allowed", pointerEvents: "none" }}
+              >
+                Contact your Department SPOC's
+                {/* <ArrowRight size={16} /> */}
+              </button>
             <Link
               href="/events"
               style={{

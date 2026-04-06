@@ -11,6 +11,7 @@ import interactLogo from "@/public/gat-logos/INTERACT2K26.png";
 import LoginLogoutButton from "./LoginLogoutButton";
 
 const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   // { href: "/schedule", label: "Schedule" },
 ];
@@ -78,11 +79,6 @@ const Navbar = () => {
                 <span>Search events...</span>
                 <kbd className="ml-2 px-1.5 py-0.5 text-[10px] uppercase border rounded bg-gat-steel/10 font-mono">⌘K</kbd>
               </button> */}
-
-              <Link href="/register" className="px-5 py-2.5 text-sm font-bold rounded-lg bg-gat-blue text-white hover:bg-gat-midnight transition-colors shadow-blue">
-                Register Now
-              </Link>
-
               <LoginLogoutButton />
             </div>
 
@@ -118,9 +114,6 @@ const Navbar = () => {
                 ))}
 
                 <div className="pt-4 border-t border-gat-cobalt/30 flex flex-col gap-4">
-                  <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="px-5 py-3 text-center text-sm font-bold rounded-lg bg-gat-gold text-gat-midnight hover:bg-gat-dark-gold transition-colors block">
-                    Register Now
-                  </Link>
                   <LoginLogoutButton />
                 </div>
               </div>
