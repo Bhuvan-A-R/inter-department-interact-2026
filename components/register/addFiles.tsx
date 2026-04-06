@@ -62,6 +62,10 @@ export default function SelectRolesAndEvents({
       email: "",
       gender: null,
       blood: null,
+      documents: {
+        photo: null,
+        idCard: null,
+      },
     },
   });
 
@@ -93,6 +97,12 @@ export default function SelectRolesAndEvents({
   ) => {
     const payload = {
       ...data,
+      gender: null,
+      blood: null,
+      documents: {
+        photo: null,
+        idCard: null,
+      },
     };
     setDisabled(true);
 
@@ -198,51 +208,6 @@ export default function SelectRolesAndEvents({
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 md:gap-10 w-full">
-              <div className="w-1/3 md:w-1/3 space-y-1.5 mt-6 w-full">
-                <Label htmlFor="gender">
-                  Gender of the student{" "}
-                  <small className="text-red-600">*</small>
-                </Label>
-                {/* <Select
-                  {...register("gender")}
-                  onValueChange={(value) => setValue("gender", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Gender</SelectLabel>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                {errors.gender && (
-                  <p className="text-red-500 text-sm">
-                    {errors.gender.message}
-                  </p>
-                )} */}
-              </div>
-
-              <div className="w-full md:w-1/3 space-y-1.5 mt-6">
-                <Label htmlFor="blood">
-                  Date of Birth <small className="text-red-600">*</small>
-                </Label>
-                <Input
-                  type="date"
-                  {...register("blood")}
-                  id="blood"
-                  name="blood"
-                  className="w-full"
-                  placeholder="Enter the date of birth"
-                />
-                {errors.blood && (
-                  <p className="text-red-500 text-sm">{errors.blood.message}</p>
-                )}
-              </div>
-
               <div className="w-full md:w-1/3 space-y-1.5 mt-6">
                 <Label htmlFor="email">
                   Email <small className="text-red-600">*</small>
@@ -332,97 +297,6 @@ export default function SelectRolesAndEvents({
             {errors.events && (
               <p className="text-red-500 text-sm">{errors.events.message}</p>
             )}
-          </div>
-
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Upload Documents</h2>
-            <p className="mb-4 text-muted-foreground text-red-500">
-              <span className="font-semibold text-red-600">Note:</span> Students
-              are required to submit valid documents for verification. All
-              documents must be uploaded in{" "}
-              <span className="text-red-600 font-bold">PNG or JPG</span> format,
-              with a file size not exceeding{" "}
-              <span className="font-bold text-red-600">256 KB</span>. If any
-              document fails the verification process, participants will be
-              notified and given an opportunity to reupload the corrected file.
-              Failure to meet the specified format, size, or authenticity
-              requirements after re-uploading may result in disqualification.
-              Ensure all submissions are clear, legible, and comply with the
-              guidelines provided.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {REQUIRED_DOCUMENTS.map((doc) => {
-                const isUploaded = !!documentUrls[doc.id];
-                const documentErrors = errors.documents as
-                  | Record<string, { message?: string } | undefined>
-                  | undefined;
-                const errorMessage = documentErrors?.[doc.id]?.message;
-                return (
-                  <div
-                    key={doc.id}
-                    className={`space-y-1.5 border rounded-[var(--radius)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 p-2 ${
-                      isUploaded
-                        ? "border-green-500 border-2"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <Label htmlFor={doc.id}>
-                      {doc.label}{" "}
-                      <span className="text-red-600 text-xs font-bold">
-                        * (PNG / JPG)
-                      </span>
-                    </Label>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {doc.hint}
-                    </p>
-                    {isUploaded ? (
-                      <div className="w-full h-[244px] flex flex-col rounded-[var(--radius)] items-center justify-end p-12 space-y-2 bg-gradient-to-t from-green-50 to-transparent">
-                        <div className="text-green-500 flex flex-col justify-items-center items-center gap-2 pb-10">
-                          <p className="flex gap-2 items-center flex-row">
-                            Upload Complete <VerifiedIcon />
-                          </p>
-                          <Image
-                            src={`https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${documentUrls[doc.id]}`}
-                            width={60}
-                            height={60}
-                            alt="uploaded image"
-                          />
-                        </div>
-                        <LoadingButton
-                          type="button"
-                          onClick={async () => {
-                            await handleDeleteFromUploadThing(doc.id);
-                          }}
-                        >
-                          Edit (Re-upload)
-                        </LoadingButton>
-                      </div>
-                    ) : (
-                      <UploadDropzone
-                        endpoint="imageUploader"
-                        onClientUploadComplete={(res) => {
-                          if (res && res[0]) {
-                            setDocumentUrls((prev) => ({
-                              ...prev,
-                              [doc.id]: res[0].key,
-                            }));
-                            toast.success(`${doc.label} Upload Completed`);
-                          }
-                        }}
-                        onUploadError={(error: Error) => {
-                          toast.error(
-                            `Error: ${error.message} Uploading ${doc.label}`,
-                          );
-                        }}
-                      />
-                    )}
-                    {errorMessage && (
-                      <p className="text-red-500 text-sm">{errorMessage}</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-center gap-5">

@@ -41,10 +41,12 @@ export async function insertRegistrant(
                         phone: arg.phone,
                         photoUrl: arg.photoUrl,
                         idcardUrl: arg.idcardUrl,
-                        userId: arg.userId,
                         deptCode: arg.deptCode,
                         gender: arg.gender,
                         blood: arg.blood,
+                        user: {
+                            connect: { id: arg.userId },
+                        },
                     },
                 });
 

@@ -186,8 +186,8 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="auth-shell mt-16 py-10">
-      <Card className="w-full max-w-4xl bg-card/90 text-card-foreground border border-border shadow-xl">
+    <div className="auth-shell min-h-screen flex items-center justify-center p-4 mt-10">
+      <Card className="w-full max-w-4xl bg-card/90 text-card-foreground mt-20 border border-border shadow-xl">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl text-primary font-semibold">
             Total No of Events: {events.length} events
@@ -198,14 +198,14 @@ export default function EventsPage() {
             <EventsList events={events} />
             <PaymentDetails
               paymentAmount={paymentAmount}
-              return (
-                <div className="auth-shell mt-16 py-10">
-                  <Card className="w-full max-w-4xl bg-card/90 text-card-foreground border border-border shadow-xl">
-                    <CardHeader className="text-center">
-                      <CardTitle className="text-2xl text-primary font-semibold">
-                        Total No of Events: {events.length} events
-                      </CardTitle>
-                    </CardHeader>
+              imageSrc={imageSrc}
+              qrDataUrl={qrDataUrl}
+              upiLink={upiLink}
+            />
+          </div>
+          {!paymentDone ? (
+            <>
+              <form className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="txnNumber">
                     Transaction Number / ID{" "}
