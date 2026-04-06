@@ -38,19 +38,19 @@ export default async function Page() {
   `;
 
   return (
-    <div className="relative bg-[#020202] min-h-screen pt-12">
-      {/* Watermark */}
-
+    <div className="auth-shell items-start pt-20">
       {/* Page Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 w-full">
         <div className="mt-4 justify-center flex flex-col gap-4">
           <div className="max-w-4xl mx-auto p-4">
-            <h1 className="text-white/90 font-black text-4xl md:text-4xl xl:text-4xl mb-6" style={{fontFamily:"'Inter Tight',sans-serif"}}>
+            <h1 className="auth-title text-4xl md:text-4xl xl:text-4xl mb-6">
               Add Registrant
             </h1>
           </div>
         </div>
-        <SelectRolesAndEvents allEvents={userEvents} />
+        <div className="mx-auto w-full max-w-6xl auth-section p-6">
+          <SelectRolesAndEvents allEvents={userEvents} />
+        </div>
       </div>
     </div>
   );

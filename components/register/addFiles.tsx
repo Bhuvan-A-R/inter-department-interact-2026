@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Card,
   CardHeader,
@@ -20,34 +19,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectLabel,
-  SelectItem,
-} from "@/components/ui/select";
-import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { UploadDropzone } from "@/utils/uploadthing";
-import { ArrowLeft, Save, VerifiedIcon } from "lucide-react";
-import { LoadingButton } from "../LoadingButton";
+import { ArrowLeft, Save } from "lucide-react";
 import { Event } from "@/app/register/addRegistrant/page";
 import { participantFormSchema } from "@/lib/schemas/register";
-
-const REQUIRED_DOCUMENTS = [
-  { id: "photo", label: "Photo", hint: "Passport size photo of the student" },
-  {
-    id: "idCard",
-    label: "College ID Card",
-    hint: "College Identification Card of the student",
-  },
-] as const;
 
 type SelectRolesAndEventsProps = {
   allEvents: Event[];
@@ -66,7 +45,6 @@ export default function SelectRolesAndEvents({
       type: "PARTICIPANT";
     }[]
   >([]);
-  const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const {
@@ -82,24 +60,14 @@ export default function SelectRolesAndEvents({
       phone: "",
       events: [],
       email: "",
-      documents: {
-        photo: "",
-        idCard: "",
-      },
-      gender: "",
-      blood: "",
+      gender: null,
+      blood: null,
     },
   });
 
   useEffect(() => {
     setValue("events", selectedEvents);
   }, [selectedEvents, setValue]);
-
-  useEffect(() => {
-    REQUIRED_DOCUMENTS.forEach((doc) => {
-      setValue(`documents.${doc.id}` as const, documentUrls[doc.id] || "");
-    });
-  }, [documentUrls, setValue]);
 
   const onToggleSelect = (event: Event) => {
     setSelectedEvents((prev) => {
@@ -156,19 +124,6 @@ export default function SelectRolesAndEvents({
     console.log("Validation Error:", err);
     toast.error("Please fix the validation errors and try again.");
   };
-
-  async function handleDeleteFromUploadThing(fileId: string) {
-    try {
-      await fetch("/api/deleteFiles", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ files: [fileId] }),
-      });
-      setDocumentUrls((prev) => ({ ...prev, [fileId]: "" }));
-    } catch (error) {
-      console.error("Error deleting file:", error);
-    }
-  }
 
   const groupedEvents = allEvents.reduce(
     (acc, ev) => {
@@ -248,7 +203,7 @@ export default function SelectRolesAndEvents({
                   Gender of the student{" "}
                   <small className="text-red-600">*</small>
                 </Label>
-                <Select
+                {/* <Select
                   {...register("gender")}
                   onValueChange={(value) => setValue("gender", value)}
                 >
@@ -268,7 +223,7 @@ export default function SelectRolesAndEvents({
                   <p className="text-red-500 text-sm">
                     {errors.gender.message}
                   </p>
-                )}
+                )} */}
               </div>
 
               <div className="w-full md:w-1/3 space-y-1.5 mt-6">
@@ -318,7 +273,7 @@ export default function SelectRolesAndEvents({
               aria-label="Available events"
               tabIndex={0}
             >
-              click on the event tile to confirm selection of the event
+              Click on the event tile to confirm selection of the event
             </h2>
 
             {allEvents.length === 0 ? (

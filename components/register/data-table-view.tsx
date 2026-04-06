@@ -36,11 +36,8 @@ import {
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 
-import Image from "next/image";
-
 export type Data = {
   id: string;
-  photo: string;
   name: string;
   usn: string;
   type: "Participant" | "";
@@ -65,23 +62,6 @@ export function DataTableView({ data }: { data: Data[] }) {
         accessorKey: "slno",
         header: "SL No",
         cell: ({ row }) => row.index + 1,
-      },
-      {
-        accessorKey: "photo",
-        header: "Photo",
-        cell: ({ row }) => {
-          const photoUrl = row.getValue("photo");
-          const imageUrl = `https://${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}.ufs.sh/f/${photoUrl}`;
-          return (
-            <Image
-              src={imageUrl}
-              alt="Profile"
-              width={80}
-              height={80}
-              className="rounded-full object-cover"
-            />
-          );
-        },
       },
       {
         accessorKey: "name",
