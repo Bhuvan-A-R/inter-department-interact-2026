@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import gatLogo from "@/public/gat-logos/GAT_Linear Logo.png";
+import gatLogo from "@/public/gat-logos/INTERACT2K26.png";
 import LoginLogoutButton from "./LoginLogoutButton";
 import MagneticButton from "./ui/MagneticButton";
 
