@@ -1,280 +1,239 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Users,
-  IndianRupee,
-  Phone,
-  BookOpen,
-  ShieldCheck,
-  Hash,
-  Tag,
-} from "lucide-react";
+import React, { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Users, Phone, Clock, Trophy, Share2, AlertCircle } from "lucide-react";
 import { EventCategory } from "@/data/eventCategories";
 import { EventList } from "@/data/eventList";
-import GlassCard from "@/components/ui/GlassCard";
+import { motion } from "framer-motion";
 
 interface Props {
   category: EventCategory;
   details: EventList[];
 }
 
-// Category → accent color map
-const categoryColors: Record<string, { from: string; to: string; glow: string }> = {
-  THEATRE:        { from: "#f97316", to: "#ef4444", glow: "rgba(249,115,22,0.12)" },
-  DANCE:          { from: "#a855f7", to: "#ec4899", glow: "rgba(168,85,247,0.12)" },
-  MUSIC:          { from: "#00f2ff", to: "#8b5cf6", glow: "rgba(0,242,255,0.10)" },
-  FASHION:        { from: "#f43f5e", to: "#f97316", glow: "rgba(244,63,94,0.12)" },
-  LITERARY:       { from: "#22d3ee", to: "#0ea5e9", glow: "rgba(34,211,238,0.10)" },
-  FINE_ARTS:      { from: "#84cc16", to: "#10b981", glow: "rgba(132,204,22,0.10)" },
-  GENERAL_EVENTS: { from: "#fbbf24", to: "#f59e0b", glow: "rgba(251,191,36,0.10)" },
+const getColorForCategory = (category: string) => {
+  const map: Record<string, { bg: string, text: string, split: string }> = {
+    THEATRE: { bg: "bg-gat-blue", text: "text-gat-blue", split: "gat-blue" },
+    DANCE: { bg: "bg-gat-gold", text: "text-gat-gold", split: "gat-gold" },
+    MUSIC: { bg: "bg-gat-navy", text: "text-gat-navy", split: "gat-navy" },
+    FASHION: { bg: "bg-gat-cobalt", text: "text-gat-cobalt", split: "gat-cobalt" },
+    LITERARY: { bg: "bg-gat-dark-gold", text: "text-gat-dark-gold", split: "gat-dark-gold" },
+    FINE_ARTS: { bg: "bg-gat-blue", text: "text-gat-blue", split: "gat-blue" },
+    GENERAL_EVENTS: { bg: "bg-gat-gold", text: "text-gat-gold", split: "gat-gold" },
+  };
+  return map[category] || { bg: "bg-gat-charcoal", text: "text-gat-charcoal", split: "gat-charcoal" };
 };
 
-const fade = (delay = 0) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] },
-});
-
 export default function EventDetailClient({ category, details }: Props) {
-  const accent = categoryColors[category.category] ?? {
-    from: "#00f2ff",
-    to: "#8b5cf6",
-    glow: "rgba(0,242,255,0.10)",
+  const colors = getColorForCategory(category.category);
+  const hasDetails = details.length > 0;
+  const mainDetail = hasDetails ? details[0] : null;
+
+  const [activeAccordion, setActiveAccordion] = useState<string | null>("description");
+
+  const toggleAccordion = (id: string) => {
+    setActiveAccordion(activeAccordion === id ? null : id);
   };
 
-  const hasDetails = details.length > 0;
-
   return (
-    <div className="relative min-h-screen bg-[#020202]">
-      {/* Ambient background glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background: `radial-gradient(ellipse 70% 50% at 50% 0%, ${accent.glow} 0%, transparent 65%)`,
-        }}
-      />
-
-      {/* ── Back button ─────────────────────────────────────────────────────── */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        <motion.a
-          href="/events"
-          {...fade(0)}
-          className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white/80 transition-colors duration-200 no-underline group"
-          style={{ textDecoration: "none" }}
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-          Back to Events
-        </motion.a>
-      </div>
-
-      {/* ── Hero ────────────────────────────────────────────────────────────── */}
-      <header className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12">
-        {/* Event number + category pills */}
-        <motion.div {...fade(0.05)} className="flex items-center gap-3 mb-6 flex-wrap">
-          <span
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border"
-            style={{
-              background: `linear-gradient(135deg, ${accent.from}18, ${accent.to}18)`,
-              borderColor: `${accent.from}40`,
-              color: accent.from,
-            }}
+    <div className="min-h-screen bg-gat-off-white font-body pt-24 pb-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* ── Top Nav row ──────────────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-sm font-bold text-gat-steel hover:text-gat-blue transition-colors group"
           >
-            <Hash className="w-3 h-3" />
-            Event {String(category.eventNo).padStart(2, "0")}
-          </span>
-          <span
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              borderColor: "rgba(255,255,255,0.10)",
-              color: "rgba(255,255,255,0.50)",
-            }}
-          >
-            <Tag className="w-3 h-3" />
-            {category.category.replace(/_/g, " ")}
-          </span>
-        </motion.div>
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Events
+          </Link>
 
-        {/* Event name */}
-        <motion.h1
-          {...fade(0.1)}
-          className="text-4xl md:text-6xl font-black tracking-tighter mb-6 leading-tight"
-          style={{
-            fontFamily: "'Inter Tight', sans-serif",
-            background: `linear-gradient(135deg, #fff 30%, ${accent.from} 100%)`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          {category.eventName}
-        </motion.h1>
-
-        {/* Stat chips */}
-        <motion.div {...fade(0.15)} className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/8 text-sm">
-            <IndianRupee className="w-4 h-4 text-[#8b5cf6]/70" />
-            <span className="text-white/50">Registration Fee</span>
-            <span className="text-white font-bold">₹{category.amount ?? 0}</span>
+          <div className="flex items-center gap-3">
+            <button className="p-2 text-gat-steel hover:text-gat-blue bg-white rounded-lg border border-gat-blue/10 shadow-sm transition-colors">
+              <Share2 className="w-4 h-4" />
+            </button>
+            <Link
+              href="/register"
+              className="px-4 py-2 text-sm font-bold bg-gat-blue text-white rounded-lg hover:bg-gat-midnight transition-colors shadow-sm"
+            >
+              Register →
+            </Link>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/8 text-sm">
-            <Users className="w-4 h-4 text-[#00f2ff]/70" />
-            <span className="text-white/50">Max Participants</span>
-            <span className="text-white font-bold">{category.maxParticipant}</span>
+        </div>
+
+        {/* ── Header ───────────────────────────────────────────────────────────── */}
+        <header className="bg-white p-8 md:p-10 rounded-2xl border border-gat-blue/10 shadow-card mb-8 relative overflow-hidden">
+          {/* Top accent line */}
+          <div className={`absolute top-0 inset-x-0 h-1.5 ${colors.bg}`} />
+          
+          <div className="flex flex-wrap gap-2 mb-4">
+            <span className={`px-2.5 py-1 rounded-md text-xs font-heading font-bold tracking-widest uppercase bg-opacity-10 border border-opacity-20 ${colors.text} ${colors.bg.replace('bg-', 'bg-')}/10 border-${colors.split}/20`}>
+              {category.category.replace(/_/g, " ")}
+            </span>
+            <span className="px-2.5 py-1 rounded-md text-xs font-heading font-bold tracking-widest uppercase bg-gat-off-white border border-gat-steel/20 text-gat-steel">
+              {category.maxParticipant > 1 ? `TEAM (${category.maxParticipant})` : "SOLO"}
+            </span>
+            <span className="px-2.5 py-1 rounded-md text-xs font-heading font-bold tracking-widest uppercase bg-gat-off-white border border-gat-steel/20 text-gat-steel">
+              Event #{String(category.eventNo).padStart(2, "0")}
+            </span>
           </div>
-        </motion.div>
 
-        {/* Gradient divider */}
-        <div
-          className="mt-10 h-px"
-          style={{
-            background: `linear-gradient(to right, transparent, ${accent.from}50, transparent)`,
-          }}
-        />
-      </header>
+          <h1 className="text-4xl md:text-5xl font-heading font-black text-gat-midnight leading-tight mb-2">
+            {category.eventName}
+          </h1>
+          <p className="text-gat-steel text-sm md:text-base font-medium">
+            Part of the {category.category.replace(/_/g, " ")} lineup
+          </p>
+        </header>
 
-      {/* ── Content ─────────────────────────────────────────────────────────── */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-10">
-        {hasDetails ? (
-          details.map((detail, idx) => (
-            <div key={idx} className="space-y-8">
-              {/* Sub-event name (shown only when there are multiple entries or name differs) */}
-              {(details.length > 1 || detail.name !== category.eventName) && (
-                <motion.div {...fade(0.18 + idx * 0.06)}>
-                  <h2
-                    className="text-xl font-bold text-white/70 mb-1"
-                    style={{ fontFamily: "'Inter Tight', sans-serif" }}
-                  >
-                    {detail.name}
-                  </h2>
-                  <div className="h-px bg-white/8 mt-3" />
-                </motion.div>
-              )}
-
-              {/* Rules & Regulations */}
-              <motion.div {...fade(0.22 + idx * 0.06)}>
-                <GlassCard showBeam beamDuration={3}>
-                  <div className="flex items-center gap-2 mb-5">
-                    <ShieldCheck
-                      className="w-5 h-5 flex-shrink-0"
-                      style={{ color: accent.from }}
-                    />
-                    <h3 className="text-base font-bold text-white/90 uppercase tracking-widest">
-                      Rules &amp; Regulations
-                    </h3>
-                  </div>
-                  <ol className="space-y-3">
-                    {detail.rules.map((rule, rIdx) => (
-                      <motion.li
-                        key={rIdx}
-                        initial={{ opacity: 0, x: -8 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.35, delay: rIdx * 0.04 }}
-                        className="flex gap-3 text-sm text-white/65 leading-relaxed"
-                      >
-                        <span
-                          className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5"
-                          style={{
-                            background: `linear-gradient(135deg, ${accent.from}30, ${accent.to}30)`,
-                            color: accent.from,
-                            border: `1px solid ${accent.from}40`,
-                          }}
-                        >
-                          {rIdx + 1}
-                        </span>
-                        {rule}
-                      </motion.li>
-                    ))}
-                  </ol>
-                </GlassCard>
-              </motion.div>
-
-              {/* Coordinators */}
-              {(detail.coordinator || (detail.coordinators && detail.coordinators.length > 0)) && (
-                <motion.div {...fade(0.28 + idx * 0.06)}>
-                  <GlassCard showBeam beamColor1={accent.from} beamColor2={accent.to} beamDuration={3.5}>
-                    <div className="flex items-center gap-2 mb-5">
-                      <BookOpen
-                        className="w-5 h-5 flex-shrink-0"
-                        style={{ color: accent.to }}
-                      />
-                      <h3 className="text-base font-bold text-white/90 uppercase tracking-widest">
-                        Event Coordinators
-                      </h3>
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {detail.coordinator && (
-                        <CoordinatorCard
-                          name={detail.coordinator.name}
-                          mobile={detail.coordinator.mobile}
-                          accent={accent}
-                        />
-                      )}
-                      {detail.coordinators?.map((c, ci) => (
-                        <CoordinatorCard key={ci} name={c.name} mobile={c.mobile} accent={accent} />
-                      ))}
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              )}
+        {/* ── Grid Layout ────────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* LEFT COLUMN: Meta & Actions */}
+          <div className="lg:col-span-1 space-y-6">
+            
+            {/* Prize Pool */}
+            <div className="bg-white p-6 rounded-2xl border border-gat-blue/10 shadow-sm">
+              <h3 className="flex items-center gap-2 text-gat-midnight font-bold font-heading text-lg mb-4">
+                <Trophy className="w-5 h-5 text-gat-gold" /> Prize Pool
+              </h3>
+              
+              <div className="flex items-center justify-between p-3 bg-gat-gold/10 rounded-lg border border-gat-gold/20 mb-3">
+                <span className="font-bold text-gat-midnight">1st Prize 🥇</span>
+                <span className="font-mono font-bold text-lg text-gat-dark-gold">
+                  {category.amount ? `₹${category.amount}` : "TBD"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gat-steel/10 rounded-lg border border-gat-steel/20">
+                <span className="font-bold text-gat-charcoal">2nd Prize 🥈</span>
+                <span className="font-mono font-bold text-lg text-gat-charcoal">
+                  TBD
+                </span>
+              </div>
             </div>
-          ))
-        ) : (
-          /* No matching eventList entry — show basic card */
-          <motion.div {...fade(0.2)}>
-            <GlassCard showBeam>
-              <p className="text-white/40 text-sm text-center py-8">
-                Detailed rules for this event will be announced soon. Stay tuned!
-              </p>
-            </GlassCard>
-          </motion.div>
-        )}
-      </main>
-    </div>
-  );
-}
 
-// ── Coordinator card sub-component ──────────────────────────────────────────
-function CoordinatorCard({
-  name,
-  mobile,
-  accent,
-}: {
-  name: string;
-  mobile: string;
-  accent: { from: string; to: string };
-}) {
-  return (
-    <div
-      className="flex items-start gap-3 p-4 rounded-xl border"
-      style={{
-        background: `linear-gradient(135deg, ${accent.from}08, ${accent.to}08)`,
-        borderColor: `${accent.from}20`,
-      }}
-    >
-      <div
-        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-        style={{
-          background: `linear-gradient(135deg, ${accent.from}30, ${accent.to}30)`,
-          border: `1px solid ${accent.from}40`,
-        }}
-      >
-        <Users className="w-4 h-4" style={{ color: accent.from }} />
-      </div>
-      <div>
-        <p className="text-sm font-semibold text-white/90 leading-snug">{name}</p>
-        <a
-          href={`tel:${mobile.replace(/\s/g, "")}`}
-          className="inline-flex items-center gap-1.5 mt-1 text-xs no-underline"
-          style={{ color: accent.from, textDecoration: "none" }}
-        >
-          <Phone className="w-3 h-3" />
-          {mobile}
-        </a>
+            {/* Registration Progress */}
+            <div className="bg-white p-6 rounded-2xl border border-gat-blue/10 shadow-sm">
+              <h3 className="flex items-center gap-2 text-gat-midnight font-bold font-heading text-lg mb-4">
+                <Users className="w-5 h-5 text-gat-blue" /> Registration Form
+              </h3>
+              
+              <div className="mb-2 flex items-center justify-between text-sm">
+                <span className="text-gat-steel font-bold">Seats Left</span>
+                <span className="font-mono font-bold text-gat-midnight">
+                  {category.maxParticipant} Teams Total
+                </span>
+              </div>
+              <div className="w-full h-2 bg-gat-steel/20 rounded-full overflow-hidden mb-6">
+                <div className="bg-gat-blue h-full w-[25%]" />
+              </div>
+
+              <Link
+                href="/register"
+                className="block w-full text-center py-3 bg-gat-gold text-gat-midnight font-black rounded-lg hover:bg-gat-dark-gold transition-colors shadow-gold"
+              >
+                Register Now →
+              </Link>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: Details & Accordions */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            <div className="bg-white p-6 md:p-8 rounded-2xl border border-gat-blue/10 shadow-sm">
+              <h2 className="text-2xl font-bold font-heading text-gat-midnight mb-6 border-b border-gat-blue/5 pb-4">
+                About This Event
+              </h2>
+
+              {/* Accordion Group */}
+              <div className="space-y-4">
+                
+                {/* Description */}
+                <div className="border border-gat-steel/20 rounded-xl overflow-hidden">
+                  <button 
+                    onClick={() => toggleAccordion("description")}
+                    className="w-full flex items-center justify-between p-4 bg-gat-off-white hover:bg-gat-blue/5 transition-colors font-bold text-gat-midnight"
+                  >
+                    Description & Guidelines
+                    <span className="text-gat-steel">{activeAccordion === "description" ? "−" : "+"}</span>
+                  </button>
+                  {activeAccordion === "description" && (
+                    <div className="p-5 bg-white text-gat-charcoal text-sm leading-relaxed border-t border-gat-steel/10">
+                      {hasDetails ? (
+                        <div className="space-y-4">
+                          {details.map((detail, idx) => (
+                            <div key={idx} className="space-y-3">
+                              {details.length > 1 && <h4 className="font-bold text-gat-midnight">{detail.name}</h4>}
+                              <ol className="list-decimal pl-5 space-y-2">
+                                {detail.rules.map((rule, ridx) => <li key={ridx}>{rule}</li>)}
+                              </ol>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                         <div className="flex items-center gap-3 text-gat-steel">
+                           <AlertCircle className="w-5 h-5" />
+                           Detailed rules will be announced shortly.
+                         </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Coordinators */}
+                <div className="border border-gat-steel/20 rounded-xl overflow-hidden">
+                  <button 
+                    onClick={() => toggleAccordion("coordinators")}
+                    className="w-full flex items-center justify-between p-4 bg-gat-off-white hover:bg-gat-blue/5 transition-colors font-bold text-gat-midnight"
+                  >
+                    Contact Coordinators
+                    <span className="text-gat-steel">{activeAccordion === "coordinators" ? "−" : "+"}</span>
+                  </button>
+                  {activeAccordion === "coordinators" && (
+                    <div className="p-5 bg-white text-gat-charcoal text-sm leading-relaxed border-t border-gat-steel/10">
+                      {mainDetail && (mainDetail.coordinator || (mainDetail.coordinators && mainDetail.coordinators.length > 0)) ? (
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          {mainDetail.coordinator && (
+                            <div className="flex items-start gap-4 p-4 border border-gat-blue/10 rounded-lg hover:border-gat-blue/30 transition-colors bg-gat-off-white">
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${colors.bg}`}>
+                                <Users className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="font-bold text-gat-midnight">{mainDetail.coordinator.name}</p>
+                                <a href={`tel:${mainDetail.coordinator.mobile.replace(/\s/g, "")}`} className="flex items-center gap-1.5 text-xs text-gat-blue hover:underline mt-1">
+                                  <Phone className="w-3 h-3" /> {mainDetail.coordinator.mobile}
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                          {mainDetail.coordinators && mainDetail.coordinators.map((coord, idx) => (
+                            <div key={idx} className="flex items-start gap-4 p-4 border border-gat-blue/10 rounded-lg hover:border-gat-blue/30 transition-colors bg-gat-off-white">
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${colors.bg}`}>
+                                <Users className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="font-bold text-gat-midnight">{coord.name}</p>
+                                <a href={`tel:${coord.mobile.replace(/\s/g, "")}`} className="flex items-center gap-1.5 text-xs text-gat-blue hover:underline mt-1">
+                                  <Phone className="w-3 h-3" /> {coord.mobile}
+                                </a>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gat-steel italic">Coordinator info pending.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </div>
+            
+          </div>
+        </div>
       </div>
     </div>
   );

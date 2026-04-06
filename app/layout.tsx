@@ -7,6 +7,12 @@ import { ThemeProvider } from "@/contexts/theme-provider";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Playfair_Display, Rajdhani, DM_Sans, JetBrains_Mono } from "next/font/google";
+
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const rajdhani = Rajdhani({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-rajdhani" });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 
 export const metadata = {
   metadataBase: new URL("https://www.vtufestinteract.com"),
@@ -60,39 +66,23 @@ export const metadata = {
 // Global layout for pages
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Inter Tight — premium heading font */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
-        {/* Persistent 5% grain / noise texture overlay */}
-        <div className="noise-overlay" aria-hidden="true" />
-
-        {/* Cursor radial spotlight — updated via --mx/--my CSS vars from useMouseSpotlight */}
-        <div className="cursor-spotlight" aria-hidden="true" />
-
+    <html lang="en" suppressHydrationWarning className={`${playfair.variable} ${rajdhani.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-body text-gat-charcoal bg-white antialiased">
         <ThemeProvider>
           <AuthContextProvider>
             <Navbar />
-            <main className="pt-20">
+            <main className="min-h-screen">
               {children}
               <Analytics />
               <SpeedInsights />
             </main>
             <Toaster
-              theme="dark"
+              theme="light"
               toastOptions={{
                 style: {
-                  background: "rgba(10,10,10,0.9)",
-                  backdropFilter: "blur(24px)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#f4f4f5",
+                  background: "#1a3a8b",
+                  color: "#ffffff",
+                  border: "1px solid #2362ec",
                 },
               }}
             />

@@ -1,168 +1,187 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { Zap } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Search, Trophy, ChevronRight } from "lucide-react";
 import { eventCategories } from "@/data/eventCategories";
-import GlassCard from "@/components/ui/GlassCard";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.06 } },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24, scale: 0.96 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 260, damping: 24 },
-  },
+// Helper to assign brand colors to categories
+const getColorForCategory = (category: string) => {
+  const map: Record<string, { bg: string, text: string, border: string }> = {
+    THEATRE: { bg: "bg-gat-blue", text: "text-gat-blue", border: "border-gat-blue" },
+    DANCE: { bg: "bg-gat-gold", text: "text-gat-gold", border: "border-gat-gold" },
+    MUSIC: { bg: "bg-gat-navy", text: "text-gat-navy", border: "border-gat-navy" },
+    FASHION: { bg: "bg-gat-cobalt", text: "text-gat-cobalt", border: "border-gat-cobalt" },
+    LITERARY: { bg: "bg-gat-dark-gold", text: "text-gat-dark-gold", border: "border-gat-dark-gold" },
+    FINE_ARTS: { bg: "bg-gat-blue", text: "text-gat-blue", border: "border-gat-blue" },
+    GENERAL_EVENTS: { bg: "bg-gat-gold", text: "text-gat-gold", border: "border-gat-gold" },
+  };
+  return map[category] || { bg: "bg-gat-charcoal", text: "text-gat-charcoal", border: "border-gat-charcoal" };
 };
 
 const EventPage = () => {
-  const grouped = eventCategories.reduce<Record<string, typeof eventCategories>>(
-    (acc, event) => {
-      acc[event.category] = acc[event.category] || [];
-      acc[event.category].push(event);
-      return acc;
-    },
-    {},
-  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("ALL");
+
+  // Derive unique categories
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(eventCategories.map((e) => e.category)));
+    return ["ALL", ...cats];
+  }, []);
+
+  // Filter events
+  const filteredEvents = useMemo(() => {
+    return eventCategories.filter((e) => {
+      const matchesSearch = e.eventName.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = activeCategory === "ALL" || e.category === activeCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, activeCategory]);
 
   return (
-    <div className="relative min-h-screen bg-[#020202]">
-      {/* Ambient glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,242,255,0.05) 0%, transparent 60%)",
-        }}
-      />
+    <div className="min-h-screen bg-gat-off-white font-body pt-12">
+      {/* ── Page Header ─────────────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-gat-blue/10 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs font-bold tracking-[0.2em] uppercase text-gat-steel mb-2 flex items-center gap-2">
+            <Link href="/" className="hover:text-gat-blue transition-colors">Home</Link>
+            <span>/</span>
+            <span className="text-gat-blue">Events</span>
+          </p>
+          <h1 className="text-4xl md:text-5xl font-heading font-black text-gat-midnight mb-6">
+            Browse Events
+          </h1>
 
-      {/* ── Hero header ─────────────────────────────────────────────────────── */}
-      <header className="relative z-10 py-24 md:py-32 text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.p
-            initial={{ opacity: 0, filter: "blur(8px)", y: -8 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-xs font-bold tracking-[0.3em] uppercase text-[#00f2ff]/60 mb-4"
-          >
-            INTERACT 2K26 · Global Academy of Technology
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, filter: "blur(12px)", y: 10 }}
-            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="silver-text text-6xl md:text-8xl font-black tracking-tighter mb-6"
-            style={{ fontFamily: "'Inter Tight', sans-serif" }}
-          >
-            Events
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="text-white/40 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-          >
-            Dive into the world of creativity, passion, and competition. Find your stage.
-          </motion.p>
+          {/* Search Bar */}
+          <div className="relative max-w-2xl">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gat-steel" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search all events... (e.g., Debate, Dance)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-11 pr-4 py-4 rounded-xl border border-gat-blue/20 bg-gat-off-white focus:bg-white focus:ring-2 focus:ring-gat-blue focus:border-transparent transition-all outline-none text-gat-charcoal font-medium placeholder-gat-steel/70"
+            />
+          </div>
         </div>
-        <div className="mt-12 h-px max-w-sm mx-auto bg-gradient-to-r from-transparent via-[#00f2ff]/30 to-transparent" />
       </header>
 
-      {/* ── Event Sections ──────────────────────────────────────────────────── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        {Object.entries(grouped).map(([category, events], sectionIdx) => (
-          <motion.section
-            key={category}
-            className="mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: sectionIdx * 0.04 }}
+      {/* ── Tabs & Grid ─────────────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Category Tabs */}
+        <div className="flex overflow-x-auto scrollbar-none gap-2 pb-6 mb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat;
+            const count = cat === "ALL" ? eventCategories.length : eventCategories.filter(e => e.category === cat).length;
+            
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`whitespace-nowrap flex items-center gap-2 px-5 py-2.5 rounded-lg font-heading uppercase tracking-wide text-sm font-bold border-b-2 transition-all ${
+                  isActive
+                    ? "bg-gat-cobalt text-white border-gat-gold shadow-[0_4px_24px_rgba(35,98,236,0.18)]"
+                    : "bg-white text-gat-steel border-transparent hover:text-gat-charcoal hover:bg-gat-blue/5"
+                }`}
+              >
+                {cat.replace(/_/g, " ")}
+                <span className={`px-2 py-0.5 rounded-md text-xs ${isActive ? "bg-white/20 text-white" : "bg-gat-off-white text-gat-steel"}`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Event Grid */}
+        {filteredEvents.length > 0 ? (
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ staggerChildren: 0.05 }}
           >
-            {/* Category header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-8 rounded-full bg-gradient-to-b from-[#00f2ff] to-[#8b5cf6]" />
-                <h2
-                  className="text-2xl md:text-3xl font-black text-white/90"
-                  style={{ fontFamily: "'Inter Tight', sans-serif" }}
-                >
-                  {category.replace(/_/g, " ")}
-                </h2>
-              </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border border-[#00f2ff]/20 bg-[#00f2ff]/5 text-[#00f2ff]/80">
-                <Zap className="w-3 h-3" />
-                {events.length} events
-              </span>
-            </div>
-
-            {/* Event cards grid */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-60px" }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-            >
-              {events.map((event) => (
-                <motion.div key={event.eventNo} variants={cardVariants} className="h-full">
-                  <a
-                    href={`/events/${event.eventNo}`}
-                    style={{ textDecoration: "none", display: "block", height: "100%" }}
+            <AnimatePresence mode="popLayout">
+              {filteredEvents.map((event) => {
+                const colors = getColorForCategory(event.category);
+                
+                return (
+                  <motion.div
+                    layout
+                    key={event.eventNo}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <GlassCard
-                      className="h-full group cursor-pointer"
-                      showBeam
-                      beamDuration={2.5}
-                    >
-                      {/* Event number badge + hover hint */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#00f2ff]/8 border border-[#00f2ff]/20 text-[#00f2ff]/80">
-                          #{String(event.eventNo).padStart(2, "0")}
-                        </span>
-                        <span className="text-[10px] text-[#00f2ff]/60 font-medium uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
-                          View Details
-                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                            <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </span>
-                      </div>
+                    <Link href={`/events/${event.eventNo}`} className="block h-full">
+                      <div className="group h-full relative bg-white border border-gat-blue/10 rounded-xl overflow-hidden shadow-[0_2px_12px_rgba(27,58,139,0.04)] hover:shadow-[0_8px_32px_rgba(35,98,236,0.15)] hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                        
+                        {/* Top Color Bar */}
+                        <div className={`h-[4px] w-full ${colors.bg}`} />
 
-                      {/* Event name */}
-                      <h3
-                        className="font-bold text-white/90 text-base mb-3 leading-snug group-hover:text-white transition-colors duration-200"
-                        style={{ fontFamily: "'Inter Tight', sans-serif" }}
-                      >
-                        {event.eventName}
-                      </h3>
+                        <div className="p-5 flex flex-col flex-grow">
+                          {/* Badges */}
+                          <div className="flex gap-2 mb-4">
+                            <span className={`inline-flex px-2 py-1 rounded-md text-[10px] font-heading font-bold uppercase tracking-widest bg-opacity-10 border border-opacity-20 ${colors.text} ${colors.bg.replace('bg-', 'bg-')}/10 ${colors.border.replace('border-', 'border-')}/20`}>
+                              {event.category.replace(/_/g, " ")}
+                            </span>
+                            <span className="inline-flex px-2 py-1 rounded-md text-[10px] font-heading font-bold uppercase tracking-widest bg-gat-off-white border border-gat-steel/20 text-gat-steel group-hover:border-gat-blue/30 transition-colors">
+                              {event.maxParticipant > 1 ? `TEAM (${event.maxParticipant})` : "SOLO"}
+                            </span>
+                          </div>
 
-                      {/* Meta row */}
-                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5">
-                        <span className="text-xs text-white/30">
-                          Fee:{" "}
-                          <span className="text-[#8b5cf6]/80 font-semibold">
-                            ₹{event.amount ?? 0}
+                          {/* Title */}
+                          <h3 className="font-heading text-xl font-bold text-gat-midnight group-hover:text-gat-blue transition-colors leading-snug mb-3">
+                            {event.eventName}
+                          </h3>
+
+                          {/* Footer Info */}
+                          <div className="mt-auto pt-4 border-t border-gat-blue/5 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5 text-gat-dark-gold">
+                              <Trophy className="w-4 h-4" />
+                              <span className="font-mono text-sm font-bold">
+                                {event.amount ? `₹${event.amount}` : "FREE"}
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-bold text-gat-steel uppercase tracking-widest bg-gat-off-white px-2 py-1 rounded-md">
+                              #{String(event.eventNo).padStart(2, "0")}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Hover Slide-up Action */}
+                        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gat-blue p-3 flex justify-center">
+                          <span className="text-white text-sm font-bold tracking-wide flex items-center gap-2">
+                            View Details <ChevronRight className="w-4 h-4" />
                           </span>
-                        </span>
-                        <span className="text-xs text-white/20">
-                          Max {event.maxParticipant}
-                        </span>
+                        </div>
                       </div>
-                    </GlassCard>
-                  </a>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.section>
-        ))}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        ) : (
+          <div className="py-24 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gat-steel/10 mb-4">
+              <Search className="w-8 h-8 text-gat-steel" />
+            </div>
+            <h3 className="font-heading text-2xl font-bold text-gat-midnight mb-2">No events found</h3>
+            <p className="text-gat-charcoal">Try adjusting your filters or search query.</p>
+            <button 
+              onClick={() => { setSearchQuery(""); setActiveCategory("ALL"); }}
+              className="mt-6 px-6 py-2 bg-gat-blue text-white rounded-lg font-bold hover:bg-gat-midnight transition-colors"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
