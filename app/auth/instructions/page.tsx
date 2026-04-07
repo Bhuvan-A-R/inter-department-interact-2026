@@ -67,51 +67,51 @@ function InstructionStep({
 const instructions = [
   {
     stepNumber: 1,
-    title: "College Registration",
+    title: "SPOC Registration",
     description:
-      "Register your college on the Sign-Up page using your official principal's email. Only verified principal email IDs are accepted. If your email isn't listed, contact support immediately at 9945864767 or via our website.",
+      "Each department nominates a SPOC who completes registration for all students. Students must submit their details to their department SPOC.",
     icon: <UserPlus className="h-10 w-10 text-red-700" />,
   },
   {
     stepNumber: 2,
-    title: "Login",
+    title: "SPOC Login",
     description:
-      "An OTP is sent to your principal’s email for verification. Once verified, use the credentials sent to log in. If you face any issues, use the 'Forgot Password' option or contact our support team. Remember to check your spam folder.",
+      "The SPOC logs in with the credentials provided by the organizers. If there are issues, use the 'Forgot Password' option or contact support.",
     icon: <LogIn className="h-10 w-10 text-red-700" />,
   },
   {
     stepNumber: 3,
-    title: "Select Events",
+    title: "Select Events and Teams",
     description:
-      "After logging in, view the event categories. Click the down arrow to expand and see available events. Select the events your college wishes to participate in—the selected events will highlight in yellow, confirming your choice.",
+      "Select the events your department will participate in. If an event has multiple teams, increase the team count accordingly.",
     icon: <List className="h-10 w-10 text-red-700" />,
   },
   {
     stepNumber: 4,
-    title: "Add Individual Participants",
+    title: "Collect Student Details",
     description:
-      "Use the 'Add Registrant' option to register individual students. Ensure each student's event selection is correct.",
+      "Students must submit their details and documents to the SPOC. The SPOC enters all student information in the portal.",
     icon: <User className="h-10 w-10 text-red-700" />,
   },
   {
     stepNumber: 5,
-    title: "Review & Update Registrants",
+    title: "Review and Update",
     description:
-      "Review the list of registered students and update any event selections, personal details, or documents as needed. Double-check all details since errors cannot be corrected after submission.",
+      "Review the list of registered students. Update event selections, personal details, or documents if needed. Double-check all entries before payment.",
     icon: <Clipboard className="h-10 w-10 text-red-700" />,
   },
   {
     stepNumber: 6,
     title: "Proceed to Payment",
     description:
-      "Once all registrations are complete, click the 'Go to Payments' button.",
+      "After all student entries are completed, proceed to payment from the portal.",
     icon: <CreditCard className="h-10 w-10 text-red-700" />,
   },
   {
     stepNumber: 7,
     title: "Complete Payment",
     description:
-      "Make your payment via UPI (₹4,000 for up to 10 events; ₹8,000 for 11 or more events). Upload your transaction details and a screenshot for verification. Upon successful verification, your registration is confirmed.",
+      "Make payment via UPI as per the fee structure provided by the organizers. Upload transaction details and a screenshot for verification. Once verified, registrations are confirmed.",
     icon: <CheckCircle className="h-10 w-10 text-red-700" />,
   },
 ];
@@ -120,7 +120,7 @@ export default function RegistrationInstructions() {
   return (
     <div className="min-h-screen bg-[#990000] text-yellow-300 flex flex-col items-center py-12">
       <h1 className="text-5xl font-extrabold mb-12 text-center tracking-wide drop-shadow-lg">
-        Registration Process Instructions
+        Registration Process Instructions (SPOC)
       </h1>
       <div className="flex flex-col items-center space-y-8">
         {instructions.map((instruction, index) => (

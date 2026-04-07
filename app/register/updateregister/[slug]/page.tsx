@@ -52,8 +52,8 @@ interface Registrant {
   usn: string;
   phone: string;
   email: string;
-  gender: string;
-  blood: string;
+  gender: string | null;
+  blood: string | null;
   events: Event[];
   eventRegistrations: EventRegistration[];
   [key: string]: any; // For dynamic access to file URLs
@@ -94,8 +94,8 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
       phone: "",
       usn: "",
       email: "",
-      gender: "",
-      blood: "",
+      gender: null,
+      blood: null,
     },
   });
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
@@ -149,9 +149,9 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
       setValue("name", registrant.name);
       setValue("phone", registrant.phone);
       setValue("usn", registrant.usn);
-      setValue("gender", registrant.gender);
+      // setValue("gender", registrant.gender);
       setValue("email", registrant.email);
-      setValue("blood", registrant.blood);
+      // setValue("blood", registrant.blood);
       setId(registrant.id);
       setRegistrant(registrant);
       const fetchResponse = await fetch("/api/getalleventregister", {
@@ -402,98 +402,6 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-col md:flex-row  gap-4 md:gap-10 mt-5">
-                      <div className="w-full md:w-1/3 space-y-1.5">
-                        <Label htmlFor="gender">
-                          Gender <small className="text-red-600">*</small>
-                        </Label>
-                        <Controller
-                          control={control}
-                          name="gender"
-                          rules={{ required: "Gender is required" }}
-                          render={({ field }) => (
-                            <Select
-                              value={field.value || ""}
-                              onValueChange={field.onChange}
-                              disabled={!editOne}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select Gender" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Gender</SelectLabel>
-                                  <SelectItem value="male">Male</SelectItem>
-                                  <SelectItem value="female">Female</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {errors.gender && (
-                          <p className="text-red-500">
-                            {errors.gender.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="w-full md:w-1/3 space-y-1.5">
-                        <Label htmlFor="blood">
-                          Date Of Birth{" "}
-                          <small className="text-red-600">*</small>
-                        </Label>
-                        <Controller
-                          control={control}
-                          name="blood"
-                          rules={{
-                            required: "Date of Birth is required",
-                          }}
-                          render={({ field }) => (
-                            <Input
-                              type="date"
-                              id="blood"
-                              {...field}
-                              disabled={!editOne}
-                              placeholder="Enter your Date of Birth"
-                            />
-                          )}
-                        />
-                        {errors.blood && (
-                          <p className="text-red-500">{errors.blood.message}</p>
-                        )}
-                      </div>
-
-                      <div className="w-full md:w-1/3 space-y-1.5">
-                        <Label htmlFor="email">
-                          Email <small className="text-red-600">*</small>
-                        </Label>
-                        <Controller
-                          control={control}
-                          name="email"
-                          rules={{
-                            required: "Email is required",
-                            pattern: {
-                              value:
-                                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                              message: "Invalid email address",
-                            },
-                          }}
-                          render={({ field }) => (
-                            <Input
-                              type="text"
-                              id="email"
-                              {...field}
-                              disabled={!editOne}
-                              placeholder="Enter your Email"
-                            />
-                          )}
-                        />
-                        {errors.email && (
-                          <p className="text-red-500">{errors.email.message}</p>
-                        )}
-                      </div>
-                    </div>
                     <div className="flex flex-row gap-4 mt-5 justify-end ">
                       {editOne ? (
                         <>
@@ -623,7 +531,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                   </div>
                 </>
 
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <div className="">
                     <Label className="block text-sm font-medium mt-10 text-primary mb-2">
                       Select Field for Upload:
@@ -715,7 +623,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                       </>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
             </CardContent>
             <CardFooter>

@@ -1,6 +1,6 @@
-# VTU Fest 2025 - Brand Karnataka
+# INTERACT 2026 - Global Academy of Technology
 
-A comprehensive web application for managing the VTU Youth Fest 2025 at Global Academy of Technology, Bengaluru. This platform enables colleges to register, manage student participants, handle event registrations, process payments, and facilitate document verification for a seamless fest experience.
+A comprehensive web application for managing the INTERACT 2026 at Global Academy of Technology, Bengaluru. This platform enables colleges to register, manage student participants, handle event registrations, process payments, and facilitate document verification for a seamless fest experience.
 
 ## 🖼️ Demo Screenshots
 
@@ -9,7 +9,7 @@ A comprehensive web application for managing the VTU Youth Fest 2025 at Global A
 
 ## 🎯 Overview
 
-This application serves as the central hub for VTU Youth Fest 2025, themed "Brand Karnataka", celebrating Karnataka's rich cultural heritage and Bengaluru's innovative spirit. It provides a complete registration and management system for colleges, students, and administrators.
+This application serves as the central hub for INTERACT 2026, celebrating Karnataka's rich cultural heritage and Bengaluru's innovative spirit. It provides a complete registration and management system for colleges, students, and administrators.
 
 ## ✨ Key Features
 
@@ -24,8 +24,8 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 
 - **College Registration**: Colleges can register with their details and manage their profile
 - **Student Registration**: Individual student registration with comprehensive profile management
-- **Event Registration**: Flexible event registration system supporting participants and accompanists
-- **Document Upload**: Secure file upload system for verification documents (Aadhar, SSLC, PUC, etc.)
+- **Event Registration**: Flexible event registration system with multi-team support per event
+- **Document Upload**: Secure file upload system for verification documents
 
 ### 📤 File Upload & Management
 
@@ -91,6 +91,7 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 - **Uploadthing**: File upload and storage
 - **Nodemailer**: Email service
 - **Vercel Analytics**: Usage analytics
+- **Vercel Speed Insights**: Performance insights
 
 ### Development Tools
 
@@ -154,9 +155,10 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
    DATABASE_URL="postgresql://username:password@localhost:5432/vtufest"
    JWT_SECRET="your-super-secret-jwt-key"
    JWT_EXPIRE="24h"
-   REDIS_URL="redis://localhost:6379"
+   UPSTASH_REDIS_REST_URL="https://YOUR-INSTANCE.upstash.io"
+   UPSTASH_REDIS_REST_TOKEN="your-upstash-token"
    UPLOADTHING_SECRET="your-uploadthing-secret"
-   UPLOADTHING_APP_ID="your-uploadthing-app-id"
+   NEXT_PUBLIC_UPLOADTHING_APP_ID="your-uploadthing-app-id"
    SMTP_HOST="smtp.gmail.com"
    SMTP_PORT="587"
    SMTP_EMAIL="your-email@gmail.com"
@@ -183,7 +185,7 @@ This application serves as the central hub for VTU Youth Fest 2025, themed "Bran
 ## 📁 Project Structure
 
 ```
-vtufest/
+interact2026/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   ├── auth/              # Authentication pages
@@ -223,7 +225,7 @@ vtufest/
 
 - `GET /api/getalleventregister` - Get all event registrations
 - `POST /api/markverified` - Verify documents
-- `POST /api/markattendance` - Mark attendance
+- `POST /api/attendancemark` - Mark attendance
 
 ## 🎨 UI/UX Features
 
@@ -275,4 +277,4 @@ For questions or support, please contact the development team at [bhuvansa@bhuva
 
 ---
 
-**Built with ❤️ for VTU Youth Fest 2025 - Brand Karnataka**
+**Built with ❤️ for INTERACT 2026**

@@ -186,10 +186,10 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="min-h-screen mt-16 py-10 flex items-center justify-center bg-gradient-to-br from-background to-secondary p-4">
-      <Card className="w-full max-w-4xl bg-card text-card-foreground">
+    <div className="auth-shell min-h-screen flex items-center justify-center p-4 mt-10">
+      <Card className="w-full max-w-4xl bg-card/90 text-card-foreground mt-20 border border-border shadow-xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-yellow-500 font-semibold">
+          <CardTitle className="text-2xl text-primary font-semibold">
             Total No of Events: {events.length} events
           </CardTitle>
         </CardHeader>
@@ -297,13 +297,17 @@ export default function EventsPage() {
                 </div>
               </form>
               <Button
-                className="w-full my-2"
+                className="w-full my-2 auth-button"
                 onClick={() => setIsOpen((prev) => !prev)}
               >
                 Submit
               </Button>
               <Link href="getallregister">
-                <Button type="button" variant="outline" className="w-full my-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full my-2 auth-button auth-button-secondary"
+                >
                   Go Back
                 </Button>
               </Link>
@@ -317,10 +321,19 @@ export default function EventsPage() {
                     Once After Payment, You cannot make Changes
                   </p>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsOpen(false)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsOpen(false)}
+                      className="auth-button auth-button-secondary"
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleSubmit(onSubmit)}>Confirm</Button>
+                    <Button
+                      onClick={handleSubmit(onSubmit)}
+                      className="auth-button"
+                    >
+                      Confirm
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

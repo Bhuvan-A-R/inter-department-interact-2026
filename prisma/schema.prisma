@@ -21,7 +21,7 @@ model Users {
   deptCode String       @unique
   collegeName String       @unique
   region      String
-  collegeOurCode String?    @unique
+  collegeOurCode String?    
   phone       String        @unique
   email       String        @unique
   password    String
@@ -59,11 +59,11 @@ model Registrants {
   name               String
   usn                String                     @unique
   phone              String                     @unique
-  photoUrl           String
+  photoUrl           String?
   email              String                     @unique
   idcardUrl          String?
-  gender             String
-  blood              String
+  gender             String?
+  blood              String?
   deptCode           String?
   userId             String
   user               Users                      @relation(fields: [userId], references: [id], onDelete: Cascade)

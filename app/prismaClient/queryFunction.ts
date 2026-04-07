@@ -29,7 +29,7 @@ export async function insertRegistrant(
                 }
             }
         });
-        console.log(eventList,arg);
+        // console.log(eventList,arg);
 
         const result = await prisma.$transaction(
             async (prisma) => {
@@ -41,10 +41,12 @@ export async function insertRegistrant(
                         phone: arg.phone,
                         photoUrl: arg.photoUrl,
                         idcardUrl: arg.idcardUrl,
-                        userId: arg.userId,
                         deptCode: arg.deptCode,
                         gender: arg.gender,
                         blood: arg.blood,
+                        user: {
+                            connect: { id: arg.userId },
+                        },
                     },
                 });
 
@@ -173,7 +175,7 @@ export async function getUser(id: string) {
             events: true,
         },
     });
-    console.log(user);
+    // console.log(user);
     return user;
 }
 

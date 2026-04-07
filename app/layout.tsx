@@ -1,12 +1,18 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from ".././components/Footer";
-import "./styles/globals.css";
+import "./globals.css";
 import AuthContextProvider from "@/contexts/auth-context";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Playfair_Display, Rajdhani, DM_Sans, JetBrains_Mono } from "next/font/google";
+
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const rajdhani = Rajdhani({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-rajdhani" });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 
 export const metadata = {
   metadataBase: new URL("https://www.vtufestinteract.com"),
@@ -56,23 +62,30 @@ export const metadata = {
     images: ["https://www.vtufestinteract.com/images/og-image.jpg"],
   },
 };
+
 // Global layout for pages
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* You can add custom head tags here, like meta tags, link to styles, etc. */}
-      </head>
-      <body>
+    <html lang="en" suppressHydrationWarning className={`${playfair.variable} ${rajdhani.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-body text-gat-charcoal bg-white antialiased">
         <ThemeProvider>
           <AuthContextProvider>
             <Navbar />
-            <main className="pt-20">
+            <main className="min-h-screen">
               {children}
               <Analytics />
               <SpeedInsights />
             </main>
-            <Toaster />
+            <Toaster
+              theme="light"
+              toastOptions={{
+                style: {
+                  background: "#1a3a8b",
+                  color: "#ffffff",
+                  border: "1px solid #2362ec",
+                },
+              }}
+            />
             <Footer />
           </AuthContextProvider>
         </ThemeProvider>

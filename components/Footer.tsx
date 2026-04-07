@@ -1,133 +1,128 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import insta from "@/public/images/flogo2.png";
 import yt from "@/public/images/flogo1.png";
-import facebook from "@/public/images/flogo3.png";
 import linkedin from "@/public/images/flogo4.png";
-import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer
-      aria-label="Site Footer"
-      className="backdrop-blur-xl bg-white/90 dark:bg-black/80 shadow-2xl border-b border-white/20 text-black border-t border-black/20"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {/* Left block */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/images/gat-logo.png"
-                alt="GAT logo"
-                width={60}
-                height={60}
-                className="object-contain"
-              />
-              <div>
-                <p className="text-xl font-bold text-black/90">
-                  Global Academy of Technology
-                </p>
-                <p className="text-sm text-black">Bengaluru, Karnataka</p>
-              </div>
-            </div>
-            {/* <div className="flex items-center gap-4">
-              <Image
-                src="/images/vtulogo.png"
-                alt="VTU logo"
-                width={60}
-                height={60}
-                className="object-contain"
-              />
-              <div>
-                <p className="text-xl font-bold">
-                  Visvesvaraya Technological University
-                </p>
-                <p className="text-sm text-black">VTU</p>
-              </div>
-            </div> */}
-            <p className="text-sm leading-relaxed text-black">
-              Growing Ahead of Time.
-            </p>
+    <footer className="bg-gat-midnight text-white pt-16 pb-24 md:pb-8 border-t border-gat-cobalt/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          
+          {/* Column 1: Brand & About */}
+          <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <a
-                href="https://www.linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:scale-110"
-              >
-                <Image src={linkedin} alt="LinkedIn" width={24} height={24} />
-              </a>
-              <a
-                href="https://www.instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:scale-110"
-              >
-                <Image src={insta} alt="Instagram" width={24} height={24} />
-              </a>
-              <a
-                href="https://www.youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:scale-110"
-              >
-                <Image src={yt} alt="YouTube" width={24} height={24} />
-              </a>
+              <span className="font-heading font-bold text-3xl tracking-wide">
+                <span className="text-white">GAT</span>{" "}
+                <span className="text-gat-gold">INTERACT</span>
+              </span>
+            </div>
+            
+            <p className="text-sm text-gat-steel font-body leading-relaxed pr-4">
+              Join Global Academy of Technology for INTERACT 2026 – a celebration of innovation, creativity, and technology. Where Code Meets Culture.
+            </p>
+            
+            {/* Social icons */}
+            <div className="flex items-center gap-4">
+              {[
+                { href: "https://www.linkedin.com", img: linkedin, alt: "LinkedIn" },
+                { href: "https://www.instagram.com", img: insta, alt: "Instagram" },
+                { href: "https://www.youtube.com", img: yt, alt: "YouTube" },
+              ].map(({ href, img, alt }) => (
+                <a
+                  key={alt}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={alt}
+                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-gat-gold hover:border-gat-gold transition-all duration-300 group"
+                >
+                  <Image
+                    src={img}
+                    alt={alt}
+                    width={18}
+                    height={18}
+                    className="brightness-0 invert opacity-70 group-hover:opacity-100 group-hover:invert-0 group-hover:brightness-100 transition-all"
+                  />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Sitemap column */}
+          {/* Column 2: Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-black/90 mb-4">
-              Site Map
-            </h3>
-            <ul className="space-y-2 text-black">
+            <h3 className="font-heading font-bold text-lg text-white mb-6 tracking-wide">Quick Links</h3>
+            <ul className="space-y-3 font-body text-sm">
               <li>
-                <a href="/auth/teampage" className="hover:text-[#FFC25A]">
-                  Our Team
-                </a>
+                <Link href="/" className="text-gat-steel hover:text-gat-gold transition-colors">Home</Link>
               </li>
               <li>
-                <a href="/auth/instructions" className="hover:text-[#FFC25A]">
-                  Registration Instructions
-                </a>
+                <Link href="/about" className="text-gat-steel hover:text-gat-gold transition-colors">About GAT</Link>
+              </li>
+              <li>
+                <Link href="/sponsors" className="text-gat-steel hover:text-gat-gold transition-colors">Sponsors</Link>
+              </li>
+              <li>
+                <Link href="/gallery" className="text-gat-steel hover:text-gat-gold transition-colors">Gallery</Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal column */}
-          <div>
-            <h3 className="text-lg font-semibold text-black/90 mb-4">Legal</h3>
-            <ul className="space-y-2 text-black">
+          {/* Column 3: Events */}
+          {/* <div>
+            <h3 className="font-heading font-bold text-lg text-white mb-6 tracking-wide">Events</h3>
+            <ul className="space-y-3 font-body text-sm">
               <li>
-                <a href="/privacy-policy" className="hover:text-[#FFC25A]">
-                  Privacy Policy
-                </a>
+                <Link href="/events?category=technical" className="text-gat-steel hover:text-gat-gold transition-colors">Technical Events</Link>
               </li>
               <li>
-                <a href="/terms-of-services" className="hover:text-[#FFC25A]">
-                  Terms of Services
-                </a>
+                <Link href="/events?category=cultural" className="text-gat-steel hover:text-gat-gold transition-colors">Cultural Events</Link>
               </li>
-              {/* <li>
-                <a href="/lawyers-corners" className="hover:text-[#FFC25A]">
-                  Lawyer&apos;s Corners
-                </a>
-              </li> */}
+              <li>
+                <Link href="/events?category=workshop" className="text-gat-steel hover:text-gat-gold transition-colors">Workshops</Link>
+              </li>
+              <li>
+                <Link href="/events?category=gaming" className="text-gat-steel hover:text-gat-gold transition-colors">Gaming</Link>
+              </li>
+              <li>
+                <Link href="/schedule" className="text-gat-steel hover:text-gat-gold transition-colors">Full Schedule</Link>
+              </li>
             </ul>
+          </div> */}
+
+          {/* Column 4: Legal & Contact */}
+          <div>
+            <h3 className="font-heading font-bold text-lg text-white mb-6 tracking-wide">Legal</h3>
+            <ul className="space-y-3 font-body text-sm mb-8">
+              <li>
+                <Link href="/privacy-policy" className="text-gat-steel hover:text-gat-gold transition-colors">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link href="/terms-of-services" className="text-gat-steel hover:text-gat-gold transition-colors">Terms of Service</Link>
+              </li>
+            </ul>
+            
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="mt-2 inline-flex items-center gap-2 border border-white/50 px-4 py-2 text-sm uppercase tracking-wide hover:bg-white/10 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-widest border border-gat-steel/20 bg-white/5 text-gat-steel hover:text-white hover:border-gat-gold hover:bg-gat-gold/10 rounded-lg transition-all duration-200"
             >
               ↑ Back to Top
             </button>
           </div>
+
         </div>
 
-        <div className="mt-10 border-t border-[#1F6F62] pt-6 text-center text-sm text-black/70">
-          Copyright © 2026 interact2k26.com, All Rights Reserved.
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-gat-cobalt/30 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gat-steel font-body">
+            Copyright © 2026 Global Academy of Technology · All Rights Reserved.
+          </p>
+          <p className="text-xs text-gat-steel font-body">
+            Developed with ♥ by the Interact 2026 Website Team
+          </p>
         </div>
       </div>
     </footer>

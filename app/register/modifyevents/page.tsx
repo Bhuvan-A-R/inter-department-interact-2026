@@ -195,7 +195,7 @@ export default function EventRegister() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen py-16 px-4 bg-gradient-to-br from-background to-secondary flex justify-center items-center"
+      className="auth-shell py-16 px-4"
     >
       <Toaster
         position="top-right"
@@ -206,7 +206,7 @@ export default function EventRegister() {
           },
         }}
       />
-      <div className="w-full px-4">
+      <div className="w-full px-4 mt-20">
         <h1 className="text-3xl font-bold mb-8 text-foreground text-center">
           Event Registration
         </h1>
@@ -344,7 +344,9 @@ export default function EventRegister() {
                       </li>
                     ))
                   ) : (
-                    <p className="text-gray-500">No events registered</p>
+                    <p className="text-muted-foreground">
+                      No events registered
+                    </p>
                   )}
                 </ul>
               </div>
@@ -380,20 +382,21 @@ export default function EventRegister() {
                         </li>
                       ))
                   ) : (
-                    <p className="text-gray-500">No events selected</p>
+                    <p className="text-muted-foreground">No events selected</p>
                   )}
                 </ul>
                 <LoadingButton
                   loading={isLoading}
                   onClick={generateResponse}
                   disabled={Object.keys(selectedEvents).length === 0}
+                  className="w-full auth-button"
                 >
                   Submit
                 </LoadingButton>
                 <Button
                   variant="outline"
                   onClick={() => router.push("/register/getallregister")}
-                  className="w-full mt-2"
+                  className="w-full mt-2 auth-button auth-button-secondary"
                 >
                   View All Registrations
                 </Button>

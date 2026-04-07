@@ -2,6 +2,8 @@ import eventImage from "@/public/images/pexels-jidev-mohan-356965646-14469571.jp
 import { StaticImageData } from "next/image";
 
 export interface EventList {
+    /** Maps to eventNo in eventCategories.ts */
+    eventNo?: number;
     category: string;
     image: StaticImageData;
     name: string;
@@ -18,6 +20,7 @@ export interface EventList {
 
 export const eventsList:EventList[]= [
     {
+        eventNo: 15,
         category: "Music",
         image: eventImage,
         name: "Classical Vocal Solo (Hindustani/Carnatic)",
@@ -36,6 +39,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 12,
         category: "Music",
         image: eventImage,
         name: "Classical Instrumental Solo (Percussion Tala Vadya)",
@@ -52,6 +56,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 12,
         category: "Music",
         image: eventImage,
         name: "Classical Instrumental Solo (Non-Percussion Swara Vadya)",
@@ -69,6 +74,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 14,
         category: "Music",
         image: eventImage,
         name: "Light Vocal Solo (Indian)",
@@ -85,6 +91,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 16,
         category: "Music",
         image: eventImage,
         name: "Western Vocal Solo",
@@ -101,6 +108,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 18,
         category: "Music",
         image: eventImage,
         name: "Group Song (Indian)",
@@ -119,6 +127,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 17,
         category: "Music",
         image: eventImage,
         name: "Group Song (Western)",
@@ -136,6 +145,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 13,
         category: "Music",
         image: eventImage,
         name: "Folk Orchestra",
@@ -154,6 +164,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 10,
         category: "Dance",
         image: eventImage,
         name: "Folk / Tribal Dance",
@@ -172,6 +183,7 @@ export const eventsList:EventList[]= [
         },
     },
     {
+        eventNo: 7,
         category: "Dance",
         image: eventImage,
         name: "Classical Dance Solo",
@@ -189,6 +201,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 4,
         category: "Theatre",
         image: eventImage,
         name: "Skit",
@@ -204,6 +217,7 @@ export const eventsList:EventList[]= [
         coordinators: [{ name: "Dr. Mamatha K S", mobile: "81230 30614" }],
     },
     {
+        eventNo: 3,
         category: "Theatre",
         image: eventImage,
         name: "Mime",
@@ -219,6 +233,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 1,
         category: "Theatre",
         image: eventImage,
         name: "Mimicry",
@@ -234,6 +249,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 2,
         category: "Theatre",
         image: eventImage,
         name: "One Act Play",
@@ -253,6 +269,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 38,
         category: "Literary",
         image: eventImage,
         name: "Quiz",
@@ -265,6 +282,7 @@ export const eventsList:EventList[]= [
         coordinators: [{ name: "Mr. Adarsha M R", mobile: "90199 53604" }],
     },
     {
+        eventNo: 23,
         category: "Literary",
         image: eventImage,
         name: "Debate",
@@ -284,6 +302,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 24,
         category: "Literary",
         image: eventImage,
         name: "Elocution",
@@ -303,6 +322,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 33,
         category: "Fine Arts",
         image: eventImage,
         name: "Collage",
@@ -320,6 +340,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 32,
         category: "Fine Arts",
         image: eventImage,
         name: "Rangoli",
@@ -333,6 +354,7 @@ export const eventsList:EventList[]= [
         coordinators: [{ name: "Ms. Mamatha G", mobile: "78921 14038" }],
     },
     {
+        eventNo: 28,
         category: "Fine Arts",
         image: eventImage,
         name: "Cartooning",
@@ -349,6 +371,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 27,
         category: "Fine Arts",
         image: eventImage,
         name: "Installation",
@@ -368,6 +391,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 26,
         category: "Fine Arts",
         image: eventImage,
         name: "Poster Making",
@@ -381,6 +405,7 @@ export const eventsList:EventList[]= [
         coordinators: [{ name: "Mr. Darshan A", mobile: "79752 13438" }],
     },
     {
+        eventNo: 29,
         category: "Fine Arts",
         image: eventImage,
         name: "Clay Modelling",
@@ -398,6 +423,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 30,
         category: "Fine Arts",
         image: eventImage,
         name: "On Spot Painting",
@@ -415,6 +441,7 @@ export const eventsList:EventList[]= [
         ],
     },
     {
+        eventNo: 34,
         category: "Fine Arts",
         image: eventImage,
         name: "Spot Photography",

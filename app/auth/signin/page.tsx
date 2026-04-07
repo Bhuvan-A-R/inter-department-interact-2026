@@ -30,12 +30,13 @@ import { useAuthContext } from "@/contexts/auth-context";
 import { loginSchema } from "@/lib/schemas/auth";
 import { toast } from "sonner";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
-// Import your logos and background image
+// Import logos and background image – paths unchanged
 import gatLogo from "@/public/images/gat-logo.png";
-import vtulogo from "@/public/images/vtulogo.png";
-import bgImage from "@/public/images/GAT IMAGE.png";
+import interactLogo from "@/public/gat-logos/INTERACT2K26.png";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 export default function SignIn() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function SignIn() {
           description: "You have been logged in successfully",
         });
 
-        // Role-based redirect
+        // Role-based redirect – unchanged
         const role = response.data.role;
         if (role === "ADMIN") {
           router.push("/adminDashboard");
@@ -75,14 +76,8 @@ export default function SignIn() {
           router.push("/register/firstEventSelection");
         }
       } else {
-        form.setError("email", {
-          type: "manual",
-          message: "Invalid credentials",
-        });
-        form.setError("password", {
-          type: "manual",
-          message: "Invalid credentials",
-        });
+        form.setError("email", { type: "manual", message: "Invalid credentials" });
+        form.setError("password", { type: "manual", message: "Invalid credentials" });
         setError(response.data.message);
         setIsLoading(false);
       }
@@ -93,234 +88,273 @@ export default function SignIn() {
     }
   }
 
+  // ── Visual layer ────────────────────────────────────────────────────────────
+
   return (
-    <>
-      {/* Rolling Banner at the Top with Neon Glow Border */}
-      <div className="top-25 left-0 w-full z-50 neon-glow">
-        <div className="bg-gradient-to-r from-white to-white py-2 px-4 border-[4px] border-white/30 ">
-          <div className="overflow-hidden">
-            <div className="whitespace-nowrap animate-marquee">
-              <span className="text-2xl font-bold text-[#990000] tracking-wider">
-                {/* LAST DATE TO REGISTER IS ON 10TH MARCH 2025. PLEASE ENSURE TO
-                SUBMIT YOUR REGISTRATION BEFORE THE LAST DATE. DON'T MISS OUT ON
-                THIS EXTRAORDINARY OPPORTUNITY TO JOIN AN EVENT FILLED WITH
-                TRANSFORMATIVE EXPERIENCES, ENRICHING WORKSHOPS, AND INVALUABLE
-                NETWORKING MOMENTS! */}
-                Registrations Starting Soon. Stay tuned for updates!
-              </span>
-            </div>
-          </div>
-        </div>
+    <div
+      className="relative min-h-screen flex items-center justify-center p-4 mt-20 overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(ellipse 65% 55% at 60% 35%, hsl(var(--primary) / 0.09) 0%, transparent 65%),
+          radial-gradient(ellipse 45% 45% at 5% 85%,  hsl(var(--secondary) / 0.07) 0%, transparent 55%),
+          hsl(var(--background))
+        `,
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      {/* dot grid */}
+      <div className="dot-grid absolute inset-0 pointer-events-none opacity-100" />
+
+      {/* Ghost watermark like home page */}
+      <div
+        className="font-display absolute left-[-2%] bottom-[4%] font-black leading-none select-none pointer-events-none"
+        style={{
+          fontSize: "clamp(90px,14vw,170px)",
+          color: "hsl(var(--primary) / 0.1)",
+          letterSpacing: "-0.02em",
+        }}
+        aria-hidden
+      >
+        INTERACT
+      </div>
+      <div
+        className="font-display absolute right-[-2%] top-[4%] font-black leading-none select-none pointer-events-none"
+        style={{
+          fontSize: "clamp(90px,14vw,170px)",
+          color: "hsl(var(--primary) / 0.1)",
+          letterSpacing: "-0.02em",
+        }}
+        aria-hidden
+      >
+        2K26
       </div>
 
-      {/* Main Content */}
+      {/* Announcement marquee */}
       <div
-        className="relative min-h-screen flex items-center justify-center p-10 backdrop-blur-xl bg-white/30"
+        className="absolute top-0 left-0 right-0 border-b py-2.5 overflow-hidden z-20"
         style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+          borderColor: "hsl(var(--border))",
+          background: "hsl(var(--secondary) / 0.05)",
         }}
       >
-        {/* Background Image with Reduced Opacity */}
-        <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center backdrop-blur-2xl"
-          style={{
-            backgroundImage: `url('${bgImage.src}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.6,
-          }}
-        />
-
-        {/* Content Over the Background */}
-        <div className="relative z-10">
-          <Card className="w-full max-w-md rounded-lg shadow-2xl overflow-hidden border-0 transition-shadow duration-300 hover:shadow-3xl">
-            {/* Header */}
-            <CardHeader className="backdrop-blur-xl bg-gray-200 p-6 text-center border-b border-white/30">
-              <div className="flex flex-col items-center justify-center gap-2 px-2 sm:px-6">
-                {/* <div className="transition-transform duration-300 hover:scale-105">
-                  <Image
-                    src={gatLogo}
-                    alt="GAT Logo"
-                    width={80}
-                    height={80}
-                    style={{ objectFit: "contain" }}
-                    className="drop-shadow-lg"
-                  />
-                </div> */}
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <div className="transition-transform duration-300 hover:scale-105">
-                    <CardTitle className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-wide bg-gradient-to-r from-red-600 via-[#800000] to-red-900 bg-clip-text text-transparent drop-shadow-lg leading-tight">
-                      INTERACT
-                    </CardTitle>
-                  </div>
-                  <div className="transition-transform duration-300 hover:scale-105 flex items-center">
-                    <CardDescription className="text-2xl sm:text-3xl font-extrabold text-[#1e3a8a] uppercase tracking-wide drop-shadow-lg animate-bounce leading-tight">
-                      <sub className="text-base align-top font-semibold text-[#1e3a8a]"></sub>
-                      2K26
-                    </CardDescription>
-                  </div>
-                </div>
-                <div className="transition-transform duration-300 hover:scale-105">
-                  <CardTitle className="text-xs sm:text-base md:text-lg lg:text-xl font-semibold uppercase tracking-wide text-black drop-shadow-md leading-snug text-center">
-                    Inter - Department Event Registration Portal
-                  </CardTitle>
-                </div>
-              </div>
-            </CardHeader>
-
-            {/* Form Content */}
-            <CardContent className="backdrop-blur-xl bg-white/20 p-6 border-t border-white/30">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-black font-bold drop-shadow-lg">
-                          Registered Email ID
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            className="bg-gray-200 border-gray-400 focus:border-yellow-400 text-gray-900 focus:ring-2 focus:ring-yellow-400"
-                            placeholder="Enter your email"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-black font-bold drop-shadow-lg">
-                          Password
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              className="bg-gray-200 border-black-400 focus:border-yellow-400 pr-10 text-gray-900 focus:ring-2 focus:ring-yellow-400"
-                              type={visibility ? "text" : "password"}
-                              placeholder="Enter your password"
-                              {...field}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setVisibility((prev) => !prev)}
-                              className="absolute right-2 top-2.5 text-gray-600 hover:text-gray-800"
-                            >
-                              {visibility ? (
-                                <EyeOff className="h-5 w-5" />
-                              ) : (
-                                <Eye className="h-5 w-5" />
-                              )}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )}
-                  />
-                  {error && (
-                    <div className="text-sm text-red-400 text-center">
-                      {error}
-                    </div>
-                  )}
-
-                  {/* Demo Credentials for Recruiters */}
-                  {/* <div className="bg-yellow-100 border-l-4 border-yellow-400 p-3 rounded mb-2 text-sm text-gray-900">
-                    <div className="font-semibold text-[#990000] mb-1">Demo Login for Recruiters</div>
-                    <div>
-                      <span className="font-bold">Username:</span> bhuvansa@icloud.com<br />
-                      <span className="font-bold">Password:</span> am=uR@&!gBAs
-                    </div>
-                    <div className="mt-1 text-xs text-gray-700">Recruiters who are trying out my application can use this demo account.</div>
-                  </div> */}
-                  <LoadingButton
-                    type="submit"
-                    loading={isLoading}
-                    className="w-full bg-black text-white hover:bg-gray-800 font-bold transition-all duration-300 hover:scale-105 shadow-lg"
-                  >
-                    Log in
-                  </LoadingButton>
-                </form>
-              </Form>
-            </CardContent>
-
-            {/* Footer */}
-            <CardFooter className="backdrop-blur-xl bg-white/20 p-4 flex flex-col gap-6 border-t border-white/30">
-              <div className="relative flex justify-center text-sm uppercase">
-                <span className="px-2 text-red-600 drop-shadow-lg">
-                  Note: Only SPOCs can log in. We Request Participants to reach
-                  out to their respective department SPOCs for any
-                  registrations.
-                </span>
-              </div>
-              {/* <Button
-                variant="link"
-                className="w-full text-black/90 hover:text-black/70 font-bold drop-shadow-lg transition-all duration-300"
-                onClick={() => router.push("/auth/forgotpassword")}
-              >
-                Forgot Password?
-              </Button>
-              <div className="relative w-full">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white/20 px-2 text-black/90 font-bold drop-shadow-lg">
-                    Not yet Registered?
-                  </span>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                className="w-full bg-white text-black font-bold hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 shadow-lg border-gray-300"
-                onClick={() => router.push("/auth/signup")}
-              >
-                Sign Up
-              </Button> */}
-            </CardFooter>
-          </Card>
+        <style>{`
+          @keyframes marquee-scroll-signin {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+          }
+          .marquee-track-signin {
+            animation: marquee-scroll-signin 26s linear infinite;
+            display: flex;
+            width: max-content;
+          }
+          .marquee-track-signin:hover { animation-play-state: paused; }
+        `}</style>
+        <div className="whitespace-nowrap marquee-track-signin">
+          {[...Array(8)].map((_, i) => (
+            <span
+              key={i}
+              className="text-xs font-bold uppercase tracking-[0.18em] mx-12 flex-shrink-0"
+              style={{ color: "hsl(var(--foreground) / 0.5)" }}
+            >
+              Registrations Starting Soon · Stay tuned for updates · INTERACT 2K26 ·
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Global CSS for Marquee and Neon Glow Animations */}
-      <style jsx global>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(100%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 15s linear infinite;
-        }
-        @keyframes neon-glow {
-          0% {
-            box-shadow: 0 0 15px #ffd700;
-          }
-          50% {
-            box-shadow: 0 0 30px #ff4500;
-          }
-          100% {
-            box-shadow: 0 0 15px #ffd700;
-          }
-        }
+      {/* ── Sign-in card ──────────────────────────────────────────────────────── */}
+      <motion.div
+        id="signin-card"
+        initial={{ opacity: 0, y: 24, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-md"
+      >
+        {/* Card shell */}
+        <div
+          className="rounded-[var(--radius)] overflow-hidden"
+          style={{
+            background: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+          }}
+        >
+          {/* Card header */}
+          <div
+            className="px-8 pt-8 pb-6 border-b"
+            style={{ borderColor: "hsl(var(--border))" }}
+          >
+            <div className="flex flex-col items-center text-center gap-3">
+              {/* Logo */}
+              <div className="mb-2 flex items-center justify-center gap-4">
+                <Image
+                  src={gatLogo}
+                  alt="GAT Logo"
+                  width={52}
+                  height={52}
+                  className="object-contain opacity-100"
+                />
+                <Image
+                  src={interactLogo}
+                  alt="INTERACT Logo"
+                  width={52}
+                  height={52}
+                  className="object-contain opacity-100"
+                />
+              </div>
 
-        .neon-glow {
-          animation: neon-glow 2s infinite alternate;
-        }
-      `}</style>
-    </>
+              {/* Title */}
+              <div className="flex items-center gap-2">
+                <h1
+                  className="font-display text-4xl font-black tracking-tighter"
+                  style={{ color: "hsl(var(--foreground))" }}
+                >
+                  INTERACT
+                </h1>
+                <span
+                  className="font-display text-2xl font-black tracking-tight"
+                  style={{ color: "hsl(var(--primary))" }}
+                >
+                  2K26
+                </span>
+              </div>
+
+              <p
+                className="font-mono-jb text-xs font-semibold tracking-[0.2em] uppercase"
+                style={{ color: "hsl(var(--muted))" }}
+              >
+                Inter-Department Event Registration Portal
+              </p>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="px-8 py-7">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                {/* Email */}
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        className="font-mono-jb text-xs font-semibold tracking-widest uppercase"
+                        style={{ color: "hsl(var(--muted))" }}
+                      >
+                        Registered Email ID
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="h-11 transition-all duration-200"
+                          style={{
+                            background: "hsl(var(--background))",
+                            color: "hsl(var(--foreground))",
+                            borderColor: "hsl(var(--border))",
+                            borderRadius: "var(--radius)",
+                          }}
+                          placeholder="Enter your email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Password */}
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        className="font-mono-jb text-xs font-semibold tracking-widest uppercase"
+                        style={{ color: "hsl(var(--muted))" }}
+                      >
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            className="h-11 pr-10 transition-all duration-200"
+                            style={{
+                              background: "hsl(var(--background))",
+                              color: "hsl(var(--foreground))",
+                              borderColor: "hsl(var(--border))",
+                              borderRadius: "var(--radius)",
+                            }}
+                            type={visibility ? "text" : "password"}
+                            placeholder="Enter your password"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            id="password-visibility-toggle"
+                            onClick={() => setVisibility((prev) => !prev)}
+                            className="absolute right-3 top-3 transition-colors duration-200"
+                            style={{ color: "hsl(var(--muted))" }}
+                          >
+                            {visibility ? (
+                              <EyeOff className="h-5 w-5" />
+                            ) : (
+                              <Eye className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Inline error */}
+                {error && (
+                  <div className="text-xs text-red-400 text-center bg-red-400/5 border border-red-400/20 rounded-lg px-3 py-2">
+                    {error}
+                  </div>
+                )}
+
+                {/* Submit */}
+                <MagneticButton className="w-full">
+                  <LoadingButton
+                    type="submit"
+                    id="signin-submit-btn"
+                    loading={isLoading}
+                    className="w-full font-bold tracking-wide transition-shadow duration-300 h-11"
+                    style={{
+                      background: "hsl(var(--primary))",
+                      color: "hsl(var(--primary-foreground))",
+                      borderRadius: "calc(var(--radius) - 2px)",
+                    }}
+                  >
+                    Sign In
+                  </LoadingButton>
+                </MagneticButton>
+              </form>
+            </Form>
+          </div>
+
+          {/* Card footer note */}
+          <div
+            className="px-8 pb-7 border-t pt-5"
+            style={{ borderColor: "hsl(var(--border))" }}
+          >
+            <p
+              className="text-xs text-center leading-relaxed"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              <span
+                className="font-semibold"
+                style={{ color: "hsl(var(--primary))" }}
+              >
+                Note:
+              </span>{" "}
+              Only SPOCs can log in. Participants should reach out to their respective
+              department SPOCs for registrations.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
