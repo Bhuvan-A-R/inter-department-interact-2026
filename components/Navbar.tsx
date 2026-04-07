@@ -131,8 +131,8 @@ const Navbar = () => {
         <Link href="/events" className="flex flex-col items-center justify-center w-full text-gat-steel hover:text-gat-blue p-2 transition-colors">
           <span className="text-xs mt-1">Events</span>
         </Link>
-        <Link href="/schedule" className="flex flex-col items-center justify-center w-full text-gat-steel hover:text-gat-blue p-2 transition-colors">
-          <span className="text-xs mt-1">Schedule</span>
+        <Link href="/spoc-details" className="flex flex-col items-center justify-center w-full text-gat-steel hover:text-gat-blue p-2 transition-colors">
+          <span className="text-xs mt-1">SPOCs Details</span>
         </Link>
       </nav>
     </>
