@@ -14,8 +14,8 @@ const registerSchema = z.object({
             message: "Phone number must contain only digits",
         }),
     usn: z.string({ message: "usn is required" }),
-    gender: z.string({ message: "gender is required" }),
-    blood: z.string({ message: "date of birth is required" }),
+    gender: z.string().nullable().optional(),
+    blood: z.string().nullable().optional(),
     email: z.string({ message: "email is required" }),
 
 });
@@ -25,8 +25,8 @@ export interface RegistrantDetailUpdate {
     name: string;
     phone: string;
     usn: string;
-    gender: string;
-    blood: string;
+    gender: string | null;
+    blood: string | null;
     email: string;
 }
 
@@ -34,6 +34,8 @@ export async function PATCH(request: Request) {
     const data = await request.json();
     data.usn = String(data.usn).toUpperCase();
     data.email = String(data.email).toUpperCase();
+    data.gender = data.gender && String(data.gender).trim() !== "" ? data.gender : null;
+    data.blood = data.blood && String(data.blood).trim() !== "" ? data.blood : null;
     
     const result =  registerSchema.safeParse(data);
 
