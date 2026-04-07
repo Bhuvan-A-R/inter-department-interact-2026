@@ -29,7 +29,7 @@ export async function insertRegistrant(
                 }
             }
         });
-        console.log(eventList,arg);
+        // console.log(eventList,arg);
 
         const result = await prisma.$transaction(
             async (prisma) => {
@@ -175,7 +175,7 @@ export async function getUser(id: string) {
             events: true,
         },
     });
-    console.log(user);
+    // console.log(user);
     return user;
 }
 

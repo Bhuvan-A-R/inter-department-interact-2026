@@ -163,11 +163,11 @@ export default function SelectRolesAndEvents({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4 md:gap-10">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-10 items-start">
               <div className="w-full md:w-1/3 space-y-1.5">
                 <Label htmlFor="name">
-                  Name of the student (As mentioned on 10th or any equivalent
-                  marks card) <small className="text-red-600">*</small>
+                  Name of the Student
+                  <span className="block font-normal"><small className="text-red-600">(As mentioned on 10th or any equivalent marks card)*</small></span>
                 </Label>
                 <Input
                   {...register("name")}
@@ -178,9 +178,10 @@ export default function SelectRolesAndEvents({
                   <p className="text-red-500 text-sm">{errors.name.message}</p>
                 )}
               </div>
-              <div className="w-full md:w-1/3 space-y-1.5 mt-6">
+              <div className="w-full md:w-1/3 space-y-1.5">
                 <Label htmlFor="usn">
-                  USN of the Student <small className="text-red-600">*</small>
+                  USN of the Student 
+                  <span className="block font-normal mt-1"><small className="text-red-600">(Should be in format 1GA22CS000)*</small></span>
                 </Label>
                 <Input
                   {...register("usn")}
@@ -191,10 +192,10 @@ export default function SelectRolesAndEvents({
                   <p className="text-red-500 text-sm">{errors.usn.message}</p>
                 )}
               </div>
-              <div className="w-full md:w-1/3 space-y-1.5 mt-6">
+              <div className="w-full md:w-1/3 space-y-1.5">
                 <Label htmlFor="phone">
-                  Phone number of the student{" "}
-                  <small className="text-red-600">*</small>
+                  Phone number of the Student{" "}
+                  <span className="block font-normal mt-1"><small className="text-red-600">(Correct Number and it should be entered once)*</small></span>
                 </Label>
                 <Input
                   id="phone"
@@ -207,10 +208,11 @@ export default function SelectRolesAndEvents({
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 md:gap-10 w-full">
-              <div className="w-full md:w-1/3 space-y-1.5 mt-6">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-10 w-full items-start">
+              <div className="w-full md:w-1/3 space-y-1.5">
                 <Label htmlFor="email">
-                  Email <small className="text-red-600">*</small>
+                  Email 
+                  <span className="block font-normal mt-1"><small className="text-red-600">(Correct E-Mail and it should be entered once)*</small></span>
                 </Label>
                 <Input
                   {...register("email")}

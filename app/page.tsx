@@ -139,7 +139,7 @@ export default function Home() {
 
         {/* ghost year watermark */}
         <div
-          className="absolute top-[12%] select-none pointer-events-none transition-all duration-500 max-[550px]:left-1/2 max-[550px]:-translate-x-1/2 max-[550px]:opacity-[0.05] min-[551px]:right-[-2%] min-[551px]:opacity-[0.05]"
+          className="absolute top-[12%] select-none pointer-events-none transition-all duration-500 max-[550px]:left-1/2 max-[550px]:-translate-x-1/2 max-[550px]:opacity-[0.05] min-[551px]:right-[-2%] min-[551px]:opacity-[0.9]"
           style={{ width: "clamp(280px, 40vw, 700px)" }}
           aria-hidden
         >
@@ -197,7 +197,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, delay: 0.3 }}
           >
-            Where Code Meets Culture
+            Inter-Department Event Registration Portal
           </motion.p>
 
           {/* stats */}

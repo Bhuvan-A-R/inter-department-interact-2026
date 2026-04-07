@@ -13,6 +13,7 @@ import LoginLogoutButton from "./LoginLogoutButton";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
+  { href: "/spoc-details", label: "SPOC's Details" },
   // { href: "/schedule", label: "Schedule" },
 ];
 
