@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// added the collegeCode to nullable as optional and unique
+// add the email for the unique key
+
+model Users {
+  id          String        @id @default(uuid())
+  deptCode String       @unique
+  collegeName String       @unique
+  region      String
+  collegeOurCode String?    
+  phone       String        @unique
+  email       String        @unique
+  password    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  role        String        @default("USER")
+  paymentUrl  String?
+  txnNumber   String?
+  Amount      Int?
+  PaymentVerified  PaymentVerifiedStatus @default(PENDING)
+  events      Events[]
+  registrants Registrants[]
+}
+
+model Events {
+  id                    String               @id @default(uuid())
+  eventNo               Int
+  eventName             String
+  deptCode              String?
+  teamNumber            Int                  @default(1)
+  userId                String
+  registrants           Registrants[]        @relation("EventRegistrations")
+  user                  Users                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventRegistrations    EventRegistrations[]
+  maxParticipant        Int
+  registeredParticipant Int                  @default(0)
+  amount                Int                  @default(0)
+  category              String
+
+  @@unique([userId, eventNo, teamNumber])
+}
+
+model Registrants {
+  id                 String                     @id @default(uuid())
+  name               String
+  usn                String                     @unique
+  phone              String                     @unique
+  photoUrl           String?
+  email              String                     @unique
+  idcardUrl          String?
+  gender             String?
+  blood              String?
+  deptCode           String?
+  userId             String
+  user               Users                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events             Events[]                   @relation("EventRegistrations")
+  eventRegistrations EventRegistrations[]
+  docStatus          DocumentVerificationStatus @default(PENDING)
+}
+
+model EventRegistrations {
+  id               String      @id @default(uuid())
+  registrantId     String
+  eventId          String
+  type             Type
+  prize            Int         @default(0)
+  registrant       Registrants @relation(fields: [registrantId], references: [id], onDelete: Cascade)
+  event            Events      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([registrantId, eventId])
+}
+
+enum Type {
+  PARTICIPANT
+}
+
+enum DocumentVerificationStatus {
+  PENDING
+  PROCESSING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentVerifiedStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
