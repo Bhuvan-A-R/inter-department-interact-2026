@@ -6,14 +6,14 @@ import Image from "next/image";
 import { Menu, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import gatLogo from "@/public/gat-logos/GAT_Linear Logo.png";
+import gatLogo from "@/public/gat-logos/GAT_Linear_Logo.png"; // Changed to snake_case to fix the Invalid URL error
 import interactLogo from "@/public/gat-logos/INTERACT2K26.png";
 import LoginLogoutButton from "./LoginLogoutButton";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
-  // { href: "/spoc-details", label: "SPOC's Details" },
+  { href: "/spoc-details", label: "SPOC's Details" },
   // { href: "/schedule", label: "Schedule" },
 ];
 
@@ -131,9 +131,9 @@ const Navbar = () => {
         <Link href="/events" className="flex flex-col items-center justify-center w-full text-gat-steel hover:text-gat-blue p-2 transition-colors">
           <span className="text-xs mt-1">Events</span>
         </Link>
-        {/* <Link href="/spoc-details" className="flex flex-col items-center justify-center w-full text-gat-steel hover:text-gat-blue p-2 transition-colors">
+        <Link href="/spoc-details" className="flex flex-col items-center justify-center w-full text-gat-steel hover:text-gat-blue p-2 transition-colors">
           <span className="text-xs mt-1">SPOCs Details</span>
-        </Link> */}
+        </Link>
       </nav>
     </>
   );
