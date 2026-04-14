@@ -9,6 +9,7 @@ type RegistrationRow = {
   rollNo: string;
   department: string | null;
   email: string;
+  phone: string;
   eventName: string;
   eventDate: string | null;
   registrationDate: string | null;
@@ -71,6 +72,7 @@ export async function GET() {
       rollNo: entry.registrant.usn,
       department: dept,
       email: entry.registrant.email,
+      phone: entry.registrant.phone || entry.registrant.user?.phone || "",
       eventName,
       eventDate,
       registrationDate: null,

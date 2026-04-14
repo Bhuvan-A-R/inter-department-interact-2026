@@ -31,6 +31,7 @@ type RegistrationRow = {
   rollNo: string;
   department: string | null;
   email: string;
+  phone: string | null;
   eventName: string;
   eventDate: string | null;
   registrationDate: string | null;
@@ -73,6 +74,23 @@ const exportToExcel = (
 
 const formatValue = (value: string | null) => value ?? "N/A";
 
+const getBaseEventName = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return "Unknown Event";
+  const matchIndex = trimmed.toLowerCase().indexOf(" 1ga");
+  if (matchIndex === -1) return trimmed;
+  return trimmed.slice(0, matchIndex).trim() || "Unknown Event";
+};
+
+const getTeamName = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return "N/A";
+  const matchIndex = trimmed.toLowerCase().indexOf(" 1ga");
+  if (matchIndex === -1) return "N/A";
+  const team = trimmed.slice(matchIndex + 1).trim();
+  return team || "N/A";
+};
+
 export default function AdminDashboardPanel() {
   const [data, setData] = React.useState<DashboardResponse | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -83,7 +101,9 @@ export default function AdminDashboardPanel() {
 
     const load = async () => {
       try {
-        const response = await fetch("/api/admin/registration-dashboard");
+        const response = await fetch("/api/admin/registration-dashboard", {
+          cache: "no-store",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch admin registration data");
         }
@@ -116,7 +136,7 @@ export default function AdminDashboardPanel() {
   const eventSummaries = React.useMemo<EventSummary[]>(() => {
     const map = new Map<string, EventSummary>();
     registrations.forEach((row) => {
-      const key = row.eventName || "Unknown Event";
+      const key = getBaseEventName(row.eventName || "");
       if (!map.has(key)) {
         map.set(key, {
           eventName: key,
@@ -162,12 +182,22 @@ export default function AdminDashboardPanel() {
       row.studentName,
       row.rollNo,
       formatValue(row.department),
+      getTeamName(row.eventName),
       row.email,
+      formatValue(row.phone),
       formatValue(row.registrationDate),
     ]);
     exportToExcel(
       `${safeFileName(eventName)}_registrations.xlsx`,
-      ["Student Name", "Roll No", "Department", "Email", "Registration Date"],
+      [
+        "Student Name",
+        "Roll No",
+        "Department",
+        "Team",
+        "Email",
+        "Phone",
+        "Registration Date",
+      ],
       rows,
     );
   };
@@ -181,12 +211,22 @@ export default function AdminDashboardPanel() {
       row.studentName,
       row.rollNo,
       row.eventName,
+      getTeamName(row.eventName),
       row.email,
+      formatValue(row.phone),
       formatValue(row.registrationDate),
     ]);
     exportToExcel(
       `${safeFileName(department)}_registrations.xlsx`,
-      ["Student Name", "Roll No", "Event Name", "Email", "Registration Date"],
+      [
+        "Student Name",
+        "Roll No",
+        "Event Name",
+        "Team",
+        "Email",
+        "Phone",
+        "Registration Date",
+      ],
       rows,
     );
   };
