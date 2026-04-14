@@ -733,10 +733,10 @@ export const eventsList: EventList[] = [
         eventNo: 45,
         category: "SPORTS",
         image: eventImage,
-        name: "Basketball",
+        name: "Basketball (3v3)",
         rules: [
-            "Each team consists of 7 players (5 playing + 2 substitutes).",
-            "Game is played on a full court.",
+            "Each team consists of 4 players (3 playing + 1 substitute).",
+            "Game is played on a half court.",
             "Match starts with a tip-off at center court.",
             "Standard scoring rules apply (2, 3, and 1 point free throws).",
             "Dribbling, passing, and shooting rules must be followed.",
