@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/spoc-details", label: "SPOC's Details" },
+  { href: "/points-calculation-scheme", label: "Points Calculation" },
   // { href: "/schedule", label: "Schedule" },
 ];
 
