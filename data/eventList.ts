@@ -83,7 +83,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Western Group Dance (Student)",
         rules: [
-            "Participation: Groups of 6 to 14 members.",
+            "Participation: Groups of 5 to 8 members.",
             "Time: Must be between 5 to 10 minutes.",
             "Teams may perform any Western dance styles.",
             "Pre-recorded music must be submitted to the Co-Ordinator prior to the event.",
@@ -172,7 +172,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Group Song (Faculty)",
         rules: [
-            "Participation: Up to 6 members per team.",
+            "Participation: Up to 5-8 members per team.",
             "Duration: 15 minutes (including set-up and clearance time).",
             "Participants should bring their own instruments.",
             "Karaoke or Programmed Music is strictly not allowed.",
@@ -461,7 +461,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Content Creation",
         rules: [
-            "Participation: Individual or teams of up to 3 members.",
+            "Participation: Teams of up to 3-4 members.",
             "Duration: The content (Reels, TikTok-style videos, or Vlogs) must be between 60 to 90 seconds.",
             "Technical: High-quality vertical (9:16) or horizontal (16:9) formats are accepted depending on the platform focus. Trending audio is permitted, but the visual content and editing must be original.",
             "Submission: Must be submitted in MP4 format via the designated link or USB.",
@@ -491,7 +491,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Entertainment Quiz",
         rules: [
-            "Participation: Teams of 2 or 3 members.",
+            "Participation: Teams of 3 members.",
             "Format: Consists of a preliminary written round followed by a final stage round for the top 5–6 teams.",
             "Scope: The quiz covers Global and Indian Cinema, Music, OTT series, Social Media trends, and General Pop Culture.",
             "Language: The medium of the quiz will be English.",

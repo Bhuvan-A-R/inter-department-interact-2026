@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { EventCategory } from "@/data/eventCategories";
 import { EventList } from "@/data/eventList";
-import { eventPrizes } from "@/data/eventPrizes";
+import { eventPrizeData } from "@/data/eventPrizes";
 import { motion } from "framer-motion";
 
 interface Props {
@@ -56,7 +56,7 @@ export default function EventDetailClient({ category, details }: Props) {
   const colors = getColorForCategory(category.category);
   const hasDetails = details.length > 0;
   const mainDetail = hasDetails ? details[0] : null;
-  const prizeEntry = eventPrizes.find(
+  const prizeEntry = eventPrizeData.find(
     (entry) => entry.eventNo === category.eventNo,
   );
   const prizeData = prizeEntry
