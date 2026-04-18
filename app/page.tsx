@@ -173,9 +173,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            NATIONAL LEVEL
+             PRAGNYA
             <br />
-            <span style={{ color: "hsl(var(--primary))" }}>INTER-COLLEGIATE</span>
+            <span style={{ color: "hsl(var(--primary))" }}>Interact 2026</span>
             <br />
             <span
               style={{
@@ -183,7 +183,7 @@ export default function Home() {
                 color: "transparent",
               }}
             >
-              EVENTS 2026
+              Inter - Department Events 2026
             </span>
           </motion.h1>
 
