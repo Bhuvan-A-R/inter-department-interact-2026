@@ -173,7 +173,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-             PRAGNYA
+             Inter - Department
             <br />
             <span style={{ color: "hsl(var(--primary))" }}>Interact 2026</span>
             <br />
@@ -183,7 +183,7 @@ export default function Home() {
                 color: "transparent",
               }}
             >
-              Inter - Department Events 2026
+              PRAGNYA
             </span>
           </motion.h1>
 
@@ -195,7 +195,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, delay: 0.3 }}
           >
-            Inter-collegiate Event <br /> Registration Portal
+            Inter-Department Event <br /> Registration Portal
           </motion.p>
 
           {/* stats */}
