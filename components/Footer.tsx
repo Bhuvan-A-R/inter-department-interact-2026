@@ -46,8 +46,8 @@ const Footer = () => {
                   @interact2026
                 </span>
               </a>
-              </div>
-              <div className="flex items-center gap-4">
+            </div>
+            <div className="flex items-center gap-4">
               <a
                 href="https://www.instagram.com/gatbengaluru/"
                 target="_blank"
@@ -85,7 +85,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="https://www.gatinteract.com/about/gat"
+                  href="/about/gat"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
                   About GAT
@@ -93,7 +93,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="https://www.gatinteract.com/about/fest"
+                  href="/about/fest"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
                   About FEST
@@ -101,7 +101,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="https://www.gatinteract.com/about/management"
+                  href="/about/management"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
                   Management Team
@@ -109,7 +109,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="https://www.gatinteract.com/about/interact-team"
+                  href="/about/interact-team"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
                   Interact Team
@@ -120,7 +120,7 @@ const Footer = () => {
               </li> */}
               <li>
                 <Link
-                  href="https://www.gatinteract.com/gallery"
+                  href="/gallery"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
                   Gallery
@@ -128,10 +128,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="https://www.gatinteract.com/"
+                  href="https://interdepartment.gatinteract.com/"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
-                  Inter - College Website
+                  Inter - Department Details
                 </Link>
               </li>
             </ul>
@@ -192,10 +192,10 @@ const Footer = () => {
               <li className="text-gat-gold">
                 Technical Coordinator <br />
                 <a
-                  href="callto:+91 83174 62097"
+                  href="callto:+91 89511 85530"
                   className="text-gat-steel hover:text-gat-gold transition-colors"
                 >
-                  {/* Aditi Rajesh - +91 81479 53199 */} 
+                  Vignesh - +91 89511 85530
                 </a>
               </li>
               <li className="text-gat-gold">
