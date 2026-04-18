@@ -173,9 +173,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-             Inter - Department
+             INTER-DEPARTMENT
             <br />
-            <span style={{ color: "hsl(var(--primary))" }}>Interact 2026</span>
+            <span style={{ color: "hsl(var(--primary))" }}>INTERACT 2026</span>
             <br />
             <span
               style={{
