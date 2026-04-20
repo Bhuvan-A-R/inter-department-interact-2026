@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { utapi } from "../uploadthing/uploadthing";
+import { checkRegistrationBlocks } from "@/lib/blockCheck";
 
 export async function DELETE(request: Request) {
     try {
@@ -27,6 +28,38 @@ export async function DELETE(request: Request) {
 
         // Initialize an array to collect all file URLs to delete
         const filesToDelete: string[] = [];
+
+        // Check if any of these registrants are tied to events that have passed their deadline
+        const foundRegistrantsForBlockCheck = await prisma.registrants.findMany({
+            where: {
+                id: { in: registrantIds },
+                userId: userId,
+            },
+            include: {
+                eventRegistrations: {
+                    include: {
+                        event: true
+                    }
+                }
+            }
+        });
+
+        const eventNamesToCheck = new Set<string>();
+        foundRegistrantsForBlockCheck.forEach(r => {
+            r.eventRegistrations.forEach(er => {
+                if (er.event?.eventName) {
+                    eventNamesToCheck.add(er.event.eventName);
+                }
+            });
+        });
+
+        const blockError = await checkRegistrationBlocks(Array.from(eventNamesToCheck));
+        if (blockError) {
+            return NextResponse.json(
+                { success: false, message: `Cannot delete records: ${blockError}` },
+                { status: 400 }
+            );
+        }
 
         await prisma.$transaction(async (tx) => {
             // 1. Get all registrants with their event registrations and file URLs

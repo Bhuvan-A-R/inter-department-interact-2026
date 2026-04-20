@@ -101,3 +101,11 @@ enum PaymentVerifiedStatus {
   COMPLETED
   FAILED
 }
+
+model EventBlock {
+  id          String   @id @default(uuid())
+  targetName  String   @unique // This will store either the scheduled date (e.g. "25th April") OR the specific eventName.
+  blockTime   DateTime // The exact cutoff date and time
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

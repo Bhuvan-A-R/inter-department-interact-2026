@@ -1,4 +1,5 @@
 import { checkEmailUnique, checkPhoneUnique, checkUsnUnique, getRegistrantById, updateRegisterDetails } from "@/app/prismaClient/queryFunction";
+import { checkRegistrationBlocks } from "@/lib/blockCheck";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -57,6 +58,12 @@ export async function PATCH(request: Request) {
 
         if(!findRegistrant){
             return NextResponse.json({success:false, message:"User Not found"},{status:400});
+        }
+
+        const registeredEventNames = findRegistrant.events?.map(e => e.eventName) || [];
+        const blockError = await checkRegistrationBlocks(registeredEventNames);
+        if (blockError) {
+            return NextResponse.json({ success: false, message: `Cannot edit details: ${blockError}` }, { status: 400 });
         }
 
         const checkPhone = await checkPhoneUnique(result.data.phone);

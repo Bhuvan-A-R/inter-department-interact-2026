@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { EventSchema } from "@/lib/schemas/register";
 import { verifySession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { checkRegistrationBlocks } from "@/lib/blockCheck";
 
 export interface EventCreate {
     eventNo: number;
@@ -44,6 +45,14 @@ export async function POST(request: Request) {
     if (!result.success) {
         return NextResponse.json(
             { success: false, message: result.error.message },
+            { status: 400 }
+        );
+    }
+
+    const blockError = await checkRegistrationBlocks(result.data.map(e => e.eventName));
+    if (blockError) {
+        return NextResponse.json(
+            { success: false, message: blockError },
             { status: 400 }
         );
     }

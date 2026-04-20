@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifySession } from "@/lib/session";
+import { checkRegistrationBlocks } from "@/lib/blockCheck";
 
 interface RegisterEvent {
     eventNo: number;
@@ -32,6 +33,14 @@ export async function PUT(request: Request) {
     if (!userId || !Array.isArray(events)) {
         return NextResponse.json(
             { message: "Invalid request data." },
+            { status: 400 }
+        );
+    }
+
+    const blockError = await checkRegistrationBlocks(events.map((e) => e.eventName));
+    if (blockError) {
+        return NextResponse.json(
+            { message: blockError },
             { status: 400 }
         );
     }

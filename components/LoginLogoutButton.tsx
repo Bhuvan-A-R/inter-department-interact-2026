@@ -8,7 +8,7 @@ import { useAuthContext } from "@/contexts/auth-context";
 // ─── All auth logic below is intentionally untouched ─────────────────────────
 
 const LoginLogoutButton = () => {
-  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const { isLoggedIn, role, setIsLoggedIn } = useAuthContext();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -45,9 +45,16 @@ const LoginLogoutButton = () => {
     <div className="flex items-center gap-2">
       {isLoggedIn ? (
         <>
-          <Link id="dashboard-link" href="/register/getallregister" className={baseBtn}>
-            Dashboard
-          </Link>
+          {(role === "USER" || role === "SPOC" || role === "user" || role === "spoc") && (
+            <Link id="dashboard-link" href="/register/getallregister" className={baseBtn}>
+              Dashboard
+            </Link>
+          )}
+          {role === "ADMIN" && (
+            <Link id="admin-dashboard-link" href="/adminDashboard" className={baseBtn}>
+              Admin Dashboard
+            </Link>
+          )}
           <Link id="logout-link" href="/auth/logout" className={primaryBtn}>
             Logout
           </Link>

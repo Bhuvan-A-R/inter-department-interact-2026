@@ -7,7 +7,9 @@ type AuthContextProviderProps = {
 
 type AuthContext = {
     isLoggedIn: boolean;
+    role: string | null;
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    setRole: React.Dispatch<React.SetStateAction<string | null>>;
     checkAuth: () => Promise<void>;
 };
 
@@ -17,14 +19,22 @@ export default function AuthContextProvider({
     children,
 }: AuthContextProviderProps) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [role, setRole] = useState<string | null>(null);
+    
     const checkAuth = async () => {
         try {
             const response = await fetch("/api/checkAuth");
             const data = await response.json();
             setIsLoggedIn(data.success);
+            if (data.success && data.role) {
+                setRole(data.role);
+            } else {
+                setRole(null);
+            }
         } catch (error) {
             console.error("Auth check failed:", error);
             setIsLoggedIn(false);
+            setRole(null);
         } finally {
         }
     };
@@ -34,7 +44,7 @@ export default function AuthContextProvider({
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, checkAuth }}>
+        <AuthContext.Provider value={{ isLoggedIn, role, setIsLoggedIn, setRole, checkAuth }}>
             {children}
         </AuthContext.Provider>
     );
