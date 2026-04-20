@@ -99,4 +99,13 @@ export const spocsData: SpocData[] = [
     email: "Tejaswini.an@gat.ac.in",
     photo: "/spoc-faculty-photos/tejashwini_an.jpg",
   },
+  {
+    id: 11,
+    name: "Dr. Anitha G. H",
+    department: "MBA",
+    role: "Department SPOC",
+    phone: "+91 81234 96667",
+    email: "anithagh@gat.ac.in",
+    photo: "/spoc-faculty-photos/anitha_g_h.png",
+  },
 ];

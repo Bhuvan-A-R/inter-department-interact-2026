@@ -1,3 +1,5 @@
+import React from 'react';
+
 const pointTiers = [
   {
     title: "Solo Event",
@@ -31,6 +33,18 @@ const pointTiers = [
   },
 ];
 
+const TrophyCard = ({ title, description, iconColor }: { title: string, description: string, iconColor: string }) => (
+  <div className="rounded-2xl border border-gat-blue/10 bg-white/90 p-5 shadow-sm flex flex-col gap-2">
+    <div className={`w-10 h-10 rounded-full ${iconColor} flex items-center justify-center text-xl`}>
+      🏆
+    </div>
+    <h3 className="font-heading font-bold text-gat-midnight">{title}</h3>
+    <p className="text-xs text-gat-steel leading-relaxed">
+      {description}
+    </p>
+  </div>
+);
+
 export default function PointsCalculationSchemePage() {
   return (
     <div className="min-h-screen bg-gat-off-white pt-24 pb-20">
@@ -38,26 +52,43 @@ export default function PointsCalculationSchemePage() {
         <div className="relative overflow-hidden rounded-3xl border border-gat-blue/10 bg-white shadow-card">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(10,66,106,0.08),_transparent_55%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(248,250,252,0.6),_rgba(250,250,250,0))]" />
+          
           <div className="relative p-6 md:p-10">
+            {/* Header Section */}
             <div className="flex flex-col gap-3">
               <p className="text-xs uppercase tracking-[0.35em] text-gat-steel font-bold">
-                Department Points
+                Championship Scoring
               </p>
               <h1 className="text-3xl md:text-4xl font-heading font-black text-gat-midnight">
                 Points Calculation Scheme
               </h1>
               <p className="text-sm md:text-base text-gat-steel max-w-3xl">
-                Total points for an event are calculated as:
-                <span className="font-bold text-gat-midnight">
-                  {" "}
-                  Participation Points + Placement Bonus
-                </span>
-                . Each event type has a fixed participation value, then adds the
-                podium bonus for 1st/2nd/3rd place.
+                Total points for each department are calculated based on three specific categories below. 
+                {/* Winning points consist of <span className="font-bold text-gat-midnight text-blue-600">Participation Points + Podium Bonus</span>. */}
               </p>
             </div>
 
-            <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {/* Trophy Logic Section */}
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              <TrophyCard 
+                title="Rally Trophy" 
+                iconColor="bg-red-100"
+                description="Awarded to the winner of the Rally. These winning points are also added to the cumulative Rolling Trophy tally."
+              />
+              <TrophyCard 
+                title="Rolling Trophy" 
+                iconColor="bg-yellow-100"
+                description="The ultimate championship prize. It includes points from every event podium finish and Rally points."
+              />
+              <TrophyCard 
+                title="Participation Trophy" 
+                iconColor="bg-blue-100"
+                description="Awarded to the department with the highest level of engagement across all events throughout the fest."
+              />
+            </div>
+
+            {/* Points Table Section */}
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
               {pointTiers.map((tier) => (
                 <div
                   key={tier.title}
@@ -71,81 +102,57 @@ export default function PointsCalculationSchemePage() {
                       <p className="text-xs text-gat-steel">{tier.subtitle}</p>
                     </div>
                     <div className="rounded-full bg-gat-blue/10 px-3 py-1 text-xs font-bold text-gat-blue">
-                      Participation = {tier.participation}
+                      Entry: +{tier.participation}
                     </div>
                   </div>
 
-                  <div className="mt-4 space-y-2">
+                  {/* <div className="space-y-2">
                     <div className="flex items-center justify-between rounded-lg border border-yellow-300/40 bg-gradient-to-r from-yellow-50 to-amber-50 p-3">
-                      <span className="font-bold text-gat-midnight">
-                        1st Place
-                      </span>
+                      <span className="font-bold text-gat-midnight">1st Place</span>
                       <span className="font-mono font-black text-amber-700">
                         {tier.podium.first + tier.participation}
-                        <span className="text-xs text-gat-steel">
-                          {" "}
+                        <span className="text-[10px] text-gat-steel ml-1">
                           ({tier.participation}+{tier.podium.first})
                         </span>
                       </span>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border border-gray-300/40 bg-gradient-to-r from-gray-50 to-slate-50 p-3">
-                      <span className="font-bold text-gat-midnight">
-                        2nd Place
-                      </span>
+                      <span className="font-bold text-gat-midnight">2nd Place</span>
                       <span className="font-mono font-black text-slate-600">
                         {tier.podium.second + tier.participation}
-                        <span className="text-xs text-gat-steel">
-                          {" "}
+                        <span className="text-[10px] text-gat-steel ml-1">
                           ({tier.participation}+{tier.podium.second})
                         </span>
                       </span>
                     </div>
                     <div className="flex items-center justify-between rounded-lg border border-orange-300/40 bg-gradient-to-r from-orange-50 to-amber-50/50 p-3">
-                      <span className="font-bold text-gat-midnight">
-                        3rd Place
-                      </span>
+                      <span className="font-bold text-gat-midnight">3rd Place</span>
                       <span className="font-mono font-black text-orange-700">
                         {tier.podium.third + tier.participation}
-                        <span className="text-xs text-gat-steel">
-                          {" "}
+                        <span className="text-[10px] text-gat-steel ml-1">
                           ({tier.participation}+{tier.podium.third})
                         </span>
                       </span>
                     </div>
-                  </div>
-
-                  <div className="mt-4 rounded-lg border border-gat-blue/10 bg-gat-off-white p-3 text-xs text-gat-steel">
-                    Example: Participation = {tier.participation} + 1st place
-                    bonus = {tier.podium.first} =
-                    <span className="font-bold text-gat-midnight">
-                      {" "}
-                      {tier.participation + tier.podium.first} points
-                    </span>
-                    .
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </div>
 
+            {/* Summary Rules */}
             <div className="mt-8 rounded-2xl border border-gat-blue/10 bg-white p-5 shadow-sm">
               <h3 className="text-base font-heading font-bold text-gat-midnight">
-                Notes
+                Scoring Guidelines
               </h3>
               <ul className="mt-3 space-y-2 text-sm text-gat-steel">
                 <li>
-                  Participation points are awarded to all participating teams in
-                  that event.
+                  <span className="font-semibold text-gat-midnight">Rolling Trophy Calculation:</span> (Sum of all Podium Bonuses) + (Rally Winning Points).
                 </li>
                 <li>
-                  Placement bonus is added only for 1st, 2nd, or 3rd place
-                  finishers.
+                  <span className="font-semibold text-gat-midnight">Participation Trophy Calculation:</span> Determined exclusively by the department with the highest total participation points across all solo and group tiers.
                 </li>
                 <li>
-                  If an event has no podium finish, only participation points
-                  apply.
-                </li>
-                <li>
-                  All these points will be added to your department for getting the participation trophy.
+                  <span className="font-semibold text-gat-midnight">Event Points:</span> If no podium is secured, only the baseline participation points are credited to the department.
                 </li>
               </ul>
             </div>
