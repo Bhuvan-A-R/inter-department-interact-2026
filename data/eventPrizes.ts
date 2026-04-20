@@ -17,7 +17,7 @@ export const eventPrizeData: EventPrizeData[] = [
     {
         eventNo: 1,
         eventName: "Classical Solo Dance",
-        prizeFirst: 1000,
+        // prizeFirst: 1000,
         pointsFirst: 5,
         pointsSecond: 3,
         pointsThird: 1,

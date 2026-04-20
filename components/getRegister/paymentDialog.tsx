@@ -26,7 +26,7 @@ export function PaymentDialog({ className }: PaymentDialogProps) {
       } else {
         const events = data.message as Array<{ eventName: string }>;
         toast.error(
-          `There are zero Registrations for these events : ${events.map((value) => value.eventName).join(", ")}`,
+          `Minimum participant requirement not met for: ${events.map((value) => value.eventName).join(", ")}`,
         );
       }
     } catch (error: unknown) {

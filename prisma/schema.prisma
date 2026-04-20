@@ -47,6 +47,7 @@ model Events {
   user                  Users                @relation(fields: [userId], references: [id], onDelete: Cascade)
   eventRegistrations    EventRegistrations[]
   maxParticipant        Int
+  minParticipant        Int                  @default(1)
   registeredParticipant Int                  @default(0)
   amount                Int                  @default(0)
   category              String

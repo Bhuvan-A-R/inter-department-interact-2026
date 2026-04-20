@@ -6,6 +6,7 @@ interface RegisterEvent {
     eventNo: number;
     eventName: string;
     category: string;
+    minParticipant: number;
     maxParticipant: number;
     amount: number;
 }
@@ -71,6 +72,7 @@ export async function PUT(request: Request) {
                         eventNo: evt.eventNo,
                         eventName: evt.eventName,
                         category: evt.category,
+                        minParticipant: evt.minParticipant,
                         maxParticipant: evt.maxParticipant,
                         amount: evt.amount,
                         registeredParticipant: 0,

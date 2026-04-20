@@ -281,9 +281,14 @@ export default function SelectRolesAndEvents({
                                 {formatEventLabel(event)}
                               </h3>
                               <div className="mt-auto flex items-end justify-between">
-                                <div>
-                                  <p className="text-sm">
-                                    Max Participants: {event.maxParticipant}
+                                <div className="space-y-1">
+                                  {event.minParticipant > 1 && (
+                                    <p className="text-sm font-medium text-amber-600 dark:text-amber-400">
+                                      Min: {event.minParticipant}
+                                    </p>
+                                  )}
+                                  <p className="text-sm text-muted-foreground">
+                                    Max: {event.maxParticipant}
                                   </p>
                                 </div>
                               </div>

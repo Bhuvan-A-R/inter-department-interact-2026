@@ -1022,17 +1022,19 @@ export async function PaymentValid(userId : string){
             },
             select:{
                 registrants: true,
-                eventName:true
+                eventName:true,
+                minParticipant: true
             }
         });
     
         const eventRegistrantList = eventList.map((event)=> ({
             eventName : event.eventName,
+            minParticipant: event.minParticipant,
             count : event.registrants.length
         }));
     
         const FilteredNotRegister = eventRegistrantList.filter((value)=>
-            value.count === 0
+            value.count < value.minParticipant
         )
         return FilteredNotRegister;
     }catch(error:unknown){

@@ -32,6 +32,22 @@ export default async function Page() {
   }
   const userIdFromSession = session.id as string;
 
+  // Fetch all events for this user to check minimum participant requirements
+  const userEvents = await prisma.events.findMany({
+    where: { userId: userIdFromSession },
+    select: {
+      eventName: true,
+      deptCode: true,
+      teamNumber: true,
+      minParticipant: true,
+      registeredParticipant: true,
+    }
+  });
+
+  const incompleteEvents = userEvents.filter(
+    e => e.registeredParticipant < e.minParticipant
+  );
+
   const registrants = await prisma.registrants.findMany({
     where: { userId: userIdFromSession },
     include: {
@@ -97,6 +113,33 @@ export default async function Page() {
             </h1>
           </div>
         </div>
+        {incompleteEvents.length > 0 && (
+          <div className="max-w-4xl mx-auto px-4 mb-6">
+            <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-6 backdrop-blur-sm">
+              <h2 className="text-red-500 font-bold text-xl mb-2 flex items-center">
+                <PenSquare className="mr-2 h-6 w-6" />
+                Action Required: Incomplete Teams
+              </h2>
+              <p className="text-black-200/80 mb-4">
+                The following events require more participants before you can proceed to payment. 
+                Please add the remaining members using the &quot;Add Registrant&quot; button.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {incompleteEvents.map((e, index) => (
+                  <div key={index} className="bg-red-500/5 border border-red-500/20 rounded-lg p-3">
+                    <p className="font-semibold text-black-600">
+                      {formatEventLabel(e.eventName, e.deptCode, e.teamNumber)}
+                    </p>
+                    <p className="text-sm text-red-400 font-medium">
+                      Need {e.minParticipant - e.registeredParticipant} more participant(s)
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-center mt-4 gap-4 mb-3 flex-wrap">
           <Link href="/register/modifyevents">
             <Button
