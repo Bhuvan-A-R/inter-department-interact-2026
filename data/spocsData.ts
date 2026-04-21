@@ -11,7 +11,7 @@ export interface SpocData {
 export const spocsData: SpocData[] = [
   {
     id: 1,
-    name: "Mrs. Keerthy",
+    name: "Prof. Keerthy",
     department: "EC",
     role: "Department SPOC",
     phone: "+91 82963 99998",
@@ -20,7 +20,7 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 2,
-    name: "Akshatha Preeth P",
+    name: "Prof. Akshatha Preeth P",
     department: "ISE",
     role: "Department SPOC",
     phone: "+91 96637 07850",
@@ -29,7 +29,7 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 3,
-    name: "Mr. Praveen Kumar R",
+    name: "Prof. Praveen Kumar R",
     department: "CSE",
     role: "Department SPOC",
     phone: "+91 70908 49540",
@@ -56,7 +56,7 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 6,
-    name: "Likith Krishna Kikkeri",
+    name: "Prof. Likhith Krishna Kikkeri ",
     department: "AIML",
     role: "Department SPOC",
     phone: "+91 80508 52523",
@@ -65,7 +65,7 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 7,
-    name: "Kavya Shree",
+    name: "Prof. Kavya Shree",
     department: "CSAIML",
     role: "Department SPOC",
     phone: "+91 87221 88758",
@@ -83,7 +83,7 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 9,
-    name: "Poornachandra",
+    name: "Prof. Poornachandra",
     department: "ME",
     role: "Department SPOC",
     phone: "+91 99866 61892",
@@ -92,7 +92,7 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 10,
-    name: "Prof Tejaswini N",
+    name: "Prof. Tejaswini N",
     department: "AE",
     role: "Department SPOC",
     phone: "+91 99867 71063",
