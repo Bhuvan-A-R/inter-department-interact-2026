@@ -173,9 +173,9 @@ export const eventsList: EventList[] = [
         name: "Group Song (Faculty)",
         rules: [
             "Participation: Up to 5-8 members per team.",
-            "Duration: 15 minutes (including set-up and clearance time).",
-            "Participants should bring their own instruments.",
-            "Karaoke or Programmed Music is strictly not allowed.",
+            "Duration: 10-15 minutes (including set-up and clearance time).",
+            "Participants should bring their own instruments or Karaoke allowed.",
+            // "Karaoke or Programmed Music is strictly not allowed.",
             "Song lyrics must be appropriate and free from offensive or explicit content.",
         ],
     },
