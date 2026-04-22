@@ -735,6 +735,17 @@ export const interDepartmentEvents: EventCategory[] = [
         registeredParticipant: 0,
         amount: 500,
     },
+    {
+        eventNo: 65,
+        eventName: "Tug of War (FACULTY) (M & W)",
+        category: "FACULTY",
+        minParticipant: 6,
+        maxParticipant: 2,
+        id: "",
+        userId: "",
+        registeredParticipant: 0,
+        amount: 500,
+    },
 ];
 
 export const eventCategories = interDepartmentEvents;

@@ -1079,6 +1079,24 @@ export const eventsList: EventList[] = [
             "Background music is to be submitted at the reporting time to the event in-charge.",
         ],
     },
+    {
+        eventNo: 65,
+        category: "FACULTY",
+        image: eventImage,
+        name: "Tug of War (FACULTY) (M & W)",
+        rules: [
+            "Each team consists of 8 (6+2) players.",
+            "Total team weight must be within 640 kg.",
+            "Players must undergo weigh-in before the match.",
+            "Match format: best of 3 pulls.",
+            "No sitting, kneeling, or lying down allowed (considered a foul).",
+            "Rope must not be wrapped around the body (except anchor).",
+            "Sudden jerking or dropping is not allowed.",
+            "In a set (3 pulls), a maximum of 5 fouls will be considered.",
+            "Per pull, a maximum of 3 fouls will be considered.",
+            "Proper footwear and safety compliance required.",
+        ],
+    },
 ];
 
 export const eventCategories = eventsList;

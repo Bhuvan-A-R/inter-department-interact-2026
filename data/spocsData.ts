@@ -83,12 +83,12 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 9,
-    name: "Prof. Poornachandra",
+    name: "Prof. R Kiran",
     department: "ME",
     role: "Department SPOC",
-    phone: "+91 99866 61892",
-    email: "Poornachandra@gat.ac.in",
-    photo: "/spoc-faculty-photos/poornachandra.jpg",
+    phone: "+91 97393 14102",
+    email: "kiran.r@gat.ac.in",
+    photo: "/spoc-faculty-photos/r_kiran.png",
   },
   {
     id: 10,

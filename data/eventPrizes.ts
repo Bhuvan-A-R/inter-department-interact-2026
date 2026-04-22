@@ -502,4 +502,15 @@ export const eventPrizeData: EventPrizeData[] = [
         pointsSecond: 10,
         pointsThird: 5,
     },
+
+    // ─────────────────────────────────────────
+    // Updated  (eventNo 65)
+    // ─────────────────────────────────────────
+    {
+        eventNo: 65,
+        eventName: "Tug of War (FACULTY) (M & W)",
+        pointsFirst: 10,
+        pointsSecond: 7,
+        pointsThird: 5,
+    },
 ];
