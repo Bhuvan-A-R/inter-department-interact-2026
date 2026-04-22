@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import interactLogo from "@/public/gat-logos/INTERACT2K26.png";
-import { ArrowRight, MapPin, Calendar } from "lucide-react";
+import { ArrowRight, MapPin, Calendar, Sparkles, Trophy, Flame } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { categories, marqueeItems } from "@/data/homeData";
 import ParticlesBackground from "@/components/ParticlesBackground";
@@ -98,7 +98,9 @@ function Marquee() {
             >
               {item}
             </span>
-            <span style={{ color: "hsl(var(--secondary))", fontSize: 9 }}>◆</span>
+            <span style={{ color: "hsl(var(--secondary))", fontSize: 9 }}>
+              ◆
+            </span>
           </span>
         ))}
       </div>
@@ -118,10 +120,9 @@ export default function Home() {
         color: "hsl(var(--foreground))",
       }}
     >
-
       {/* ══ HERO ══════════════════════════════════════════════════════════ */}
       <section
-        className="relative overflow-hidden min-h-screen flex flex-col justify-center pt-24 pb-32"
+        className="relative overflow-hidden min-h-screen flex flex-col justify-center pt-20 pb-16"
         style={{
           background: `
             radial-gradient(ellipse 65% 55% at 60% 35%, hsl(var(--primary) / 0.09) 0%, transparent 65%),
@@ -148,21 +149,21 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-14 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-14 w-full mt-2">
           {/* badge */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <span className="pill-badge mb-8 inline-flex">
+            <span className="pill-badge mb-6 inline-flex">
               Global Academy of Technology Presents
             </span>
           </motion.div>
 
           {/* headline */}
           <motion.h1
-            className="font-display leading-[0.92] mb-5"
+            className="font-display leading-[0.92] mb-4"
             style={{
               // Reduced from clamp(2.5rem, 8vw, 6.5rem)
               fontSize: "clamp(2rem, 6vw, 5rem)",
@@ -173,7 +174,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-             INTER-DEPARTMENT
+            INTER-DEPARTMENT
             <br />
             <span style={{ color: "hsl(var(--primary))" }}>INTERACT 2026</span>
             <br />
@@ -189,7 +190,7 @@ export default function Home() {
 
           {/* tagline */}
           <motion.p
-            className="font-mono-jb text-sm uppercase tracking-[0.28em] mb-12"
+            className="font-mono-jb text-sm uppercase tracking-[0.28em] mb-8 lg:mb-10"
             style={{ color: "hsl(var(--muted))" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -200,12 +201,15 @@ export default function Home() {
 
           {/* stats */}
           <motion.div
-            className="stats-row flex flex-wrap gap-y-8 mb-12"
+            className="stats-row flex flex-wrap gap-y-6 lg:gap-y-8 mb-8 lg:mb-10"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <StatItem to={categories.reduce((acc, c) => acc + c.count, 0)} label="Events" />
+            <StatItem
+              to={categories.reduce((acc, c) => acc + c.count, 0)}
+              label="Events"
+            />
             <StatItem to={3} label="Days" />
             <StatItem to={1000} label="Participants" />
             {/* <div className="flex flex-col gap-1">
@@ -226,7 +230,7 @@ export default function Home() {
 
           {/* CTAs */}
           <motion.div
-            className="flex flex-wrap gap-3 mb-10"
+            className="flex flex-wrap gap-3 mb-8 lg:mb-10"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.52 }}
@@ -238,29 +242,70 @@ export default function Home() {
 
           {/* meta */}
           <motion.div
-            className="flex flex-wrap items-center gap-5"
+            className="flex flex-wrap items-center gap-4 mt-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.68 }}
           >
-            <span
-              className="font-mono-jb text-xs flex items-center gap-2"
-              style={{ color: "hsl(var(--muted))" }}
+            {/* Culturals & Technical */}
+            <div
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl border backdrop-blur-sm"
+              style={{
+                borderColor: "hsl(var(--border) / 0.4)",
+                background: "hsl(var(--foreground) / 0.03)",
+              }}
             >
-              <Calendar size={12} />
-              May 13–15, 2026
-            </span>
-            <span
-              className="w-px h-3"
-              style={{ background: "hsl(var(--border))" }}
-            />
-            <span
-              className="font-mono-jb text-xs flex items-center gap-2"
-              style={{ color: "hsl(var(--muted))" }}
+              <Sparkles size={18} style={{ color: "hsl(var(--primary))" }} />
+              <div className="flex flex-col">
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">April 27–29</span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Culturals & Tech</span>
+              </div>
+            </div>
+
+            {/* Sports */}
+            <div
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl border backdrop-blur-sm"
+              style={{
+                borderColor: "hsl(var(--border) / 0.4)",
+                background: "hsl(var(--foreground) / 0.03)",
+              }}
             >
-              <MapPin size={12} />
-              GAT Campus, Bengaluru
-            </span>
+              <Trophy size={18} style={{ color: "hsl(var(--primary))" }} />
+              <div className="flex flex-col">
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">May 4–6</span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Sports</span>
+              </div>
+            </div>
+
+            {/* Main Fest */}
+            <div
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl border backdrop-blur-sm"
+              style={{
+                borderColor: "hsl(var(--border) / 0.4)",
+                background: "hsl(var(--foreground) / 0.03)",
+              }}
+            >
+              <Flame size={18} style={{ color: "hsl(var(--primary))" }} />
+              <div className="flex flex-col">
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">May 13–15</span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Interact Fest</span>
+              </div>
+            </div>
+
+            {/* Location */}
+            <div
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl border backdrop-blur-sm"
+              style={{
+                borderColor: "hsl(var(--border) / 0.4)",
+                background: "hsl(var(--foreground) / 0.03)",
+              }}
+            >
+              <MapPin size={18} style={{ color: "hsl(var(--primary))" }} />
+              <div className="flex flex-col">
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">GAT Campus</span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Bengaluru</span>
+              </div>
+            </div>
           </motion.div>
         </div>
 
@@ -274,13 +319,19 @@ export default function Home() {
       {/* ══ CATEGORIES ═══════════════════════════════════════════════════ */}
       <section
         className="py-28"
-        style={{ background: "hsl(var(--card))", fontFamily: "'Outfit', sans-serif" }}
+        style={{
+          background: "hsl(var(--card))",
+          fontFamily: "'Outfit', sans-serif",
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* section header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
             <div>
-              <span className="eyebrow">{categories.reduce((acc, c) => acc + c.count, 0)} events across {categories.length} domains</span>
+              <span className="eyebrow">
+                {categories.reduce((acc, c) => acc + c.count, 0)} events across{" "}
+                {categories.length} domains
+              </span>
               <h2
                 className="font-display text-5xl md:text-6xl font-black leading-[0.95]"
                 style={{ color: "hsl(var(--foreground))" }}
@@ -294,7 +345,8 @@ export default function Home() {
               className="text-base leading-relaxed md:max-w-xs"
               style={{ color: "hsl(var(--muted-foreground))" }}
             >
-              From high-stakes hackathons to mesmerizing musical performances — find your stage.
+              From high-stakes hackathons to mesmerizing musical performances —
+              find your stage.
             </p>
           </div>
 
@@ -370,7 +422,10 @@ export default function Home() {
       {/* ══ SCHEDULE ═════════════════════════════════════════════════════ */}
       <section
         className="py-28 relative overflow-hidden"
-        style={{ background: "hsl(var(--background))", fontFamily: "'Outfit', sans-serif" }}
+        style={{
+          background: "hsl(var(--background))",
+          fontFamily: "'Outfit', sans-serif",
+        }}
       >
         {/* ghost watermark */}
         <div
@@ -399,7 +454,6 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-16 items-start">
-
             {/* left col — sticky */}
             <div className="lg:sticky lg:top-28">
               <span className="eyebrow">The Itinerary</span>
@@ -417,18 +471,21 @@ export default function Home() {
                 className="text-base leading-relaxed mb-8 max-w-sm"
                 style={{ color: "hsl(var(--muted-foreground))" }}
               >
-                Plan your days ahead to make the most of INTERACT 2026. Every slot is a story — pick yours.
+                Plan your days ahead to make the most of INTERACT 2026. Every
+                slot is a story — pick yours.
               </p>
               <button
                 disabled
                 className="btn-primary"
-                style={{ opacity: 1, cursor: "not-allowed", pointerEvents: "none" }}
+                style={{
+                  opacity: 1,
+                  cursor: "not-allowed",
+                  pointerEvents: "none",
+                }}
               >
-                Full Schedule  ( Coming Soon... )
+                Full Schedule ( Coming Soon... )
               </button>
-
             </div>
-
           </div>
         </div>
       </section>
@@ -463,13 +520,19 @@ export default function Home() {
             className="text-base leading-relaxed mb-8"
             style={{ color: "hsl(var(--accent-foreground) / 0.6)" }}
           >
-            Join 1000+ students across {categories.reduce((acc, c) => acc + c.count, 0)}+ events. Just bring your best game.
+            Join 1000+ students across{" "}
+            {categories.reduce((acc, c) => acc + c.count, 0)}+ events. Just
+            bring your best game.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <button
               disabled
               className="btn-gold"
-              style={{ opacity: 1, cursor: "not-allowed", pointerEvents: "none" }}
+              style={{
+                opacity: 1,
+                cursor: "not-allowed",
+                pointerEvents: "none",
+              }}
             >
               Register Now ( Coming Soon... )
             </button>
