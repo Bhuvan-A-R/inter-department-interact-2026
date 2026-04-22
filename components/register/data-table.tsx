@@ -58,12 +58,14 @@ export type Data = {
   id: string;
   name: string;
   usn: string;
+  phone?: string;
+  email?: string;
   type: "Participant" | "";
   events: { eventName: string; role?: "Participant" }[];
   status: "Pending" | "Processing" | "Success" | "Failed";
 };
 
-export function DataTable({ data }: { data: Data[] }) {
+export function DataTable({ data, deptCode }: { data: Data[]; deptCode: string }) {
   const router = useRouter();
   const [rows, setRows] = React.useState<Data[]>(data);
 
@@ -429,6 +431,27 @@ export function DataTable({ data }: { data: Data[] }) {
     };
   };
 
+  const handleExportToExcel = () => {
+    const filteredSortedRows = table.getRowModel().rows;
+    
+    const exportData = filteredSortedRows.map((row, index) => ({
+      "SL No": index + 1,
+      "Name": row.original.name,
+      "USN": row.original.usn,
+      "Phone Number": row.original.phone || "-",
+      "Email ID": row.original.email || "-",
+      "Events Registered": row.original.events.map((e) => e.eventName).join(", ")
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Registrants");
+    
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const dataBlob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    saveAs(dataBlob, `${deptCode}.xlsx`);
+  };
+
   return (
     <div className="w-full px-5 rounded-xl my-12 text-foreground">
       <div className="flex items-center py-4 flex-wrap gap-3 ">
@@ -453,7 +476,15 @@ export function DataTable({ data }: { data: Data[] }) {
                 </Button> */}
         <Button
           variant="outline"
-          className="ml-auto bg-red-500 text-white hover:scale-105 hover:bg-red-500 hover:text-primary-foreground"
+          className="ml-auto bg-green-600 text-white hover:scale-105 hover:bg-green-600 hover:text-primary-foreground"
+          onClick={handleExportToExcel}
+        >
+          <FileDown className="mr-2 h-4 w-4" />
+          Download Excel Sheet
+        </Button>
+        <Button
+          variant="outline"
+          className="bg-red-500 text-white hover:scale-105 hover:bg-red-500 hover:text-primary-foreground"
           onClick={() => handleDeleteSelected()}
         >
           <Trash2 className="mr-2 h-4 w-4" />

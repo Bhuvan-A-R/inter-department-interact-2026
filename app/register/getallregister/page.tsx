@@ -32,6 +32,12 @@ export default async function Page() {
   }
   const userIdFromSession = session.id as string;
 
+  const currentUser = await prisma.users.findUnique({
+    where: { id: userIdFromSession },
+    select: { deptCode: true },
+  });
+  const deptCode = currentUser?.deptCode ?? "registrants";
+
   // Fetch all events for this user to check minimum participant requirements
   const userEvents = await prisma.events.findMany({
     where: { userId: userIdFromSession },
@@ -83,6 +89,8 @@ export default async function Page() {
         id: registrant.id,
         name: registrant.name,
         usn: registrant.usn,
+        phone: registrant.phone,
+        email: registrant.email,
         type: "",
         events: [],
         status: docStatusMap[registrant.docStatus],
@@ -97,6 +105,8 @@ export default async function Page() {
       id: `${registrant.id}#${typeLabel.toUpperCase()}`,
       name: registrant.name,
       usn: registrant.usn,
+      phone: registrant.phone,
+      email: registrant.email,
       type: typeLabel,
       events: combinedEvents,
       status: docStatusMap[registrant.docStatus],
@@ -162,7 +172,7 @@ export default async function Page() {
         </div>
 
         <div className="mx-auto w-full max-w-6xl auth-section p-4">
-          <DataTable data={results} />
+          <DataTable data={results} deptCode={deptCode} />
         </div>
 
         <div className="flex flex-col items-center mt-8 mb-5 gap-4">

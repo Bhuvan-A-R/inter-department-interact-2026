@@ -51,7 +51,7 @@ export const interDepartmentEvents: EventCategory[] = [
         eventName: "Western Group Dance (Student)",
         category: "DANCE",
         minParticipant: 5,
-        maxParticipant: 6,
+        maxParticipant: 8,
         id: "",
         userId: "",
         registeredParticipant: 0,
