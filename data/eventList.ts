@@ -102,7 +102,7 @@ export const eventsList: EventList[] = [
         name: "Western Solo Dance",
         rules: [
             "Participation: Only 1 participant.",
-            "The performance duration must be between 2 to 4 minutes.",
+            "The performance duration must be between 3 to 5 minutes.",
             "Participants may perform in any Western dance style (Hip-hop, Contemporary, Jazz, etc.).",
             "Pre-recorded music must be submitted to the co-ordinators in MP3 format prior to the event.",
             "Participants must ensure that their track is properly edited and cued; no extra time will be given for technical delays.",
@@ -138,7 +138,7 @@ export const eventsList: EventList[] = [
         name: "Group Dance (Faculty)",
         rules: [
             "Participation: Groups of 6 to 14 members.",
-            "Time: Must be between 5 to 10 minutes.",
+            "Time: Must be between 5 to 8 minutes.",
             "Teams may perform any Western dance styles.",
             "Pre-recorded music must be submitted to the Co-Ordinator prior to the event.",
             "Teams must ensure their track is properly edited and finalized; no additional time will be provided for corrections.",
@@ -156,7 +156,7 @@ export const eventsList: EventList[] = [
         name: "Group Ramp Walk (Faculty)",
         rules: [
             "Team size: 8–12 members (minimum of 8 and maximum of 12 members).",
-            "Time limit: 9+1 minutes. Exceeding the time limit will lead to negative marking.",
+            "Time limit: 6 to 10 minutes. Exceeding the time limit will lead to negative marking.",
             "Walking barefoot is not allowed.",
             "No gender restrictions on team constitution.",
             "Any form of obscenity or vulgarity leads to direct disqualification.",
@@ -172,8 +172,8 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Group Song (Faculty)",
         rules: [
-            "Participation: Up to 5-8 members per team.",
-            "Duration: 10-15 minutes (including set-up and clearance time).",
+            "Participation: Up to 6 members per team.",
+            "Duration: 5 to 10 minutes (including set-up and clearance time).",
             "Participants should bring their own instruments or Karaoke allowed.",
             // "Karaoke or Programmed Music is strictly not allowed.",
             "Song lyrics must be appropriate and free from offensive or explicit content.",
@@ -199,7 +199,7 @@ export const eventsList: EventList[] = [
         name: "Solo Dance (Faculty)",
         rules: [
             "Participation: Only 1 participant.",
-            "The performance duration must be between 2 to 4 minutes.",
+            "The performance duration must be between 3 to 5 minutes.",
             "Participants may perform in any dance style (Hip-hop, Contemporary, Jazz, etc.).",
             "Pre-recorded music must be submitted to the co-ordinators in MP3 format prior to the event.",
             "Participants must ensure that their track is properly edited and cued; no extra time will be given for technical delays.",
@@ -231,7 +231,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Voice of GAT (Faculty)",
         rules: [
-            "Duration: 8 minutes (including set-up and clearance time).",
+            "Duration: 2 to 7 minutes (including set-up and clearance time).",
             "Language: No language bar; however, lyrics must be appropriate and free from offensive content.",
             "Style: This category focuses on audience engagement and stage presence alongside vocal prowess.",
             "Accompaniment: Karaoke is allowed (no lead vocals) or a maximum of one acoustic instrument for accompaniment.",
@@ -461,7 +461,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Content Creation",
         rules: [
-            "Participation: Teams of up to 3-4 members.",
+            "Participation: Teams of up to 3 members.",
             "Duration: The content (Reels, TikTok-style videos, or Vlogs) must be between 60 to 90 seconds.",
             "Technical: High-quality vertical (9:16) or horizontal (16:9) formats are accepted depending on the platform focus. Trending audio is permitted, but the visual content and editing must be original.",
             "Submission: Must be submitted in MP4 format via the designated link or USB.",
@@ -506,7 +506,7 @@ export const eventsList: EventList[] = [
         name: "Face Painting",
         rules: [
             "Participation: 2 members per team (1 Artist and 1 Model).",
-            "Duration: 60 minutes.",
+            "Duration: 90 minutes.",
             "Materials: Participants must bring their own paints and brushes. Only skin-friendly/cosmetic-grade paints are allowed.",
             "Theme: If a theme is provided, it must be strictly followed. Reference images (phones/printouts) are not allowed during the event.",
             "Restrictions: Use of stencils or stickers is prohibited; the work must be free-hand.",
@@ -597,7 +597,7 @@ export const eventsList: EventList[] = [
         name: "Pick and Speak",
         rules: [
             "Participation: Solo Event.",
-            "Duration: Up to 3 minutes.",
+            "Duration: 3 to 5 minutes.",
             "The medium of expression shall be English or Kannada.",
             "Topic will be given on spot, with appropriate time to prepare.",
             "Reading from paper or any other source is strictly prohibited.",
@@ -630,7 +630,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Classical Solo Vocal",
         rules: [
-            "Duration: 15 minutes (including set-up and clearance time).",
+            "Duration:5 to 15 minutes (including set-up and clearance time).",
             "Tradition: The performance must strictly adhere to either Hindustani or Carnatic classical traditions.",
             "Accompaniment: Electronic Tanpura/Sruti box is allowed. Maximum of two live accompanists (Tabla/Mridangam/Harmonium/Violin) are permitted.",
             "Restrictions: Karaoke and film-based 'semi-classical' songs are strictly prohibited.",
@@ -644,7 +644,7 @@ export const eventsList: EventList[] = [
         name: "Group Song (Student)",
         rules: [
             "Participation: Up to 6 members per team.",
-            "Duration: 15 minutes (including set-up and clearance time).",
+            "Duration: 5 to 15 minutes (including set-up and clearance time).",
             "Participants should bring their own instruments.",
             "Karaoke or Programmed Music is strictly not allowed.",
             "Song lyrics must be appropriate and free from offensive or explicit content.",
@@ -656,8 +656,8 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Instrumental Solo",
         rules: [
-            "Duration: 7 minutes (including set-up and clearance time).",
-            "Instruments: Participants must bring their own instruments and necessary cables/processors. A standard drum kit or keyboard may be provided based on venue availability.",
+            "Duration:5 to 7 minutes (including set-up and clearance time).",
+            "2 Instruments: Participants must bring their own instruments and necessary cables/processors. A standard drum kit or keyboard may be provided based on venue availability.",
             "Backing Tracks: Karaoke/Backing tracks are allowed only for rhythm/percussion accompaniment and must not contain the lead melody. Must be submitted prior to the performance.",
             "Genre: Any genre (Classical, Jazz, Pop, Rock, etc.) is permitted.",
             "Criteria: Performance will be judged on technique, tonal quality, and improvisation.",
@@ -669,11 +669,12 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Voice of GAT (Student)",
         rules: [
-            "Duration: 8 minutes (including set-up and clearance time).",
+            "Duration:3 to 8 minutes (including set-up and clearance time).",
             "Language: No language bar; however, lyrics must be appropriate and free from offensive content.",
             "Style: This category focuses on audience engagement and stage presence alongside vocal prowess.",
             "Accompaniment: Karaoke is allowed (no lead vocals) or a maximum of one acoustic instrument for accompaniment.",
             "Submission: Karaoke tracks must be submitted to the organizers at least 15 minutes prior to the event.",
+             "Content: Submissions may belong to any genre",   
         ],
     },
     {
@@ -682,7 +683,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Western Solo Vocal",
         rules: [
-            "Duration: 7 minutes (including set-up and clearance time).",
+            "Duration: 4 to 7 minutes (including set-up and clearance time).",
             "Language: Songs must be performed in English only.",
             "Karaoke: Allowed, provided it contains no lead or prominent backing vocals. Tracks must be provided in MP3 format and submitted prior to the performance.",
             "Instruments: Participants may self-accompany on a guitar or keyboard if they prefer an acoustic set.",
@@ -737,7 +738,7 @@ export const eventsList: EventList[] = [
         rules: [
             "Each team consists of 4 players (3 playing + 1 substitute).",
             "Game is played on a half court.",
-            "Match starts with a tip-off at center court.",
+            "Match starts in top of the arc.",
             "Standard scoring rules apply (2, 3, and 1 point free throws).",
             "Dribbling, passing, and shooting rules must be followed.",
             "Fouls result in free throws or possession change.",
@@ -830,7 +831,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Treasure Hunt",
         rules: [
-            "Teams consist of 3–5 members.",
+            "Teams consist of 4 members.",
             "All teams receive the first clue simultaneously.",
             "Clues must be solved in correct sequence.",
             "Skipping clues is not allowed.",
@@ -849,7 +850,7 @@ export const eventsList: EventList[] = [
         name: "Tug of War",
         rules: [
             "Each team consists of 9 (8+1) players.",
-            "Total team weight must be within 640 kg.",
+            "Total team weight must be within 640 kg(M),520kg(W).",
             "Players must undergo weigh-in before the match.",
             "Match format: best of 3 pulls.",
             "No sitting, kneeling, or lying down allowed (considered a foul).",
@@ -887,7 +888,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "AI Reel Contest",
         rules: [
-            "Team size: 1 (individual participation only).",
+            "Team size: 1 (its just you + your AI).",
             "100% AI Content: Script must be AI-generated. Voiceover must be AI-generated (no real voice recording). Visuals must be AI-generated (images/videos/avatars).",
             "Editing can use AI tools.",
             "Reel Duration: Minimum 30 seconds, Maximum 60 seconds.",
@@ -1034,7 +1035,7 @@ export const eventsList: EventList[] = [
         name: "Mime",
         rules: [
             "Participation: Only up to 6 participants.",
-            "Duration: 6 minutes.",
+            "Duration: 5+1 minutes.",
             "Background music is to be submitted at the reporting time to the event in-charge.",
         ],
     },
@@ -1045,7 +1046,7 @@ export const eventsList: EventList[] = [
         name: "Mimicry",
         rules: [
             "Participation: Only 1 participant.",
-            "Duration: Up to 5 minutes.",
+            "Duration: 3 to 5 minutes.",
             "Participants may mimic voices and speech of well-known personalities, as well as other common sounds.",
             "Profanity, suggestive speech, euphemisms, and vulgarity in action or speech is strictly prohibited. Satire and humor that is devoid of the above is accepted.",
         ],
@@ -1057,7 +1058,7 @@ export const eventsList: EventList[] = [
         name: "Mono Acting",
         rules: [
             "Participation: Only 1 participant.",
-            "Duration: Up to 5 minutes.",
+            "Duration: 3 to 5 minutes.",
             "The participant can play numerous roles in the same scene.",
             "Profanity, suggestive speech, euphemisms, and vulgarity in action or speech is strictly prohibited.",
             "Satire and humor that is devoid of the above is accepted.",
@@ -1070,7 +1071,7 @@ export const eventsList: EventList[] = [
         name: "Skit",
         rules: [
             "Participation: Only up to 6 participants per team.",
-            "Duration: 10 minutes (including set-up and clearance time).",
+            "Duration: 8 to 10 minutes (including set-up and clearance time).",
             "A maximum of 3 accompanists are allowed.",
             "Use of make-up, backdrops, and background music is allowed.",
             "Each team should submit three copies of the synopsis of the skit in the language of presentation (English or Kannada) at the reporting time to the event co-ordinator.",
