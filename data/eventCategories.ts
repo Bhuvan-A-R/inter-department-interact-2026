@@ -399,7 +399,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 35,
-        eventName: "On-Spot Creative Writing",
+        eventName: "On-Spot Creative Visual Writing",
         category: "LITERARY",
         minParticipant: 1,
         maxParticipant: 1,

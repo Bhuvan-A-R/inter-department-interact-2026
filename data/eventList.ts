@@ -579,11 +579,12 @@ export const eventsList: EventList[] = [
         eventNo: 35,
         category: "LITERARY",
         image: eventImage,
-        name: "On-Spot Creative Writing",
+        name: "On-Spot Creative Visual Writing",
         rules: [
             "Participation: Solo Event.",
             "Duration: 1 hour.",
             "The medium of expression shall be English or Kannada.",
+            "Word Limit - 700 to 1000 Words",
             "Plagiarism and use of AI is strictly prohibited.",
             "Use of derogatory words or suggestive words is strictly prohibited.",
             "Topics will be given on spot.",
@@ -1036,6 +1037,7 @@ export const eventsList: EventList[] = [
         rules: [
             "Participation: Only up to 6 participants.",
             "Duration: 5+1 minutes.",
+            "1 Accompanist allowed. Accompanist must be verified at Registrations Desk on the day of the event.",
             "Background music is to be submitted at the reporting time to the event in-charge.",
         ],
     },
