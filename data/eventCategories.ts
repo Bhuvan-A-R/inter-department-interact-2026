@@ -160,7 +160,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 14,
-        eventName: "Short Pitch Cricket (Faculty)",
+        eventName: "Short Pitch Cricket (Faculty) (M)",
         category: "FACULTY",
         minParticipant: 7,
         maxParticipant: 8,
@@ -171,7 +171,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 15,
-        eventName: "Pickle Ball (Faculty)",
+        eventName: "Pickle Ball (Faculty) (M & W)",
         category: "FACULTY",
         minParticipant: 1,
         maxParticipant: 1,
@@ -513,7 +513,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 45,
-        eventName: "Basketball",
+        eventName: "Basketball (3v3) (M & W)",
         category: "SPORTS",
         minParticipant: 3,
         maxParticipant: 7,
@@ -524,7 +524,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 46,
-        eventName: "Deadlift",
+        eventName: "Deadlift (M & W)",
         category: "SPORTS",
         minParticipant: 1,
         maxParticipant: 1,
@@ -535,7 +535,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 47,
-        eventName: "Pickleball",
+        eventName: "Pickleball (M & W)",
         category: "SPORTS",
         minParticipant: 1,
         maxParticipant: 1,
@@ -546,7 +546,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 48,
-        eventName: "Short Pitch Cricket",
+        eventName: "Short Pitch Cricket (M)",
         category: "SPORTS",
         minParticipant: 7,
         maxParticipant: 8,
@@ -557,7 +557,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 49,
-        eventName: "Throwball",
+        eventName: "Throwball (W)",
         category: "SPORTS",
         minParticipant: 7,
         maxParticipant: 9,
@@ -579,7 +579,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 51,
-        eventName: "Tug of War",
+        eventName: "Tug of War (M & W)",
         category: "SPORTS",
         minParticipant: 7,
         maxParticipant: 9,
@@ -590,7 +590,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 52,
-        eventName: "Volleyball",
+        eventName: "Volleyball (M & W)",
         category: "SPORTS",
         minParticipant: 6,
         maxParticipant: 8,

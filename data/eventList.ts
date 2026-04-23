@@ -242,7 +242,7 @@ export const eventsList: EventList[] = [
         eventNo: 14,
         category: "FACULTY",
         image: eventImage,
-        name: "Short Pitch Cricket (Faculty)",
+        name: "Short Pitch Cricket (Faculty) (M)",
         rules: [
             "Each team consists of 7 players + 1 substitute.",
             "Match format: 4 overs per innings.",
@@ -259,7 +259,7 @@ export const eventsList: EventList[] = [
         eventNo: 15,
         category: "FACULTY",
         image: eventImage,
-        name: "Pickle Ball (Faculty)",
+        name: "Pickle Ball (Faculty) (M & W)",
         rules: [
             "Serve must be underhand and diagonal.",
             "Serve must clear the non-volley zone (kitchen).",
@@ -734,7 +734,7 @@ export const eventsList: EventList[] = [
         eventNo: 45,
         category: "SPORTS",
         image: eventImage,
-        name: "Basketball (3v3)",
+        name: "Basketball (3v3) (M & W)",
         rules: [
             "Each team consists of 4 players (3 playing + 1 substitute).",
             "Game is played on a half court.",
@@ -753,7 +753,7 @@ export const eventsList: EventList[] = [
         eventNo: 46,
         category: "SPORTS",
         image: eventImage,
-        name: "Deadlift",
+        name: "Deadlift (M & W)",
         rules: [
             "Weight categories for men: 62 kg, 70 kg, 78 kg, 90 kg, 90+ kg.",
             "Weight categories for women: 52 kg, 60 kg, 68 kg, 76 kg, 76+ kg.",
@@ -773,7 +773,7 @@ export const eventsList: EventList[] = [
         eventNo: 47,
         category: "SPORTS",
         image: eventImage,
-        name: "Pickleball",
+        name: "Pickleball (M & W)",
         rules: [
             "Serve must be underhand and diagonal.",
             "Serve must clear the non-volley zone (kitchen).",
@@ -791,7 +791,7 @@ export const eventsList: EventList[] = [
         eventNo: 48,
         category: "SPORTS",
         image: eventImage,
-        name: "Short Pitch Cricket",
+        name: "Short Pitch Cricket (M)",
         rules: [
             "Each team consists of 7 players + 1 substitute.",
             "Match format: 4 overs per innings.",
@@ -812,7 +812,7 @@ export const eventsList: EventList[] = [
         eventNo: 49,
         category: "SPORTS",
         image: eventImage,
-        name: "Throwball",
+        name: "Throwball (W)",
         rules: [
             "Each team has 7 players + 2 substitutes.",
             "First two sets are played to 25 points, final set to 15 points.",
@@ -847,7 +847,7 @@ export const eventsList: EventList[] = [
         eventNo: 51,
         category: "SPORTS",
         image: eventImage,
-        name: "Tug of War",
+        name: "Tug of War (M & W)",
         rules: [
             "Each team consists of 9 (8+1) players.",
             "Total team weight must be within 640 kg(M),520kg(W).",
@@ -865,7 +865,7 @@ export const eventsList: EventList[] = [
         eventNo: 52,
         category: "SPORTS",
         image: eventImage,
-        name: "Volleyball",
+        name: "Volleyball (M & W)",
         rules: [
             "Each team consists of 8 players (6 playing + 2 substitutes).",
             "Matches are played as best of 3 sets.",
@@ -1087,7 +1087,6 @@ export const eventsList: EventList[] = [
         name: "Tug of War (FACULTY) (M & W)",
         rules: [
             "Each team consists of 8 (6+2) players.",
-            "Total team weight must be within 640 kg.",
             "Players must undergo weigh-in before the match.",
             "Match format: best of 3 pulls.",
             "No sitting, kneeling, or lying down allowed (considered a foul).",
