@@ -740,7 +740,7 @@ export const interDepartmentEvents: EventCategory[] = [
         eventName: "Tug of War (FACULTY) (M & W)",
         category: "FACULTY",
         minParticipant: 6,
-        maxParticipant: 2,
+        maxParticipant: 8,
         id: "",
         userId: "",
         registeredParticipant: 0,
