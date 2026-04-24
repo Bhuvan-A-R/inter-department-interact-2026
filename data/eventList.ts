@@ -925,7 +925,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "E-sports",
         rules: [
-            "Participation allowed as Solo / Duo / Squad (1–3 players).",
+            "Participation allowed as Squad (4 players).",
             "No team changes after registration.",
             "Matches played in classic mode (BGMI / Free Fire).",
             "Map details announced before match.",
