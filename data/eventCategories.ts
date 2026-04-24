@@ -593,7 +593,7 @@ export const interDepartmentEvents: EventCategory[] = [
         eventName: "Volleyball (M & W)",
         category: "SPORTS",
         minParticipant: 6,
-        maxParticipant: 8,
+        maxParticipant: 7,
         id: "",
         userId: "",
         registeredParticipant: 0,

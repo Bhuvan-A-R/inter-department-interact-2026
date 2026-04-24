@@ -701,7 +701,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Carrom",
         rules: [
-            "Played as singles (2) or doubles (4).",
+            "Played as singles.",
             "Each side is assigned black or white coins.",
             "Objective: pocket all coins and cover the queen.",
             "Striker must be played from the baseline.",
@@ -721,6 +721,7 @@ export const eventsList: EventList[] = [
         rules: [
             "Played between 2 players.",
             "Objective: checkmate opponent's king.",
+            "Each Round will be for 15 min 10 seconds.",
             "White moves first.",
             "Players move one piece per turn.",
             "Each piece follows standard movement rules.",
@@ -776,6 +777,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Pickleball (M & W)",
         rules: [
+            "Solo Participation",
             "Serve must be underhand and diagonal.",
             "Serve must clear the non-volley zone (kitchen).",
             "Two-bounce rule is mandatory.",
@@ -805,8 +807,8 @@ export const eventsList: EventList[] = [
             "Fielding restrictions may be applied if required.",
             "Tie → Super Over decides winner.",
             "Price Pool: ₹10,000/-",
-            "Re-entry is applicable for 1st round only (Re-entry fee: ₹2,000/-).",
-            "Teammates should be of the same college only.",
+            // "Re-entry is applicable for 1st round only (Re-entry fee: ₹2,000/-).",
+            "Teammates should be of the same department only.",
         ],
     },
     {
@@ -815,7 +817,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Throwball (W)",
         rules: [
-            "Each team has 7 players + 2 substitutes.",
+            "Each team has 7 players.",
             "First two sets are played to 25 points, final set to 15 points.",
             "Ball must be caught and released within 3 seconds.",
             "Ball must be thrown above shoulder level.",
@@ -868,7 +870,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Volleyball (M & W)",
         rules: [
-            "Each team consists of 8 players (6 playing + 2 substitutes).",
+            "Each team consists of 7 players (6 playing + 1 substitutes).",
             "Matches are played as best of 3 sets.",
             "First two sets are played to 25 points, final set to 15 points.",
             "Players must follow rotation rules during service.",
