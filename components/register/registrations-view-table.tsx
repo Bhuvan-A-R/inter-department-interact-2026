@@ -431,7 +431,7 @@ export function DataTable({ data }: { data: Data[] }) {
 
   // Export functions for PDF and Excel remain unchanged
   const handleExportToPDF = () => {
-    const filteredSortedRows = table.getRowModel().rows;
+    const filteredSortedRows = table.getSortedRowModel().rows;
     const exportData = filteredSortedRows.map((row) => [
       row.getValue("name"),
       row.getValue("usn"),
@@ -486,7 +486,7 @@ export function DataTable({ data }: { data: Data[] }) {
   };
 
   const handleExportToExcel = () => {
-    const filteredSortedRows = table.getRowModel().rows;
+    const filteredSortedRows = table.getSortedRowModel().rows;
     const exportData = filteredSortedRows.map((row) => ({
       Name: row.getValue("name"),
       USN: row.getValue("usn"),

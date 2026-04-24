@@ -278,7 +278,7 @@ export function DataTable({ data }: { data: Data[] }) {
   // Use the final row model to get the filtered + sorted data
   const handleExportToPDF = () => {
     // Pull final rows from the table’s computed row model:
-    const filteredSortedRows = table.getRowModel().rows;
+    const filteredSortedRows = table.getSortedRowModel().rows;
 
     // Prepare data for PDF
     const exportData: (string | number)[][] = filteredSortedRows.map((row) => [
@@ -342,7 +342,7 @@ export function DataTable({ data }: { data: Data[] }) {
 
   const handleExportToExcel = () => {
     // Pull final rows from the table’s computed row model:
-    const filteredSortedRows = table.getRowModel().rows;
+    const filteredSortedRows = table.getSortedRowModel().rows;
 
     // Prepare data for Excel
     const exportData = filteredSortedRows.map((row) => ({
