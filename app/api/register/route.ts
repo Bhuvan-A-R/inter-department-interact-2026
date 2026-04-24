@@ -51,11 +51,11 @@ export async function POST(request: Request) {
             status: 404,
         });
     }
-    if (user.registrants.length >= 45) {
+    if (user.registrants.length >= 600) {
         return new Response(
             JSON.stringify({
                 message:
-                    "You have reached the maximum limit of 45 registrations",
+                    "You have reached the maximum limit of 600 registrations",
             }),
             {
                 status: 400,
@@ -103,13 +103,13 @@ export async function POST(request: Request) {
         name: validation.data.name,
         usn: validation.data.usn,
         phone: validation.data.phone,
-        photoUrl: validation.data.documents.photo, // Map from documents
-        idcardUrl: validation.data.documents.idCard,
+        // photoUrl: validation.data.documents.photo, // Map from documents
+        // idcardUrl: validation.data.documents.idCard,
         userId: session.id as string, // Type assertion to string
         deptCode: user.deptCode, // Add department code from user
         events: validation.data.events, // Ensure events are included
         gender: validation.data.gender as string,
-        blood: validation.data.blood,
+        // blood: validation.data.blood,
     };
 
     if (

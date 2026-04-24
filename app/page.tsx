@@ -4,7 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import interactLogo from "@/public/gat-logos/INTERACT2K26.png";
-import { ArrowRight, MapPin, Calendar, Sparkles, Trophy, Flame } from "lucide-react";
+import {
+  ArrowRight,
+  MapPin,
+  Calendar,
+  Sparkles,
+  Trophy,
+  Flame,
+} from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { categories, marqueeItems } from "@/data/homeData";
 import ParticlesBackground from "@/components/ParticlesBackground";
@@ -257,8 +264,12 @@ export default function Home() {
             >
               <Sparkles size={18} style={{ color: "hsl(var(--primary))" }} />
               <div className="flex flex-col">
-                <span className="text-sm font-bold leading-none mb-1 text-foreground">April 27–29</span>
-                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Culturals & Tech</span>
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">
+                  April 27–29
+                </span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">
+                  Culturals & Tech
+                </span>
               </div>
             </div>
 
@@ -272,8 +283,12 @@ export default function Home() {
             >
               <Trophy size={18} style={{ color: "hsl(var(--primary))" }} />
               <div className="flex flex-col">
-                <span className="text-sm font-bold leading-none mb-1 text-foreground">May 4–6</span>
-                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Sports</span>
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">
+                  May 4–6
+                </span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">
+                  Sports
+                </span>
               </div>
             </div>
 
@@ -287,8 +302,12 @@ export default function Home() {
             >
               <Flame size={18} style={{ color: "hsl(var(--primary))" }} />
               <div className="flex flex-col">
-                <span className="text-sm font-bold leading-none mb-1 text-foreground">May 13–15</span>
-                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Interact Fest</span>
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">
+                  May 13–15
+                </span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">
+                  Interact Fest
+                </span>
               </div>
             </div>
 
@@ -302,8 +321,12 @@ export default function Home() {
             >
               <MapPin size={18} style={{ color: "hsl(var(--primary))" }} />
               <div className="flex flex-col">
-                <span className="text-sm font-bold leading-none mb-1 text-foreground">GAT Campus</span>
-                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">Bengaluru</span>
+                <span className="text-sm font-bold leading-none mb-1 text-foreground">
+                  GAT Campus
+                </span>
+                <span className="font-mono-jb text-[10px] uppercase tracking-widest text-muted-foreground leading-none">
+                  Bengaluru
+                </span>
               </div>
             </div>
           </motion.div>
@@ -474,17 +497,16 @@ export default function Home() {
                 Plan your days ahead to make the most of INTERACT 2026. Every
                 slot is a story — pick yours.
               </p>
-              <button
-                disabled
+              <Link
+                href="/schedule"
                 className="btn-primary"
                 style={{
-                  opacity: 1,
-                  cursor: "not-allowed",
-                  pointerEvents: "none",
+                  display: "inline-block",
+                  textDecoration: "none",
                 }}
               >
-                Full Schedule ( Coming Soon... )
-              </button>
+                Full Schedule
+              </Link>
             </div>
           </div>
         </div>
