@@ -83,12 +83,13 @@ export const events: Event[] = [
     date: "28th April",
     timings: "2pm to 4pm",
   },
+  // CHANGED
   {
     eventId: 10,
     domain: "FACULTY",
     eventName: "Rangoli (Faculty)",
     venue: "Main Building Road",
-    date: "27th April",
+    date: "29th April",
     timings: "8:30am to 10:30am",
   },
   {
@@ -175,12 +176,13 @@ export const events: Event[] = [
   },
 
   // FINE ARTS
+  // CHANGED
   {
     eventId: 21,
     domain: "FINE_ARTS",
     eventName: "Cartooning",
     venue: "AIB 101",
-    date: "27th April",
+    date: "28th April",
     timings: "8:30am to 10:30am",
   },
   {
@@ -191,36 +193,39 @@ export const events: Event[] = [
     date: "27th April",
     timings: "2pm to 4pm",
   },
+  // CHANGED
   {
     eventId: 23,
     domain: "FINE_ARTS",
     eventName: "Collage Making",
     venue: "Quadrangle Stage",
-    date: "27th April",
+    date: "29th April",
     timings: "11am to 1pm",
   },
+  // CHANGED
   {
     eventId: 24,
     domain: "FINE_ARTS",
     eventName: "On Spot Painting",
     venue: "Elephant Area",
-    date: "27th April",
+    date: "28th April",
     timings: "11am to 1pm",
   },
+  // CHANGED
   {
     eventId: 25,
     domain: "FINE_ARTS",
     eventName: "On Spot Photography",
     venue: "Main Building 316",
     date: "27th April",
-    timings: "Reporting 8:30am, Presentation 12:30pm",
+    timings: "Reporting 11am, Presentation 3pm",
   },
   {
     eventId: 26,
     domain: "FINE_ARTS",
     eventName: "Rangoli (Student)",
     venue: "Main Building Road",
-    date: "27th April",
+    date: "29th April",
     timings: "8:30am to 10:30am",
   },
 
@@ -281,7 +286,7 @@ export const events: Event[] = [
     eventName: "Debate",
     venue: "Silver Jubilee Presentation Hall",
     date: "27th April",
-    timings: "8:30am to 10:30am",
+    timings: "2pm to 4pm",
   },
   {
     eventId: 34,
@@ -297,15 +302,16 @@ export const events: Event[] = [
     eventName: "Pick and Speak",
     venue: "AIB 102",
     date: "27th April",
-    timings: "8:30am to 10:30am",
+    timings: "2pm to 4pm",
   },
+  //CHANGED
   {
     eventId: 36,
     domain: "LITERARY",
     eventName: "Poetry",
     venue: "Main Building 306",
-    date: "27th April",
-    timings: "11am to 1pm",
+    date: "28th April",
+    timings: "8:30am to 10:30am",
   },
   {
     eventId: 37,
@@ -313,7 +319,7 @@ export const events: Event[] = [
     eventName: "On-Spot Creative Visual Writing",
     venue: "Main Building 202",
     date: "27th April",
-    timings: "2pm to 4pm",
+    timings: "11am to 1pm",
   },
 
   // MUSIC
@@ -521,7 +527,7 @@ export const events: Event[] = [
     eventName: "Mimicry",
     venue: "Main Building 416",
     date: "27th April",
-    timings: "8:30am to 10:30am",
+    timings: "11am to 1pm",
   },
   {
     eventId: 63,
@@ -529,7 +535,7 @@ export const events: Event[] = [
     eventName: "Mono Acting",
     venue: "Main Building 317",
     date: "27th April",
-    timings: "8:30am to 10:30am",
+    timings: "11am to 1pm",
   },
   {
     eventId: 64,
