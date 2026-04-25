@@ -571,7 +571,7 @@ export const interDepartmentEvents: EventCategory[] = [
         eventName: "Treasure Hunt",
         category: "SPORTS",
         minParticipant: 3,
-        maxParticipant: 5,
+        maxParticipant: 4,
         id: "",
         userId: "",
         registeredParticipant: 0,
