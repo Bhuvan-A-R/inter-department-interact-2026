@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifySession } from "@/lib/session";
 import { checkRegistrationBlocks } from "@/lib/blockCheck";
+import { interDepartmentEvents } from "@/data/eventCategories";
 
 interface RegisterEvent {
     eventNo: number;
@@ -81,7 +82,7 @@ export async function PUT(request: Request) {
                         eventNo: evt.eventNo,
                         eventName: evt.eventName,
                         category: evt.category,
-                        minParticipant: evt.minParticipant,
+                        minParticipant: interDepartmentEvents.find(ie => ie.eventName === evt.eventName)?.minParticipant ?? 1,
                         maxParticipant: evt.maxParticipant,
                         amount: evt.amount,
                         registeredParticipant: 0,

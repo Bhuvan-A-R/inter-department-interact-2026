@@ -46,12 +46,14 @@ type EventSummary = {
   eventName: string;
   eventDate: string | null;
   count: number;
+  participantCount: number;
   registrations: RegistrationRow[];
 };
 
 type DepartmentSummary = {
   department: string;
   count: number;
+  participantCount: number;
   registrations: RegistrationRow[];
 };
 
@@ -134,43 +136,62 @@ export default function AdminDashboardPanel() {
   const registrations = data?.registrations ?? [];
 
   const eventSummaries = React.useMemo<EventSummary[]>(() => {
-    const map = new Map<string, EventSummary>();
+    const map = new Map<string, { summary: EventSummary; teams: Set<string> }>();
     registrations.forEach((row) => {
       const key = getBaseEventName(row.eventName || "");
       if (!map.has(key)) {
         map.set(key, {
-          eventName: key,
-          eventDate: row.eventDate ?? null,
-          count: 0,
-          registrations: [],
+          summary: {
+            eventName: key,
+            eventDate: row.eventDate ?? null,
+            count: 0,
+            participantCount: 0,
+            registrations: [],
+          },
+          teams: new Set<string>(),
         });
       }
       const entry = map.get(key)!;
-      entry.count += 1;
-      entry.registrations.push(row);
-      if (!entry.eventDate && row.eventDate) {
-        entry.eventDate = row.eventDate;
+      entry.summary.registrations.push(row);
+      entry.summary.participantCount += 1;
+      if (row.eventName) {
+        entry.teams.add(row.eventName);
+      }
+      if (!entry.summary.eventDate && row.eventDate) {
+        entry.summary.eventDate = row.eventDate;
       }
     });
-    return Array.from(map.values()).sort((a, b) =>
-      a.eventName.localeCompare(b.eventName),
-    );
+    return Array.from(map.values())
+      .map((e) => ({
+        ...e.summary,
+        count: e.teams.size,
+      }))
+      .sort((a, b) => a.eventName.localeCompare(b.eventName));
   }, [registrations]);
 
   const departmentSummaries = React.useMemo<DepartmentSummary[]>(() => {
-    const map = new Map<string, DepartmentSummary>();
+    const map = new Map<string, { summary: DepartmentSummary; teams: Set<string> }>();
     registrations.forEach((row) => {
       const key = row.department || "Unknown";
       if (!map.has(key)) {
-        map.set(key, { department: key, count: 0, registrations: [] });
+        map.set(key, {
+          summary: { department: key, count: 0, participantCount: 0, registrations: [] },
+          teams: new Set<string>(),
+        });
       }
       const entry = map.get(key)!;
-      entry.count += 1;
-      entry.registrations.push(row);
+      entry.summary.registrations.push(row);
+      entry.summary.participantCount += 1;
+      if (row.eventName) {
+        entry.teams.add(row.eventName);
+      }
     });
-    return Array.from(map.values()).sort((a, b) =>
-      a.department.localeCompare(b.department),
-    );
+    return Array.from(map.values())
+      .map((e) => ({
+        ...e.summary,
+        count: e.teams.size,
+      }))
+      .sort((a, b) => a.department.localeCompare(b.department));
   }, [registrations]);
 
   const exportEventRegistrations = (eventName: string) => {
@@ -268,7 +289,7 @@ export default function AdminDashboardPanel() {
         </div>
         <div className="rounded-2xl border border-black/10 bg-white/80 px-5 py-4 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-black/70">
-            Total Events
+            Total Teams Registered
           </p>
           <p className="mt-2 text-3xl font-bold text-black">
             {data.summary.totalEvents}
@@ -339,7 +360,8 @@ export default function AdminDashboardPanel() {
             <TableHeader>
               <TableRow>
                 <TableHead>Event Name</TableHead>
-                <TableHead>Registrations</TableHead>
+                <TableHead>Teams</TableHead>
+                <TableHead>Participants</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Export</TableHead>
               </TableRow>
@@ -358,6 +380,7 @@ export default function AdminDashboardPanel() {
                       {event.eventName}
                     </TableCell>
                     <TableCell>{event.count}</TableCell>
+                    <TableCell>{event.participantCount}</TableCell>
                     <TableCell>{formatValue(event.eventDate)}</TableCell>
                     <TableCell>
                       <Button
@@ -389,7 +412,8 @@ export default function AdminDashboardPanel() {
             <TableHeader>
               <TableRow>
                 <TableHead>Department</TableHead>
-                <TableHead>Registrations</TableHead>
+                <TableHead>Teams</TableHead>
+                <TableHead>Participants</TableHead>
                 <TableHead>Export</TableHead>
               </TableRow>
             </TableHeader>
@@ -407,6 +431,7 @@ export default function AdminDashboardPanel() {
                       {dept.department}
                     </TableCell>
                     <TableCell>{dept.count}</TableCell>
+                    <TableCell>{dept.participantCount}</TableCell>
                     <TableCell>
                       <Button
                         variant="outline"

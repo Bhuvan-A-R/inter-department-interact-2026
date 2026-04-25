@@ -7,6 +7,7 @@ import { verifySession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { PenSquare, UserPlus } from "lucide-react";
 import { PaymentDialog } from "@/components/getRegister/paymentDialog";
+import { interDepartmentEvents } from "@/data/eventCategories";
 
 export const docStatusMap = {
   PENDING: "Pending",
@@ -50,7 +51,16 @@ export default async function Page() {
     }
   });
 
-  const incompleteEvents = userEvents.filter(
+  const incompleteEvents = userEvents.map(e => {
+    // Look up the official minParticipant from eventCategories.ts
+    const officialEvent = interDepartmentEvents.find(ie => ie.eventName === e.eventName);
+    const minRequired = officialEvent?.minParticipant ?? e.minParticipant;
+    
+    return {
+      ...e,
+      minParticipant: minRequired,
+    };
+  }).filter(
     e => e.registeredParticipant < e.minParticipant
   );
 
@@ -116,69 +126,81 @@ export default async function Page() {
   return (
     <div className="auth-shell items-start pt-20">
       <div className="relative z-10 w-full">
-        <div className="mt-4 justify-center flex flex-col gap-4">
-          <div className="max-w-4xl mx-auto p-4">
-            <h1 className="auth-title text-5xl md:text-5xl xl:text-5xl mb-6">
-              Registration List
-            </h1>
-          </div>
-        </div>
-        {incompleteEvents.length > 0 && (
-          <div className="max-w-4xl mx-auto px-4 mb-6">
-            <div className="bg-red-500/10 border-2 border-red-500/30 rounded-xl p-6 backdrop-blur-sm">
-              <h2 className="text-red-500 font-bold text-xl mb-2 flex items-center">
-                <PenSquare className="mr-2 h-6 w-6" />
-                Action Required: Incomplete Teams
-              </h2>
-              <p className="text-black-200/80 mb-4">
-                The following events require more participants before you can proceed to payment. 
-                Please add the remaining members using the &quot;Add Registrant&quot; button.
+        <div className="w-full mt-20 flex flex-col md:flex-row gap-8 px-6 md:px-12 mb-10 items-start">
+          {/* Left Side: Title, Control Buttons, and Table (80% width) */}
+          <div className="flex-1 min-w-0 space-y-8">
+            <div className="text-left">
+              <h1 className="auth-title text-5xl md:text-6xl xl:text-7xl mb-2">
+                Registration List
+              </h1>
+              <p className="text-black-200/60 text-xl">
+                Manage your college's participant details and event registrations.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {incompleteEvents.map((e, index) => (
-                  <div key={index} className="bg-red-500/5 border border-red-500/20 rounded-lg p-3">
-                    <p className="font-semibold text-black-600">
-                      {formatEventLabel(e.eventName, e.deptCode, e.teamNumber)}
-                    </p>
-                    <p className="text-sm text-red-400 font-medium">
-                      Need {e.minParticipant - e.registeredParticipant} more participant(s)
-                    </p>
-                  </div>
-                ))}
-              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <Link href="/register/modifyevents">
+                <Button
+                  variant="outline"
+                  className="auth-button auth-button-secondary px-8"
+                >
+                  <PenSquare className="mr-2 h-5 w-5" />
+                  Modify Events
+                </Button>
+              </Link>
+              <Link href="/register/addRegistrant">
+                <Button
+                  variant="outline"
+                  className="auth-button auth-button-secondary px-8"
+                >
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  Add Registrant
+                </Button>
+              </Link>
+              <PaymentDialog 
+                className="auth-button px-8" 
+                disabled={incompleteEvents.length > 0} 
+              />
+            </div>
+
+            <div className="auth-section p-6 overflow-hidden w-full border border-white/5 rounded-3xl">
+              <DataTable data={results} deptCode={deptCode} />
             </div>
           </div>
-        )}
 
-        <div className="flex justify-center mt-4 gap-4 mb-3 flex-wrap">
-          <Link href="/register/modifyevents">
-            <Button
-              variant="outline"
-              className="auth-button auth-button-secondary px-6"
-            >
-              <PenSquare className="mr-2 h-5 w-5" />
-              Modify Events
-            </Button>
-          </Link>
-          <Link href="/register/addRegistrant">
-            <Button
-              variant="outline"
-              className="auth-button auth-button-secondary px-6"
-            >
-              <UserPlus className="mr-2 h-5 w-5" />
-              Add Registrant
-            </Button>
-          </Link>
+          {/* Right Side: Incomplete Teams Check (20% width) */}
+          {incompleteEvents.length > 0 && (
+            <div className="w-full md:w-[25%] shrink-0">
+              <div className="bg-red-500/10 border-2 border-red-500/30 rounded-2xl p-5 backdrop-blur-sm shadow-2xl shadow-red-500/5">
+                <h2 className="text-red-500 font-bold text-lg mb-3 flex items-center">
+                  <PenSquare className="mr-2 h-5 w-5" />
+                  Action Required
+                </h2>
+                <p className="text-black-200/70 mb-5 text-xs leading-relaxed">
+                  Incomplete teams detected. Please fill the remaining slots.
+                </p>
+                <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-1 custom-scrollbar">
+                  {incompleteEvents.map((e, index) => (
+                    <div key={index} className="bg-white/5 border border-red-500/10 rounded-xl p-3 flex flex-col justify-between hover:bg-white/10 transition-all duration-300">
+                      <div>
+                        <p className="font-semibold text-black-600 text-sm mb-1 leading-tight">
+                          {formatEventLabel(e.eventName, e.deptCode, e.teamNumber)}
+                        </p>
+                        <p className="text-[10px] text-black-400">
+                          {e.registeredParticipant} / {e.minParticipant} filled
+                        </p>
+                      </div>
+                      <p className="text-[10px] text-red-500 font-bold mt-2 uppercase tracking-tighter">
+                        Need {e.minParticipant - e.registeredParticipant} more
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="mx-auto w-full max-w-6xl auth-section p-4">
-          <DataTable data={results} deptCode={deptCode} />
-        </div>
-
-        <div className="flex flex-col items-center mt-8 mb-5 gap-4">
-          {/* Render PaymentDialog only once. Assume PaymentDialog uses the trigger passed via children or className. */}
-          <PaymentDialog className="auth-button px-6" />
-        </div>
       </div>
     </div>
   );

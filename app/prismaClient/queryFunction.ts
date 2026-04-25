@@ -5,6 +5,7 @@ import { RegistrantDetailUpdate } from "../api/updateregisterdetails/route";
 import { UpdateRole } from "../api/updateroleinevent/route";
 import type { AddEvent } from "../api/addeventregister/route";
 import { Registrant, UserEventsType } from "../api/register/route";
+import { interDepartmentEvents } from "@/data/eventCategories";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function insertRegistrant(
@@ -371,6 +372,7 @@ export async function registerUserEvents(
                 userId,
                 eventName: event.eventName,
                 eventNo: event.eventNo,
+                minParticipant: interDepartmentEvents.find(ie => ie.eventName === event.eventName)?.minParticipant ?? 1,
                 maxParticipant: event.maxParticipant,
                 category: event.category,
                 amount: event.amount,

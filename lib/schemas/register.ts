@@ -3,6 +3,7 @@ export const EventSchema = z.array(
     z.object({
         eventNo: z.number({ message: "eventNo is required" }),
         eventName: z.string({ message: "eventName is required" }),
+        minParticipant: z.number().int().min(1).optional(),
         maxParticipant: z.number({ message: "max participant is required" }),
         category: z.string({ message: "category of event is required" }),
         amount: z.number({ message: "amount is required" }).min(0),

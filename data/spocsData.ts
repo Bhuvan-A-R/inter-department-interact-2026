@@ -47,11 +47,11 @@ export const spocsData: SpocData[] = [
   },
   {
     id: 5,
-    name: "Prof. Pushpraj H",
+    name: "Prof. Pushparaj H",
     department: "EEE",
     role: "Department SPOC",
     phone: "+91 86183 89913",
-    email: "pushprajh@gat.ac.in",
+    email: "pushparajh@gat.ac.in",
     photo: "/spoc-faculty-photos/pushparaj h.jpg",
   },
   {

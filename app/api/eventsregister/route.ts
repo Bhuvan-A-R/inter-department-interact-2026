@@ -9,6 +9,7 @@ import { checkRegistrationBlocks } from "@/lib/blockCheck";
 export interface EventCreate {
     eventNo: number;
     eventName: string;
+    minParticipant?: number;
     maxParticipant: number;
     category: string;
     amount: number;

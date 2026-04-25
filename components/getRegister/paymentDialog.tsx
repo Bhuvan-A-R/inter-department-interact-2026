@@ -8,12 +8,14 @@ import { toast } from "sonner";
 
 type PaymentDialogProps = {
   className?: string;
+  disabled?: boolean;
 };
 
-export function PaymentDialog({ className }: PaymentDialogProps) {
+export function PaymentDialog({ className, disabled }: PaymentDialogProps) {
   const router = useRouter();
 
   const handlePaymentValid = async () => {
+    if (disabled) return;
     try {
       const request = await fetch("/api/paymentValidate");
 
@@ -43,6 +45,7 @@ export function PaymentDialog({ className }: PaymentDialogProps) {
           className ||
           "border bg-primary relative text-white hover:bg-primary hover:text-white hover:scale-105 transition-all"
         }
+        disabled={disabled}
         onClick={() => handlePaymentValid()}
       >
         <CreditCard className="mr-2 h-4 w-4" />
