@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import DepartmentDetailsWrapper from '@/components/DepartmentDetailsWrapper';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function ResultsPage() {
   const standings = await getCalculatedResults();

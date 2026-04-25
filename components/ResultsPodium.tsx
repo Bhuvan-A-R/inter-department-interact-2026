@@ -67,7 +67,7 @@ const PodiumStep = ({ department, points, position }: PodiumStepProps) => {
         beamColor1={config.beamColor1}
         beamColor2={config.beamColor2}
       >
-        <span className="text-4xl font-black text-white drop-shadow-md">
+        <span className="text-4xl font-black text-gold drop-shadow-md">
           {config.label}
         </span>
       </GlassCard>

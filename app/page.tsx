@@ -547,7 +547,7 @@ export default function Home() {
             bring your best game.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <button
+            {/* <button
               disabled
               className="btn-gold"
               style={{
@@ -557,7 +557,7 @@ export default function Home() {
               }}
             >
               Register Now ( Coming Soon... )
-            </button>
+            </button> */}
             <Link
               href="/events"
               style={{

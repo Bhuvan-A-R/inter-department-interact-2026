@@ -46,16 +46,20 @@ export default function DepartmentDetailsWrapper({ standing, children }: Props) 
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       item.position === 1 ? 'bg-gat-gold/20' : 
-                      item.position === 2 ? 'bg-gat-steel/20' : 'bg-gat-steel/10'
+                      item.position === 2 ? 'bg-gat-steel/20' : 
+                      item.position === 3 ? 'bg-gat-steel/10' : 'bg-gat-blue/10'
                     }`}>
                       {item.position === 1 ? <Trophy className="w-5 h-5 text-gat-gold" /> : 
                        item.position === 2 ? <Medal className="w-5 h-5 text-gat-steel" /> : 
-                       <Medal className="w-5 h-5 text-gat-steel/70" />}
+                       item.position === 3 ? <Medal className="w-5 h-5 text-gat-steel/70" /> :
+                       <Star className="w-5 h-5 text-gat-blue" />}
                     </div>
                     <div>
                       <p className="font-bold text-gat-midnight leading-tight">{item.eventName}</p>
-                      <p className="text-xs text-gat-steel">
-                        {item.position === 1 ? 'First' : item.position === 2 ? 'Second' : 'Third'} Place
+                      <p className="text-xs text-gat-steel uppercase tracking-wider font-bold">
+                        {item.position === 1 ? 'First Place' : 
+                         item.position === 2 ? 'Second Place' : 
+                         item.position === 3 ? 'Third Place' : 'Participation'}
                       </p>
                     </div>
                   </div>
