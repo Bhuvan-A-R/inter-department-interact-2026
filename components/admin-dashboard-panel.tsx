@@ -17,7 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FileDown } from "lucide-react";
+import { FileDown, RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 type Summary = {
   totalStudents: number;
@@ -97,6 +98,27 @@ export default function AdminDashboardPanel() {
   const [data, setData] = React.useState<DashboardResponse | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [syncing, setSyncing] = React.useState(false);
+
+  const handleSyncToSheets = async (clear = false) => {
+    setSyncing(true);
+    try {
+      const response = await fetch(`/api/admin/sync-sheets${clear ? "?clear=true" : ""}`, {
+        method: "POST",
+      });
+      const result = await response.json();
+      if (response.ok) {
+        toast.success(result.data?.message || "Synced successfully!");
+      } else {
+        toast.error(result.error?.message || "Sync failed.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred during sync.");
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   React.useEffect(() => {
     let isMounted = true;
@@ -349,6 +371,30 @@ export default function AdminDashboardPanel() {
             )}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <Button
+          variant="outline"
+          className="gap-2"
+          onClick={() => handleSyncToSheets(false)}
+          disabled={syncing}
+        >
+          <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+          {syncing ? "Syncing..." : "Sync to Sheets"}
+        </Button>
+
+        <Button
+          variant="destructive"
+          className="gap-2"
+          onClick={() => {
+            if (confirm("Are you sure? This will delete all existing event tabs and recreate them.")) {
+              handleSyncToSheets(true);
+            }
+          }}
+          disabled={syncing}
+        >
+          <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+          {syncing ? "Clearing..." : "Clear & Sync to Sheets"}
+        </Button>
       </div>
 
       <div className="mt-10 rounded-2xl border border-black/10 bg-white/80 px-4 py-6 shadow-sm">
