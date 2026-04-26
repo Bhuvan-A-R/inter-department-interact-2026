@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifySession } from "@/lib/session";
 import { google } from "googleapis";
+import { events as scheduleEvents } from "@/data/scheduleInterDepartment";
+import { interDepartmentEvents as categoryEvents } from "@/data/eventCategories";
 
 // Helper to get base event name
 const getBaseEventName = (value: string) => {
@@ -48,14 +50,49 @@ export async function POST(req: Request) {
     });
 
     // 2. Group by base event name
-    const groupedData = new Map<string, any[]>();
+    const groupedData = new Map<string, { rows: any[], participantCount: number, teams: Set<string> }>();
+    
+    // Map for easy lookup of event metadata
+    const normalize = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, "").trim();
+    const eventMetadataMap = new Map();
+
+    // Load from schedule
+    scheduleEvents.forEach(e => {
+      const key = normalize(e.eventName);
+      eventMetadataMap.set(key, { 
+        id: e.eventId, 
+        domain: e.domain 
+      });
+    });
+
+    // Load from categories (may overwrite or fill gaps)
+    categoryEvents.forEach(e => {
+      const key = normalize(e.eventName);
+      const existing = eventMetadataMap.get(key) || {};
+      eventMetadataMap.set(key, {
+        ...existing,
+        id: existing.id || e.eventNo,
+        domain: existing.domain || e.category
+      });
+    });
+
     eventRegistrations.forEach((entry) => {
       const baseEventName = entry.event?.eventName || "Unknown Event";
       
       if (!groupedData.has(baseEventName)) {
-        groupedData.set(baseEventName, []);
+        groupedData.set(baseEventName, { rows: [], participantCount: 0, teams: new Set() });
       }
       
+      const entryData = groupedData.get(baseEventName)!;
+      entryData.participantCount++;
+      if (entry.event?.id) {
+        entryData.teams.add(entry.event.id);
+      } else if (entry.event?.teamNumber) {
+        // Fallback to department + team number as a unique team identifier if needed
+        const teamId = `${entry.event.deptCode || 'GENERAL'}-${entry.event.teamNumber}`;
+        entryData.teams.add(teamId);
+      }
+
       const registrantDept = entry.registrant.deptCode || entry.registrant.user?.deptCode || "N/A";
       
       // Construct team identifier: "DeptCode Team TeamNumber"
@@ -63,7 +100,7 @@ export async function POST(req: Request) {
       const teamNumber = entry.event?.teamNumber || 1;
       const teamIdentifier = `${eventDeptCode} Team ${teamNumber}`.trim() || "N/A";
 
-      groupedData.get(baseEventName)?.push([
+      entryData.rows.push([
         registrantDept,
         teamIdentifier,
         entry.registrant.name,
@@ -168,11 +205,28 @@ export async function POST(req: Request) {
 
     // Main Summary Content
     const syncTime = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-    const mainHeaders = ["Event Name", "Link to Sheet"];
-    const mainRows = eventSheetTitles.sort().map(title => [
-      title,
-      `=HYPERLINK("#gid=${titleToGid.get(title)}", "Go to Sheet")`
-    ]);
+    const mainHeaders = ["# ↑", "Domain", "Event Name", "Teams", "Participants", "Link to Event Sheets"];
+    const mainRows = Array.from(groupedData.entries())
+      .map(([title, info]) => {
+        const metadata = eventMetadataMap.get(normalize(title));
+        // Find one entry for this event to get database fallback if needed
+        const sampleEntry = eventRegistrations.find(e => (e.event?.eventName || "Unknown Event") === title);
+        const eventId = metadata?.id || sampleEntry?.event?.eventNo;
+
+        return {
+          sortId: typeof eventId === 'number' ? eventId : 999,
+          data: [
+            eventId || "N/A",
+            metadata?.domain || sampleEntry?.event?.category || "N/A",
+            title,
+            info.teams.size,
+            info.participantCount,
+            `=HYPERLINK("#gid=${titleToGid.get(title.substring(0, 100).replace(/[\[\]\?\/\*\\:]/g, ""))}", "Go to Sheet")`
+          ]
+        };
+      })
+      .sort((a, b) => a.sortId - b.sortId)
+      .map(item => item.data);
 
     dataUpdates.push({
       range: `${MAIN_SHEET}!A1`,
@@ -186,7 +240,7 @@ export async function POST(req: Request) {
     });
 
     // Event Sheets Content
-    for (const [eventName, rows] of groupedData.entries()) {
+    for (const [eventName, info] of groupedData.entries()) {
       const safeTitle = eventName.substring(0, 100).replace(/[\[\]\?\/\*\\:]/g, "");
       const headers = ["Department", "Team", "Student Name", "USN/Roll No", "Email", "Phone"];
       dataUpdates.push({
@@ -195,7 +249,7 @@ export async function POST(req: Request) {
           [`Event: ${eventName}`],
           [],
           headers,
-          ...rows
+          ...info.rows
         ],
       });
     }
@@ -207,6 +261,45 @@ export async function POST(req: Request) {
         valueInputOption: "USER_ENTERED", // Use USER_ENTERED for formulas
         data: dataUpdates,
       },
+    });
+
+    // 10. Styling and Formatting Requests
+    const mainSheetId = titleToGid.get(MAIN_SHEET);
+    const stylingRequests: any[] = [];
+
+    // Merge and Style Title on Main Summary
+    if (mainSheetId !== undefined) {
+      stylingRequests.push(
+        // Merge Title
+        { mergeCells: { range: { sheetId: mainSheetId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 6 }, mergeType: "MERGE_ALL" } },
+        // Merge Timestamp
+        { mergeCells: { range: { sheetId: mainSheetId, startRowIndex: 1, endRowIndex: 2, startColumnIndex: 0, endColumnIndex: 6 }, mergeType: "MERGE_ALL" } },
+        // Bold Title
+        { repeatCell: { range: { sheetId: mainSheetId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 1 }, cell: { userEnteredFormat: { textFormat: { bold: true, fontSize: 14 }, horizontalAlignment: "CENTER" } }, fields: "userEnteredFormat(textFormat,horizontalAlignment)" } },
+        // Bold Table Headers on Main Summary
+        { repeatCell: { range: { sheetId: mainSheetId, startRowIndex: 3, endRowIndex: 4, startColumnIndex: 0, endColumnIndex: 6 }, cell: { userEnteredFormat: { textFormat: { bold: true }, backgroundColor: { red: 0.9, green: 0.9, blue: 0.9 } } }, fields: "userEnteredFormat(textFormat,backgroundColor)" } }
+      );
+    }
+
+    // Auto-resize and specific styling for all sheets
+    allSheets.forEach(s => {
+      stylingRequests.push({
+        autoResizeDimensions: {
+          dimensions: {
+            sheetId: s.properties?.sheetId,
+            dimension: "COLUMNS",
+            startIndex: 0,
+            endIndex: 10
+          }
+        }
+      });
+    });
+
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: stylingRequests
+      }
     });
 
     return NextResponse.json({

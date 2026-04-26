@@ -513,7 +513,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 45,
-        eventName: "Basketball (3v3) (M & W)",
+        eventName: "Basketball (M&W)",
         category: "SPORTS",
         minParticipant: 3,
         maxParticipant: 7,
@@ -524,7 +524,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 46,
-        eventName: "Deadlift (M & W)",
+        eventName: "Deadlift (M&W)",
         category: "SPORTS",
         minParticipant: 1,
         maxParticipant: 1,
@@ -535,7 +535,7 @@ export const interDepartmentEvents: EventCategory[] = [
     },
     {
         eventNo: 47,
-        eventName: "Pickleball (M & W)",
+        eventName: "Pickleball (M&W)",
         category: "SPORTS",
         minParticipant: 1,
         maxParticipant: 1,

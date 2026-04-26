@@ -36,6 +36,8 @@ type RegistrationRow = {
   eventName: string;
   eventDate: string | null;
   registrationDate: string | null;
+  eventId: number | null;
+  domain: string | null;
 };
 
 type DashboardResponse = {
@@ -49,6 +51,8 @@ type EventSummary = {
   count: number;
   participantCount: number;
   registrations: RegistrationRow[];
+  eventId: number | null;
+  domain: string | null;
 };
 
 type DepartmentSummary = {
@@ -70,6 +74,18 @@ const exportToExcel = (
   rows: string[][],
 ) => {
   const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  // Calculate column widths
+  const colWidths = headers.map((h, i) => {
+    let maxLen = h.length;
+    rows.forEach(row => {
+      const val = row[i] ? String(row[i]).length : 0;
+      if (val > maxLen) maxLen = val;
+    });
+    return { wch: maxLen + 2 }; // Add some padding
+  });
+  worksheet["!cols"] = colWidths;
+
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Registrations");
   XLSX.writeFile(workbook, filename);
@@ -99,6 +115,22 @@ export default function AdminDashboardPanel() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [syncing, setSyncing] = React.useState(false);
+  const [sortConfig, setSortConfig] = React.useState<{
+    key: keyof EventSummary;
+    direction: "asc" | "desc";
+  } | null>({ key: "eventId", direction: "asc" });
+
+  const requestSort = (key: keyof EventSummary) => {
+    let direction: "asc" | "desc" = "asc";
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "asc"
+    ) {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
 
   const handleSyncToSheets = async (clear = false) => {
     setSyncing(true);
@@ -176,6 +208,12 @@ export default function AdminDashboardPanel() {
       const entry = map.get(key)!;
       entry.summary.registrations.push(row);
       entry.summary.participantCount += 1;
+      if (!entry.summary.eventId && row.eventId) {
+        entry.summary.eventId = row.eventId;
+      }
+      if (!entry.summary.domain && row.domain) {
+        entry.summary.domain = row.domain;
+      }
       if (row.eventName) {
         entry.teams.add(row.eventName);
       }
@@ -183,13 +221,31 @@ export default function AdminDashboardPanel() {
         entry.summary.eventDate = row.eventDate;
       }
     });
-    return Array.from(map.values())
-      .map((e) => ({
-        ...e.summary,
-        count: e.teams.size,
-      }))
-      .sort((a, b) => a.eventName.localeCompare(b.eventName));
-  }, [registrations]);
+    const summaries = Array.from(map.values()).map((e) => ({
+      ...e.summary,
+      count: e.teams.size,
+    }));
+
+    if (sortConfig !== null) {
+      summaries.sort((a, b) => {
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
+
+        if (aValue === null || aValue === undefined) return 1;
+        if (bValue === null || bValue === undefined) return -1;
+
+        if (aValue < bValue) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+
+    return summaries;
+  }, [registrations, sortConfig]);
 
   const departmentSummaries = React.useMemo<DepartmentSummary[]>(() => {
     const map = new Map<string, { summary: DepartmentSummary; teams: Set<string> }>();
@@ -405,11 +461,43 @@ export default function AdminDashboardPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Event Name</TableHead>
-                <TableHead>Teams</TableHead>
-                <TableHead>Participants</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Export</TableHead>
+                <TableHead
+                  className="cursor-pointer hover:bg-black/5 text-center"
+                  onClick={() => requestSort("eventId")}
+                >
+                  # {sortConfig?.key === "eventId" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer hover:bg-black/5"
+                  onClick={() => requestSort("domain")}
+                >
+                  Domain {sortConfig?.key === "domain" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer hover:bg-black/5"
+                  onClick={() => requestSort("eventName")}
+                >
+                  Event Name {sortConfig?.key === "eventName" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer hover:bg-black/5"
+                  onClick={() => requestSort("count")}
+                >
+                  Teams {sortConfig?.key === "count" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer hover:bg-black/5"
+                  onClick={() => requestSort("participantCount")}
+                >
+                  Participants {sortConfig?.key === "participantCount" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer hover:bg-black/5"
+                  onClick={() => requestSort("eventDate")}
+                >
+                  Date {sortConfig?.key === "eventDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                </TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -422,6 +510,12 @@ export default function AdminDashboardPanel() {
               ) : (
                 eventSummaries.map((event) => (
                   <TableRow key={event.eventName}>
+                    <TableCell className="text-center text-black/50">
+                      {event.eventId || "-"}
+                    </TableCell>
+                    <TableCell className="font-semibold text-xs text-black/60">
+                      {event.domain || "N/A"}
+                    </TableCell>
                     <TableCell className="font-medium">
                       {event.eventName}
                     </TableCell>
@@ -436,7 +530,7 @@ export default function AdminDashboardPanel() {
                           exportEventRegistrations(event.eventName)
                         }
                       >
-                        Download Excel
+                        Excel
                       </Button>
                     </TableCell>
                   </TableRow>

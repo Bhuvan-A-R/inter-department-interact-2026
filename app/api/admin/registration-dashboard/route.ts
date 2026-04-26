@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifySession } from "@/lib/session";
 import { events as scheduleEvents } from "@/data/scheduleInterDepartment";
+import { interDepartmentEvents as categoryEvents } from "@/data/eventCategories";
 
 type RegistrationRow = {
   registrantId: string;
@@ -13,11 +14,34 @@ type RegistrationRow = {
   eventName: string;
   eventDate: string | null;
   registrationDate: string | null;
+  eventId: number | null;
+  domain: string | null;
 };
 
-const eventDateByName = new Map(
-  scheduleEvents.map((event) => [event.eventName.toLowerCase(), event.date])
-);
+const normalize = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, "").trim();
+
+const eventMetadataMap = new Map();
+
+// Load from schedule
+scheduleEvents.forEach(e => {
+  const key = normalize(e.eventName);
+  eventMetadataMap.set(key, {
+    date: e.date,
+    id: e.eventId,
+    domain: e.domain
+  });
+});
+
+// Load from categories (may overwrite or fill gaps)
+categoryEvents.forEach(e => {
+  const key = normalize(e.eventName);
+  const existing = eventMetadataMap.get(key) || {};
+  eventMetadataMap.set(key, {
+    ...existing,
+    id: existing.id || e.eventNo,
+    domain: existing.domain || e.category
+  });
+});
 
 export async function GET() {
   const session = await verifySession();
@@ -64,7 +88,10 @@ export async function GET() {
       ? ` Team ${entry.event.teamNumber}`
       : "";
     const eventName = `${baseEventName}${deptLabel}${teamLabel}`.trim();
-    const eventDate = eventDateByName.get(baseEventName.toLowerCase()) ?? null;
+    const metadata = eventMetadataMap.get(normalize(baseEventName));
+    const eventDate = metadata?.date ?? null;
+    const eventId = metadata?.id ?? entry.event?.eventNo ?? null;
+    const domain = metadata?.domain ?? entry.event?.category ?? null;
 
     return {
       registrantId: entry.registrantId,
@@ -76,6 +103,8 @@ export async function GET() {
       eventName,
       eventDate,
       registrationDate: null,
+      eventId,
+      domain,
     };
   });
 
