@@ -9,23 +9,23 @@ import { events } from "@/data/scheduleInterDepartment";
 const TRACKS = [
   { label: "27-04-2026", dateKey: "27th April", trackNo: 1, color: "hsl(var(--primary))", bg: "hsl(var(--primary) / 0.1)", border: "hsl(var(--primary) / 0.2)" },
   { label: "28-04-2026", dateKey: "28th April", trackNo: 2, color: "#7c3aed", bg: "rgba(124,58,237,0.1)", border: "rgba(124,58,237,0.2)" },
-  { label: "29-04-2026", dateKey: "29th April", trackNo: 3, color: "#2563eb", bg: "rgba(37,99,235,0.1)",  border: "rgba(37,99,235,0.2)"  },
-  { label: "04-05-2026", dateKey: "4th May",    trackNo: 4, color: "#16a34a", bg: "rgba(22,163,74,0.1)", border: "rgba(22,163,74,0.2)"  },
-  { label: "05-05-2026", dateKey: "5th May",    trackNo: 5, color: "#ea580c", bg: "rgba(234,88,12,0.1)", border: "rgba(234,88,12,0.2)"  },
-  { label: "06-05-2026", dateKey: "6th May",    trackNo: 6, color: "#db2777", bg: "rgba(219,39,119,0.1)", border: "rgba(219,39,119,0.2)"  },
+  { label: "29-04-2026", dateKey: "29th April", trackNo: 3, color: "#2563eb", bg: "rgba(37,99,235,0.1)", border: "rgba(37,99,235,0.2)" },
+  { label: "04-05-2026", dateKey: "4th May", trackNo: 4, color: "#16a34a", bg: "rgba(22,163,74,0.1)", border: "rgba(22,163,74,0.2)" },
+  { label: "05-05-2026", dateKey: "5th May", trackNo: 5, color: "#ea580c", bg: "rgba(234,88,12,0.1)", border: "rgba(234,88,12,0.2)" },
+  { label: "06-05-2026", dateKey: "6th May", trackNo: 6, color: "#db2777", bg: "rgba(219,39,119,0.1)", border: "rgba(219,39,119,0.2)" },
 ];
 
 const DOMAIN_COLORS: Record<string, string> = {
-  THEATRE:          "#ea580c",
-  DANCE:            "#9333ea",
-  MUSIC:            "#0891b2",
-  FASHION:          "#e11d48",
-  LITERARY:         "#0284c7",
-  FINE_ARTS:        "#65a30d",
-  GENERAL_EVENTS:   "#d97706",
-  FACULTY:          "#4b5563",
-  SPORTS:           "#ef4444",
-  TECHNICAL:        "#2563eb",
+  THEATRE: "#ea580c",
+  DANCE: "#9333ea",
+  MUSIC: "#0891b2",
+  FASHION: "#e11d48",
+  LITERARY: "#0284c7",
+  FINE_ARTS: "#65a30d",
+  GENERAL_EVENTS: "#d97706",
+  FACULTY: "#4b5563",
+  SPORTS: "#ef4444",
+  TECHNICAL: "#2563eb",
 };
 
 function trackForDate(dateKey: string) {
@@ -51,7 +51,7 @@ export default function SchedulePage() {
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
-        style={{ 
+        style={{
           background: `
             radial-gradient(ellipse 65% 55% at 60% 35%, hsl(var(--primary) / 0.07) 0%, transparent 65%),
             radial-gradient(ellipse 45% 45% at 5% 85%,  hsl(var(--secondary) / 0.05) 0%, transparent 55%),

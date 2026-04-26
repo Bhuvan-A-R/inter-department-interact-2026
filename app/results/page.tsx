@@ -18,7 +18,7 @@ export const revalidate = 0;
 export default async function ResultsPage() {
   const standings = await getCalculatedResults();
 
-  if (standings.length === 0 || standings.every(s => s.totalPoints === 0)) {
+  if (standings.length === 0 || (standings.every(s => s.podiumPoints === 0) && standings.every(s => s.participationPoints === 0))) {
     return (
       <div className="min-h-screen bg-gat-off-white pt-24 pb-20 flex flex-col items-center justify-center px-4">
         <div className="relative">
@@ -45,12 +45,15 @@ export default async function ResultsPage() {
     );
   }
 
-  const podiumDepts = standings.slice(0, 3);
-  const remainingDepts = standings.slice(3);
+  const rollingStandings = [...standings]
+    .sort((a, b) => b.podiumPoints - a.podiumPoints);
+    
+  const participationStandings = [...standings]
+    .sort((a, b) => b.participationPoints - a.participationPoints);
 
   return (
     <div className="min-h-screen bg-gat-off-white pt-24 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center mb-12">
           <p className="text-xs uppercase tracking-[0.35em] text-gat-steel font-bold mb-2">
@@ -62,84 +65,96 @@ export default async function ResultsPage() {
           <div className="h-1.5 w-24 bg-gat-blue mx-auto rounded-full" />
         </div>
 
-        {/* Podium Section */}
-        <div className="mb-20">
-          <ResultsPodium standings={podiumDepts} />
-        </div>
-
-        {/* Table Section */}
-        <div className="bg-white rounded-3xl border border-gat-blue/10 shadow-card overflow-hidden">
-          <div className="p-6 md:p-8 border-b border-gat-blue/5">
-            <h2 className="text-2xl font-heading font-bold text-gat-midnight">Full Rankings</h2>
-            <p className="text-sm text-gat-steel">Click on a department to see point details</p>
-          </div>
+        {/* Tables Container */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-gat-off-white/50">
-                <TableRow>
-                  <TableHead className="w-20 text-center">Rank</TableHead>
-                  <TableHead>Department</TableHead>
-                  <TableHead className="text-right">Total Points</TableHead>
-                  <TableHead className="text-center w-32">Awards</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {standings.map((standing, index) => (
-                  <DepartmentDetailsWrapper key={standing.department} standing={standing}>
-                    <TableRow className="cursor-pointer hover:bg-gat-blue/5 transition-colors group">
-                      <TableCell className="text-center font-bold text-gat-steel group-hover:text-gat-blue">
-                        #{index + 1}
-                      </TableCell>
-                      <TableCell className="font-heading font-bold text-gat-midnight">
+          {/* Rolling Trophy Table */}
+          <div className="bg-white rounded-[2.5rem] border border-gat-blue/10 shadow-card overflow-hidden">
+            <div className="p-8 border-b border-gat-blue/5 bg-gradient-to-br from-gat-blue/[0.02] to-transparent">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-10 h-10 bg-gat-gold/10 rounded-2xl flex items-center justify-center text-xl">
+                  🏆
+                </div>
+                <h2 className="text-2xl font-heading font-bold text-gat-midnight">Rolling Trophy</h2>
+              </div>
+              <p className="text-sm text-gat-steel">Points from podium finishes (1st, 2nd, 3rd)</p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="bg-gat-off-white/50">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-20 text-center font-bold">Rank</TableHead>
+                    <TableHead className="font-bold">Department</TableHead>
+                    <TableHead className="text-right font-bold">Points</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rollingStandings.map((standing, index) => (
+                    <DepartmentDetailsWrapper key={standing.department} standing={standing}>
+                      <TableRow className="cursor-pointer hover:bg-gat-blue/5 transition-colors group">
+                        <TableCell className="text-center font-bold text-gat-steel group-hover:text-gat-blue">
+                          #{index + 1}
+                        </TableCell>
+                        <TableCell className="font-heading font-bold text-gat-midnight">
+                          {standing.department}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <span className="inline-flex items-center justify-center bg-gat-blue/10 text-gat-blue px-3 py-1 rounded-full font-mono font-bold group-hover:bg-gat-blue group-hover:text-white transition-colors">
+                            {standing.podiumPoints}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    </DepartmentDetailsWrapper>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+
+          {/* Participation Trophy Table */}
+          <div className="bg-white rounded-[2.5rem] border border-gat-blue/10 shadow-card overflow-hidden">
+            <div className="p-8 border-b border-gat-blue/5 bg-gradient-to-br from-gat-blue/[0.02] to-transparent">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-10 h-10 bg-gat-blue/10 rounded-2xl flex items-center justify-center text-xl">
+                  🤝
+                </div>
+                <h2 className="text-2xl font-heading font-bold text-gat-midnight">Participation Trophy</h2>
+              </div>
+              <p className="text-sm text-gat-steel">Points awarded solely for event participation</p>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="bg-gat-off-white/50">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="font-bold pl-8">Department Name</TableHead>
+                    <TableHead className="text-right font-bold pr-8">Points</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {participationStandings.map((standing) => (
+                    <TableRow key={standing.department} className="hover:bg-gat-blue/5 transition-colors group">
+                      <TableCell className="font-heading font-bold text-gat-midnight pl-8">
                         {standing.department}
                       </TableCell>
-                      <TableCell className="text-right">
-                        <span className="inline-flex items-center justify-center bg-gat-blue/10 text-gat-blue px-3 py-1 rounded-full font-mono font-bold">
-                          {standing.totalPoints}
+                      <TableCell className="text-right pr-8">
+                        <span className="inline-flex items-center justify-center bg-gat-steel/10 text-gat-steel px-3 py-1 rounded-full font-mono font-bold group-hover:bg-gat-steel group-hover:text-white transition-colors">
+                          {standing.participationPoints}
                         </span>
                       </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex justify-center gap-1">
-                          {standing.breakdown.filter(b => b.position === 1).length > 0 && (
-                            <Badge className="bg-gat-gold hover:bg-gat-dark-gold text-gat-midnight border-none">
-                              {standing.breakdown.filter(b => b.position === 1).length}🥇
-                            </Badge>
-                          )}
-                          {standing.breakdown.filter(b => b.position === 2).length > 0 && (
-                            <Badge className="bg-gat-steel hover:bg-gat-charcoal hover:text-white text-gat-midnight border-none">
-                              {standing.breakdown.filter(b => b.position === 2).length}🥈
-                            </Badge>
-                          )}
-                          {standing.breakdown.filter(b => b.position === 3).length > 0 && (
-                            <Badge className="bg-gat-steel/50 hover:bg-gat-steel text-gat-midnight border-none">
-                              {standing.breakdown.filter(b => b.position === 3).length}🥉
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
                     </TableRow>
-                  </DepartmentDetailsWrapper>
-                ))}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
+
         </div>
 
-        {/* Legend */}
-        <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gat-steel font-bold">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gat-gold" />
-            <span>1st Place</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gat-steel" />
-            <span>2nd Place</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gat-steel/50" />
-            <span>3rd Place</span>
-          </div>
+        {/* Footer info */}
+        <div className="mt-12 text-center text-sm text-gat-steel italic">
+          * Click on any department in the Rolling Trophy table to view detailed podium breakdown.
         </div>
       </div>
     </div>

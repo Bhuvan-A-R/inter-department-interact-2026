@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Playfair_Display, Rajdhani, DM_Sans, JetBrains_Mono } from "next/font/google";
+import FloatingLeaderboard from "../components/FloatingLeaderboard";
 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 const rajdhani = Rajdhani({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-rajdhani" });
@@ -71,6 +72,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <ThemeProvider>
           <AuthContextProvider>
             <Navbar />
+            <FloatingLeaderboard />
             <main className="min-h-screen">
               {children}
               <Analytics />

@@ -6,6 +6,8 @@ import { unstable_noStore as noStore } from 'next/cache';
 export interface DepartmentStanding {
   department: string;
   totalPoints: number;
+  podiumPoints: number;
+  participationPoints: number;
   breakdown: {
     eventName: string;
     position: number;
@@ -43,112 +45,149 @@ export async function getCalculatedResults(): Promise<DepartmentStanding[]> {
       return [];
     }
 
+    const spreadsheet = await sheets.spreadsheets.get({
+      spreadsheetId,
+    });
+    const sheetNames = spreadsheet.data.sheets?.map(s => s.properties?.title || '') || [];
+    
+    // Find sheets matching our needs (case-insensitive)
+    const consolidatedSheetName = sheetNames.find(n => n.toLowerCase().includes('consolidated'));
+    const podiumSheetName = sheetNames.find(n => 
+      n.toLowerCase().includes('podium') || 
+      n.toLowerCase().includes('poudium')
+    );
+    const participationSheetName = sheetNames.find(n => 
+      n.toLowerCase().includes('particip') || 
+      n.toLowerCase().includes('particp')
+    );
+
+    if (!podiumSheetName) {
+      console.warn('Podium sheet not found. Available:', sheetNames);
+    }
+    if (!participationSheetName) {
+      console.warn('Participation sheet not found. Available:', sheetNames);
+    }
+
     const standingsMap: Record<string, DepartmentStanding> = {};
 
     // Initialize all departments from spocsData
-    const allDepts = Array.from(new Set(spocsData.map(s => s.department)));
+    // Sort by length descending to match longest department names first (e.g., CSAIML before AIML)
+    const allDepts = Array.from(new Set(spocsData.map(s => s.department)))
+      .sort((a, b) => b.length - a.length);
+    
     allDepts.forEach(dept => {
       standingsMap[dept] = {
         department: dept,
         totalPoints: 0,
+        podiumPoints: 0,
+        participationPoints: 0,
         breakdown: []
       };
     });
 
-    // 1. Fetch Podium Results
-    // Headers: Event ID, Domain, Event Name, 1st Place (Dept), 2nd Place (Dept), 3rd Place (Dept)
-    const podiumRes = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: 'Podium - Results!A2:F200', // Adjusted to column F
-    });
-    const podiumRows = podiumRes.data.values || [];
+    // Helper for robust department mapping
+    const findTargetDept = (input: string) => {
+      if (!input) return null;
+      const code = input.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+      return allDepts.find(d => {
+        const search = d.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+        return code === search || 
+               code === search.toLowerCase() ||
+               code.endsWith(search) || 
+               code.includes(`ga${search}`) ||
+               code.includes(`gac${search}`);
+      }) || input;
+    };
 
-    podiumRows.forEach(row => {
-      // Index mapping: 0=ID, 1=Domain, 2=Name, 3=1st, 4=2nd, 5=3rd
-      const eventName = row[2];
-      const firstDept = row[3];
-      const secondDept = row[4];
-      const thirdDept = row[5];
-
-      if (!eventName) return;
-
-      const eventInfo = eventPrizeData.find(e => e.eventName === eventName);
-      if (!eventInfo) {
-        // console.warn(`Event prize data not found for: ${eventName}`);
-        return;
-      }
-
-      const processPosition = (dept: string, position: number, points: number) => {
-        if (!dept) return;
-        // Map shorthand names to full department names if necessary
-        const targetDept = allDepts.find(d => 
-          d.toLowerCase() === dept.toLowerCase() || 
-          d.toLowerCase().includes(dept.toLowerCase())
-        ) || dept;
-
-        if (!standingsMap[targetDept]) return;
-
-        standingsMap[targetDept].totalPoints += points;
-        standingsMap[targetDept].breakdown.push({
-          eventName,
-          position,
-          points,
-          type: 'Podium'
-        });
-      };
-
-      processPosition(firstDept, 1, eventInfo.pointsFirst);
-      processPosition(secondDept, 2, eventInfo.pointsSecond);
-      processPosition(thirdDept, 3, eventInfo.pointsThird);
-    });
-
-    // 2. Fetch Participation Points
-    // Headers: Event ID, Domain, Event Name, 1GAAE, 1GAAIML, ...
-    const partRes = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: 'Particpation Points!A1:AZ200',
-    });
-    const partData = partRes.data.values || [];
-
-    if (partData.length > 0) {
-      const headers = partData[0];
-      const rows = partData.slice(1);
-
+    // 1. If Consolidated sheet exists, use it primarily
+    if (consolidatedSheetName) {
+      const consolidatedRes = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: `${consolidatedSheetName}!A1:C100`, // Assuming Dept, Rolling, Participation
+      });
+      const rows = consolidatedRes.data.values || [];
       rows.forEach(row => {
-        const eventName = row[2]; // Event Name is at index 2
+        const targetDept = findTargetDept(row[0]);
+        if (targetDept && standingsMap[targetDept]) {
+          standingsMap[targetDept].podiumPoints = parseInt(row[1]) || 0;
+          standingsMap[targetDept].participationPoints = parseInt(row[2]) || 0;
+        }
+      });
+    }
+
+    // 2. Fetch Podium Results (only if not already filled by consolidated or as additional info)
+    if (podiumSheetName) {
+      const podiumRes = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: `${podiumSheetName}!A2:F200`, 
+      });
+      const podiumRows = podiumRes.data.values || [];
+
+      podiumRows.forEach(row => {
+        const eventName = row[2];
+        const firstDept = row[3];
+        const secondDept = row[4];
+        const thirdDept = row[5];
+
         if (!eventName) return;
-        
-        // Iterate through department columns (starting from index 3)
-        for (let i = 3; i < headers.length; i++) {
-          const deptCode = headers[i];
-          const points = parseInt(row[i]) || 0;
 
-          if (points > 0) {
-            // Find the full department name from spocsData or mapping
-            // Many columns use deptCode like "1GACSE", we need to map to "CSE" or full name
-            const dept = allDepts.find(d => 
-              d.toLowerCase() === deptCode.toLowerCase() || 
-              deptCode.toLowerCase().includes(d.toLowerCase())
-            ) || deptCode;
+        const eventInfo = eventPrizeData.find(e => e.eventName === eventName);
+        if (!eventInfo) return;
 
-            if (standingsMap[dept]) {
-              standingsMap[dept].totalPoints += points;
-              standingsMap[dept].breakdown.push({
-                eventName,
-                position: 0,
-                points,
-                type: 'Participation'
-              });
-            }
+        const processPosition = (deptName: string, position: number, points: number) => {
+          const targetDept = findTargetDept(deptName);
+          if (!targetDept || !standingsMap[targetDept]) return;
+
+          // Only add to breakdown if using consolidated for totals
+          if (!consolidatedSheetName) {
+            standingsMap[targetDept].podiumPoints += points;
+          }
+          
+          standingsMap[targetDept].breakdown.push({
+            eventName,
+            position,
+            points,
+            type: 'Podium'
+          });
+        };
+
+        processPosition(firstDept, 1, eventInfo.pointsFirst);
+        processPosition(secondDept, 2, eventInfo.pointsSecond);
+        processPosition(thirdDept, 3, eventInfo.pointsThird);
+      });
+    }
+
+    // 3. Fetch Participation Points (only if not already filled by consolidated)
+    if (participationSheetName && !consolidatedSheetName) {
+      const partRes = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: `${participationSheetName}!A1:B100`, 
+      });
+      const partRows = partRes.data.values || [];
+
+      partRows.forEach(row => {
+        const deptCode = row[0];
+        const points = parseInt(row[1]) || 0;
+
+        if (deptCode && points > 0) {
+          const targetDept = findTargetDept(deptCode);
+          if (targetDept && standingsMap[targetDept]) {
+            standingsMap[targetDept].participationPoints += points;
+            standingsMap[targetDept].breakdown.push({
+              eventName: 'Participation Points',
+              position: 0,
+              points,
+              type: 'Participation'
+            });
           }
         }
       });
     }
 
-    // Convert to array and sort by total points
-    const standings = Object.values(standingsMap).sort((a, b) => b.totalPoints - a.totalPoints);
+    // Convert to array
+    const standings = Object.values(standingsMap);
     
-    // Sort breakdown for each standing: 1st, 2nd, 3rd, then Participation
+    // Sort breakdown for each standing
     standings.forEach(s => {
       s.breakdown.sort((a, b) => {
         if (a.position === 0) return 1;
@@ -157,7 +196,6 @@ export async function getCalculatedResults(): Promise<DepartmentStanding[]> {
       });
     });
     
-    // Update cache
     cachedStandings = standings;
     lastFetchTime = Date.now();
     
