@@ -35,8 +35,8 @@ const Navbar = () => {
     <>
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${scrolled
-            ? "bg-gat-midnight text-white border-gat-cobalt/30 shadow-navy"
-            : "bg-white/95 backdrop-blur-sm text-gat-charcoal border-gat-blue/10"
+          ? "bg-gat-midnight text-white border-gat-cobalt/30 shadow-navy"
+          : "bg-white/95 backdrop-blur-sm text-gat-charcoal border-gat-blue/10"
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -130,36 +130,32 @@ const Navbar = () => {
 
       {/* Mobile Bottom Nav Bar */}
       <nav className="min-[1011px]:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gat-blue/10 flex items-center justify-around h-16 px-2 safe-area-pb shadow-[0_-4px_24px_rgba(35,98,236,0.05)]">
-        <Link 
-          href="/results" 
-          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${
-            pathname === "/results" ? "bg-gat-dark-gold text-white" : "bg-gat-gold text-gat-midnight"
-          }`}
+        <Link
+          href="/results"
+          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${pathname === "/results" ? "bg-gat-dark-gold text-white" : "bg-gat-gold text-gat-midnight"
+            }`}
         >
           <Trophy className="w-5 h-5 animate-pulse" />
           <span className="text-[10px] font-bold mt-1 uppercase">Results</span>
         </Link>
-        <Link 
-          href="/" 
-          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${
-            pathname === "/" ? "bg-gat-blue/10 text-gat-blue" : "text-gat-steel"
-          }`}
+        <Link
+          href="/"
+          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${pathname === "/" ? "bg-gat-blue/10 text-gat-blue" : "text-gat-steel"
+            }`}
         >
           <span className="text-xs font-bold mt-1">Home</span>
         </Link>
-        <Link 
-          href="/events" 
-          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${
-            pathname === "/events" ? "bg-gat-blue/10 text-gat-blue" : "text-gat-steel"
-          }`}
+        <Link
+          href="/events"
+          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${pathname === "/events" ? "bg-gat-blue/10 text-gat-blue" : "text-gat-steel"
+            }`}
         >
           <span className="text-xs mt-1">Events</span>
         </Link>
-        <Link 
-          href="/schedule" 
-          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${
-            pathname === "/schedule" ? "bg-gat-blue/10 text-gat-blue" : "text-gat-steel"
-          }`}
+        <Link
+          href="/schedule"
+          className={`flex flex-col items-center justify-center w-full p-2 transition-colors rounded-lg ${pathname === "/schedule" ? "bg-gat-blue/10 text-gat-blue" : "text-gat-steel"
+            }`}
         >
           <span className="text-xs mt-1">Schedule</span>
         </Link>
