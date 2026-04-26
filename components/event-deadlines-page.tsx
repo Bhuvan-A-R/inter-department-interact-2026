@@ -6,18 +6,21 @@ import { events } from "@/data/scheduleInterDepartment";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
+import { Checkbox } from "@/components/ui/checkbox";
+
 type EventBlock = {
   id: string;
   targetName: string;
   blockTime: string;
 };
 
-// Formats an ISO string (e.g. 2026-04-20T12:00:00Z) to YYYY-MM-DDThh:mm for the input
+// Formats an ISO string (e.g. 2026-04-20T12:00:00Z) to YYYY-MM-DDThh:mm in IST (UTC+5:30)
 const formatForInput = (isoDate: string) => {
+    if (!isoDate) return "";
     const d = new Date(isoDate);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    const localISOTime = (new Date(d.getTime() - tzOffset)).toISOString().slice(0, 16);
-    return localISOTime;
+    // Add 5.5 hours (19800000 ms) to get IST representation
+    const istTime = new Date(d.getTime() + 19800000);
+    return istTime.toISOString().slice(0, 16);
 }
 
 const getBaseEventName = (value: string) => {
@@ -35,6 +38,11 @@ export default function EventDeadlinesPage() {
   
   // State for user inputs per event (event name -> datetime string)
   const [inputs, setInputs] = React.useState<Record<string, string>>({});
+
+  // Selection state for bulk actions
+  const [selectedEvents, setSelectedEvents] = React.useState<Set<string>>(new Set());
+  const [bulkInput, setBulkInput] = React.useState("");
+  const [isBulkSaving, setIsBulkSaving] = React.useState(false);
 
   const fetchBlocks = async () => {
     try {
@@ -74,6 +82,82 @@ export default function EventDeadlinesPage() {
     fetchBlocks();
   }, []);
 
+  const toggleSelectAll = () => {
+    if (selectedEvents.size === events.length) {
+      setSelectedEvents(new Set());
+    } else {
+      setSelectedEvents(new Set(events.map(e => e.eventName)));
+    }
+  };
+
+  const toggleSelect = (eventName: string) => {
+    const next = new Set(selectedEvents);
+    if (next.has(eventName)) next.delete(eventName);
+    else next.add(eventName);
+    setSelectedEvents(next);
+  };
+
+  const handleBulkSave = async () => {
+    if (!bulkInput) {
+      alert("Please select a date and time for bulk update.");
+      return;
+    }
+    if (selectedEvents.size === 0) {
+      alert("Please select at least one event.");
+      return;
+    }
+
+    setIsBulkSaving(true);
+    try {
+      const promises = Array.from(selectedEvents).map(eventName => 
+        fetch("/api/admin/blocks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            targetName: `Event: ${eventName}`, 
+            blockTime: bulkInput + "+05:30" 
+          })
+        })
+      );
+      
+      await Promise.all(promises);
+      alert(`Successfully updated deadlines for ${selectedEvents.size} events.`);
+      fetchBlocks();
+      setSelectedEvents(new Set());
+    } catch (err) {
+      console.error(err);
+      alert("Error during bulk update.");
+    } finally {
+      setIsBulkSaving(false);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedEvents.size === 0) return;
+    if (!confirm(`Are you sure you want to remove deadlines for ${selectedEvents.size} selected events?`)) return;
+
+    setIsBulkSaving(true);
+    try {
+      const promises = Array.from(selectedEvents).map(eventName => 
+        fetch("/api/admin/blocks", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ targetName: `Event: ${eventName}` })
+        })
+      );
+      
+      await Promise.all(promises);
+      alert(`Successfully removed deadlines for ${selectedEvents.size} events.`);
+      fetchBlocks();
+      setSelectedEvents(new Set());
+    } catch (err) {
+      console.error(err);
+      alert("Error during bulk delete.");
+    } finally {
+      setIsBulkSaving(false);
+    }
+  };
+
   const handleSaveBlock = async (eventName: string) => {
     const datetimeStr = inputs[eventName];
     if (!datetimeStr) {
@@ -84,7 +168,10 @@ export default function EventDeadlinesPage() {
       const res = await fetch("/api/admin/blocks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetName: `Event: ${eventName}`, blockTime: datetimeStr })
+        body: JSON.stringify({ 
+          targetName: `Event: ${eventName}`, 
+          blockTime: datetimeStr + "+05:30" // Explicitly mark as IST
+        })
       });
       if (res.ok) {
         alert("Deadline saved successfully for " + eventName);
@@ -128,9 +215,52 @@ export default function EventDeadlinesPage() {
             Events without a listed deadline will remain open indefinitely until overridden.
         </p>
 
+        {/* Bulk Action Bar */}
+        <div className={`mb-6 p-4 rounded-xl border transition-all ${selectedEvents.size > 0 ? "bg-blue-50 border-blue-200 opacity-100" : "bg-gray-50 border-gray-100 opacity-50 pointer-events-none"}`}>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-blue-900">{selectedEvents.size} Events Selected</span>
+              {selectedEvents.size > 0 && (
+                <Button variant="ghost" size="sm" onClick={() => setSelectedEvents(new Set())} className="text-blue-700 hover:text-blue-900">
+                  Clear Selection
+                </Button>
+              )}
+            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <Input 
+                type="datetime-local" 
+                value={bulkInput}
+                onChange={(e) => setBulkInput(e.target.value)}
+                className="bg-white"
+              />
+              <Button 
+                onClick={handleBulkSave} 
+                disabled={isBulkSaving || !bulkInput}
+                className="whitespace-nowrap"
+              >
+                {isBulkSaving ? "Updating..." : "Set Deadline"}
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={handleBulkDelete} 
+                disabled={isBulkSaving}
+                className="whitespace-nowrap"
+              >
+                {isBulkSaving ? "Removing..." : "Remove Deadlines"}
+              </Button>
+            </div>
+          </div>
+        </div>
+
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[50px]">
+                <Checkbox 
+                  checked={selectedEvents.size === events.length && events.length > 0}
+                  onCheckedChange={toggleSelectAll}
+                />
+              </TableHead>
               <TableHead className="w-1/3">Event Name</TableHead>
               <TableHead className="w-1/3">Deadline (Date & Time)</TableHead>
               <TableHead className="w-1/3">Actions</TableHead>
@@ -139,11 +269,21 @@ export default function EventDeadlinesPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center text-black/70 py-6">Loading events...</TableCell>
+                <TableCell colSpan={4} className="text-center text-black/70 py-6">Loading events...</TableCell>
               </TableRow>
             ) : (
                 events.map(event => (
-                  <TableRow key={event.eventId}>
+                  <TableRow 
+                    key={event.eventId} 
+                    className={`cursor-pointer transition-colors ${selectedEvents.has(event.eventName) ? "bg-blue-50/50 hover:bg-blue-50" : "hover:bg-gray-50"}`}
+                    onClick={() => toggleSelect(event.eventName)}
+                  >
+                    <TableCell>
+                      <Checkbox 
+                        checked={selectedEvents.has(event.eventName)}
+                        onCheckedChange={() => toggleSelect(event.eventName)}
+                      />
+                    </TableCell>
                     <TableCell className="font-medium">
                         {event.eventName}
                         <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
@@ -162,7 +302,7 @@ export default function EventDeadlinesPage() {
                     <TableCell>
                       <div className="flex flex-row items-center gap-2">
                         <Button size="sm" onClick={() => handleSaveBlock(event.eventName)}>
-                           Save / Edit
+                           Save
                         </Button>
                         {!!inputs[event.eventName] && (
                             <Button size="sm" variant="destructive" onClick={() => handleDeleteBlock(event.eventName)}>

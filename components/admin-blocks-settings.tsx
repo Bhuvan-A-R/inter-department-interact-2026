@@ -50,7 +50,10 @@ export default function AdminBlocksSettings() {
       const res = await fetch("/api/admin/blocks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetName: selectedTarget, blockTime: selectedBlockTime })
+        body: JSON.stringify({ 
+          targetName: selectedTarget, 
+          blockTime: selectedBlockTime + "+05:30" // Explicitly mark as IST
+        })
       });
       if (res.ok) {
         alert("Block time saved successfully.");
@@ -132,7 +135,7 @@ export default function AdminBlocksSettings() {
               blocks.map((b) => (
                 <TableRow key={b.id}>
                   <TableCell className="font-medium">{b.targetName}</TableCell>
-                  <TableCell>{new Date(b.blockTime).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(b.blockTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</TableCell>
                   <TableCell>
                     <Button variant="destructive" size="sm" onClick={() => handleDeleteBlock(b.targetName)}>Remove</Button>
                   </TableCell>
