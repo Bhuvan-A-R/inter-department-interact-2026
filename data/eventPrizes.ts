@@ -431,6 +431,7 @@ export const eventPrizeData: EventPrizeData[] = [
     {
         eventNo: 55,
         eventName: "E-sports",
+        prizeFirst: 2000,
         pointsFirst: 10,
         pointsSecond: 7,
         pointsThird: 5,

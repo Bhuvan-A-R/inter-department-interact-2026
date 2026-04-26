@@ -15,7 +15,7 @@ const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 
 export const metadata = {
-  metadataBase: new URL("https://www.vtufestinteract.com"),
+  metadataBase: new URL("https://www.gattinteract.com"),
   title: {
     default: "Home - INTERACT 2026",
     template: "%s - INTERACT 2026",
@@ -33,11 +33,11 @@ export const metadata = {
     "creativity",
     "technology events",
   ],
-  authors: [{ name: "Bhuvan S A", url: "https://www.bhuvansa.com/" }],
-  creator: "Bhuvan S A",
+  authors: [{ name: "Bhuvan A R", url: "" }],
+  creator: "Bhuvan A R",
   publisher: "Global Academy of Technology",
   openGraph: {
-    url: "https://www.vtufestinteract.com",
+    url: "https://www.gattinteract.com",
     siteName: "INTERACT 2026",
     type: "website",
     title: "INTERACT 2026",
@@ -45,7 +45,7 @@ export const metadata = {
       "Join Global Academy of Technology for INTERACT 2026 – a celebration of innovation, creativity, and technology with events, workshops, and performances designed for an unforgettable experience.",
     images: [
       {
-        url: "https://www.vtufestinteract.com/images/og-image.jpg",
+        url: "https://www.gattinteract.com/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "INTERACT 2026",
@@ -59,7 +59,7 @@ export const metadata = {
       "Experience the best of innovation and creativity at INTERACT 2026 hosted by Global Academy of Technology.",
     site: "@vtufest2026",
     creator: "@bhuvansa",
-    images: ["https://www.vtufestinteract.com/images/og-image.jpg"],
+    images: ["https://www.gattinteract.com/images/og-image.jpg"],
   },
 };
 
