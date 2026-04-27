@@ -137,7 +137,7 @@ export const eventsList: EventList[] = [
         image: eventImage,
         name: "Group Dance (Faculty)",
         rules: [
-            "Participation: Groups of 6 to 14 members.",
+            "Participation: Upto 14 members.",
             "Time: Must be between 5 to 8 minutes.",
             "Teams may perform any Western dance styles.",
             "Pre-recorded music must be submitted to the Co-Ordinator prior to the event.",
@@ -675,7 +675,7 @@ export const eventsList: EventList[] = [
             "Style: This category focuses on audience engagement and stage presence alongside vocal prowess.",
             "Accompaniment: Karaoke is allowed (no lead vocals) or a maximum of one acoustic instrument for accompaniment.",
             "Submission: Karaoke tracks must be submitted to the organizers at least 15 minutes prior to the event.",
-             "Content: Submissions may belong to any genre",   
+            "Content: Submissions may belong to any genre",
         ],
     },
     {
