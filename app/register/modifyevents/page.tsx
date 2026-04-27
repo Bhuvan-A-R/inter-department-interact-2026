@@ -46,6 +46,8 @@ export default function EventRegister() {
     id: string;
     name: string;
   } | null>(null);
+  const [deadlines, setDeadlines] = useState<Record<string, string>>({});
+  const [blockedEvents, setBlockedEvents] = useState<string[]>([]);
 
   const handleDelete = async (id: string, name: string) => {
     setEventToDelete({ id, name });
@@ -108,16 +110,50 @@ export default function EventRegister() {
     fetchRegisteredEvents();
   }, [selectedEvents]);
 
-  const availableEvents = eventCategories;
+  useEffect(() => {
+    const fetchDeadlines = async () => {
+      try {
+        const response = await fetch("/api/get-all-deadlines");
+        if (response.ok) {
+          const data = await response.json();
+          setDeadlines(data.deadlines);
+        }
+      } catch (error) {
+        console.error("Failed to fetch deadlines:", error);
+      }
+    };
+    fetchDeadlines();
+  }, []);
 
-  const groupedEvents = availableEvents.reduce(
-    (acc, event) => {
-      acc[event.category] = acc[event.category] || [];
-      acc[event.category].push(event);
-      return acc;
-    },
-    {} as Record<string, typeof eventCategories>,
-  );
+  const groupedEvents = React.useMemo(() => {
+    const grouped: Record<string, typeof eventCategories> = {};
+
+    eventCategories.forEach((evt) => {
+      grouped[evt.category] = grouped[evt.category] || [];
+      grouped[evt.category].push(evt);
+    });
+
+    return grouped;
+  }, []);
+
+  const categoryStats = React.useMemo(() => {
+    const stats: Record<string, { upcoming: number; closed: number }> = {};
+    const now = new Date();
+
+    eventCategories.forEach((evt) => {
+      const deadline = deadlines[evt.eventName];
+      const isClosed = deadline && now > new Date(deadline);
+      const isUpcoming = deadline && now < new Date(deadline);
+
+      if (!stats[evt.category]) {
+        stats[evt.category] = { upcoming: 0, closed: 0 };
+      }
+      if (isClosed) stats[evt.category].closed++;
+      else if (isUpcoming) stats[evt.category].upcoming++;
+    });
+
+    return stats;
+  }, [deadlines]);
 
   const toggleSelection = (eventNo: number) => {
     setSelectedEvents((prev) => {
@@ -181,9 +217,13 @@ export default function EventRegister() {
       }
     } catch (error) {
       console.error("Error while sending response:", error);
-      toast.error(
-        "Failed to send response. Please check your connection or server.",
-      );
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data?.message || "Failed to register events.");
+      } else {
+        toast.error(
+          "Failed to send response. Please check your connection or server.",
+        );
+      }
     } finally {
       setIsLoading(false);
       router.push("/register/getallregister");
@@ -207,9 +247,19 @@ export default function EventRegister() {
         }}
       />
       <div className="w-full px-4 mt-20">
-        <h1 className="text-3xl font-bold mb-8 text-foreground text-center">
+        <h1 className="text-3xl font-bold mb-2 text-foreground text-center">
           Event Registration
         </h1>
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-sm"></div>
+            <span className="text-sm font-medium text-muted-foreground">Registration Closing Soon</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-600 shadow-sm"></div>
+            <span className="text-sm font-medium text-muted-foreground">Registration Closed</span>
+          </div>
+        </div>
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Event Selection Section */}
           <div className="lg:w-2/3 w-full bg-card text-card-foreground shadow-2xl rounded-2xl">
@@ -227,73 +277,141 @@ export default function EventRegister() {
                   return (
                     <AccordionItem key={category} value={category}>
                       <AccordionTrigger className="flex justify-between items-center w-full px-4 py-2 text-left text-foreground hover:bg-secondary/80 rounded-lg transition-all duration-200">
-                        <span className="text-lg font-medium">
-                          {category} ({totalEvents})
-                        </span>
-                        {selectedCount > 0 && (
-                          <span className="bg-primary/20 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm">
-                            {selectedCount}
+                        <div className="flex items-center justify-between w-full pr-4">
+                          <span className="text-lg font-medium">
+                            {category} ({totalEvents})
                           </span>
-                        )}
+                          <div className="flex items-center gap-2">
+                            {categoryStats[category]?.upcoming > 0 && (
+                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-500 text-white text-[10px] font-black shadow-sm">
+                                {categoryStats[category].upcoming}
+                              </div>
+                            )}
+                            {categoryStats[category]?.closed > 0 && (
+                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-red-600 text-white text-[10px] font-black shadow-sm">
+                                {categoryStats[category].closed}
+                              </div>
+                            )}
+                            {selectedCount > 0 && (
+                              <span className="bg-primary/20 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm">
+                                {selectedCount}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 m-4">
                           {groupedEvents[category].map((event) => {
                             const isSelected = !!selectedEvents[event.eventNo];
+                            const deadline = deadlines[event.eventName];
+                            const now = new Date();
+                            const isClosed = deadline && now > new Date(deadline);
+                            const isUpcoming = deadline && now < new Date(deadline);
+                            
                             const teamCount =
                               selectedEvents[event.eventNo] ?? 1;
                             return (
                               <motion.div
                                 key={event.eventNo}
-                                onClick={() => toggleSelection(event.eventNo)}
-                                className={`p-4 border-2 rounded-lg shadow-md cursor-pointer transition duration-300 ${
-                                  isSelected
-                                    ? "border-primary bg-primary/10"
-                                    : "border-border bg-card hover:border-primary/50"
+                                onClick={() =>
+                                  !isClosed && toggleSelection(event.eventNo)
+                                }
+                                className={`p-4 border-2 rounded-lg shadow-md transition duration-300 ${
+                                  isClosed
+                                    ? "border-red-500 bg-red-50/30 opacity-90 cursor-not-allowed"
+                                    : isUpcoming
+                                      ? "border-yellow-500 bg-yellow-50/30 cursor-pointer"
+                                      : isSelected
+                                        ? "border-primary bg-primary/10 cursor-pointer"
+                                        : "border-border bg-card hover:border-primary/50 cursor-pointer"
                                 }`}
-                                whileHover={{
-                                  scale: 1.03,
-                                }}
-                                whileTap={{
-                                  scale: 0.98,
-                                }}
+                                whileHover={!isClosed ? { scale: 1.03 } : {}}
+                                whileTap={!isClosed ? { scale: 0.98 } : {}}
                               >
-                                <h3 className="text-lg font-semibold text-foreground mb-2">
-                                  {event.eventName}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
+                                <div className="flex justify-between items-start mb-2">
+                                  <h3
+                                    className={`text-lg font-semibold ${
+                                      isClosed 
+                                        ? "text-red-900" 
+                                        : isUpcoming 
+                                          ? "text-yellow-900" 
+                                          : "text-foreground"
+                                    }`}
+                                  >
+                                    {event.eventName}
+                                  </h3>
+                                  {isClosed ? (
+                                    <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                      Closed
+                                    </span>
+                                  ) : isUpcoming ? (
+                                    <span className="bg-yellow-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                      Upcoming
+                                    </span>
+                                  ) : null}
+                                </div>
+                                <p className={`text-sm ${
+                                  isClosed 
+                                    ? "text-red-700/70" 
+                                    : isUpcoming 
+                                      ? "text-yellow-700/70" 
+                                      : "text-muted-foreground"
+                                }`}>
                                   Max Participants:{" "}
-                                  <span className="font-medium text-foreground">
+                                  <span className={`font-medium ${
+                                    isClosed 
+                                      ? "text-red-900" 
+                                      : isUpcoming 
+                                        ? "text-yellow-900" 
+                                        : "text-foreground"
+                                  }`}>
                                     {event.maxParticipant}
                                   </span>
                                 </p>
-                                <div className="mt-3 flex items-center gap-3">
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      updateTeamCount(event.eventNo, -1);
-                                    }}
-                                    disabled={!isSelected || teamCount <= 1}
-                                  >
-                                    -
-                                  </Button>
-                                  <span className="min-w-6 text-center font-medium">
-                                    {teamCount}
-                                  </span>
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      updateTeamCount(event.eventNo, 1);
-                                    }}
-                                    disabled={!isSelected}
-                                  >
-                                    +
-                                  </Button>
-                                </div>
+                                {isClosed ? (
+                                  <div className="mt-3 py-1.5 px-2 bg-red-600 border border-red-700 rounded text-[11px] text-white font-bold text-center shadow-sm">
+                                    Registration Deadline Passed
+                                  </div>
+                                ) : (
+                                  <>
+                                    {isUpcoming && (
+                                      <div className="mt-3 py-1 px-2 bg-yellow-500 border border-yellow-600 rounded text-[10px] text-white font-bold text-center shadow-sm">
+                                        Closing Soon: {new Date(deadline).toLocaleString("en-IN", { 
+                                          dateStyle: "short", 
+                                          timeStyle: "short" 
+                                        })}
+                                      </div>
+                                    )}
+                                    <div className="mt-3 flex items-center gap-3">
+                                      <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateTeamCount(event.eventNo, -1);
+                                        }}
+                                        disabled={!isSelected || teamCount <= 1}
+                                      >
+                                        -
+                                      </Button>
+                                      <span className="min-w-6 text-center font-medium">
+                                        {teamCount}
+                                      </span>
+                                      <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateTeamCount(event.eventNo, 1);
+                                        }}
+                                        disabled={!isSelected}
+                                      >
+                                        +
+                                      </Button>
+                                    </div>
+                                  </>
+                                )}
                               </motion.div>
                             );
                           })}

@@ -2,8 +2,16 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { events } from "@/data/scheduleInterDepartment";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { eventCategories } from "@/data/eventCategories";
+import { events as scheduledEvents } from "@/data/scheduleInterDepartment";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,14 +22,41 @@ type EventBlock = {
   blockTime: string;
 };
 
-// Formats an ISO string (e.g. 2026-04-20T12:00:00Z) to YYYY-MM-DDThh:mm in IST (UTC+5:30)
+type EventDisplay = {
+  eventId: number;
+  eventName: string;
+  category: string;
+  date: string;
+  timings: string;
+};
+
+const scheduleMap = new Map(
+  scheduledEvents.map((event) => [
+    event.eventName,
+    { date: event.date, timings: event.timings },
+  ]),
+);
+
+const allEvents: EventDisplay[] = eventCategories.map((event) => ({
+  eventId: event.eventNo,
+  eventName: event.eventName,
+  category: event.category,
+  date: scheduleMap.get(event.eventName)?.date ?? "TBA",
+  timings: scheduleMap.get(event.eventName)?.timings ?? "TBA",
+}));
+
+type SortConfig = {
+  key: "eventName" | "category" | "count" | "date" | null;
+  direction: "asc" | "desc";
+};
+
+// Formats an ISO string to local YYYY-MM-DDThh:mm for datetime-local inputs
 const formatForInput = (isoDate: string) => {
-    if (!isoDate) return "";
-    const d = new Date(isoDate);
-    // Add 5.5 hours (19800000 ms) to get IST representation
-    const istTime = new Date(d.getTime() + 19800000);
-    return istTime.toISOString().slice(0, 16);
-}
+  if (!isoDate) return "";
+  const d = new Date(isoDate);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 const getBaseEventName = (value: string) => {
   const trimmed = value.trim();
@@ -34,15 +69,66 @@ const getBaseEventName = (value: string) => {
 export default function EventDeadlinesPage() {
   const [blocks, setBlocks] = React.useState<EventBlock[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [eventCounts, setEventCounts] = React.useState<Record<string, number>>({});
-  
+  const [eventCounts, setEventCounts] = React.useState<Record<string, number>>(
+    {},
+  );
+
   // State for user inputs per event (event name -> datetime string)
   const [inputs, setInputs] = React.useState<Record<string, string>>({});
 
   // Selection state for bulk actions
-  const [selectedEvents, setSelectedEvents] = React.useState<Set<string>>(new Set());
+  const [selectedEvents, setSelectedEvents] = React.useState<Set<string>>(
+    new Set(),
+  );
   const [bulkInput, setBulkInput] = React.useState("");
   const [isBulkSaving, setIsBulkSaving] = React.useState(false);
+
+  // Sorting state
+  const [sortConfig, setSortConfig] = React.useState<SortConfig>({
+    key: "eventName",
+    direction: "asc",
+  });
+
+  const sortedEvents = React.useMemo(() => {
+    const items = [...allEvents];
+    if (sortConfig.key) {
+      items.sort((a, b) => {
+        let valA: any;
+        let valB: any;
+
+        if (sortConfig.key === "count") {
+          valA = eventCounts[a.eventName] || 0;
+          valB = eventCounts[b.eventName] || 0;
+        } else if (sortConfig.key === "date") {
+          // Parse "27th April" -> 27, etc.
+          const parseDay = (s: string) => parseInt(s) || 0;
+          valA = parseDay(a.date);
+          valB = parseDay(b.date);
+        } else {
+          valA = a[sortConfig.key!] || "";
+          valB = b[sortConfig.key!] || "";
+        }
+
+        if (valA < valB) return sortConfig.direction === "asc" ? -1 : 1;
+        if (valA > valB) return sortConfig.direction === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    return items;
+  }, [allEvents, sortConfig, eventCounts]);
+
+  const requestSort = (key: SortConfig["key"]) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key: SortConfig["key"]) => {
+    if (sortConfig.key !== key) return "↕️";
+    return sortConfig.direction === "asc" ? "🔼" : "🔽";
+  };
 
   const fetchBlocks = async () => {
     try {
@@ -50,26 +136,26 @@ export default function EventDeadlinesPage() {
       if (res.ok) {
         const data = await res.json();
         setBlocks(data.blocks);
-        
+
         const newInputs: Record<string, string> = {};
         data.blocks.forEach((b: EventBlock) => {
-           if (b.targetName.startsWith("Event: ")) {
-               const eventName = b.targetName.replace("Event: ", "");
-               newInputs[eventName] = formatForInput(b.blockTime);
-           }
+          if (b.targetName.startsWith("Event: ")) {
+            const eventName = b.targetName.replace("Event: ", "");
+            newInputs[eventName] = formatForInput(b.blockTime);
+          }
         });
         setInputs(newInputs);
       }
-      
+
       const dashboardRes = await fetch("/api/admin/registration-dashboard");
       if (dashboardRes.ok) {
-         const dData = await dashboardRes.json();
-         const counts: Record<string, number> = {};
-         dData.registrations.forEach((r: any) => {
-            const ev = getBaseEventName(r.eventName || "");
-            counts[ev] = (counts[ev] || 0) + 1;
-         });
-         setEventCounts(counts);
+        const dData = await dashboardRes.json();
+        const counts: Record<string, number> = {};
+        dData.registrations.forEach((r: any) => {
+          const ev = getBaseEventName(r.eventName || "");
+          counts[ev] = (counts[ev] || 0) + 1;
+        });
+        setEventCounts(counts);
       }
     } catch (err) {
       console.error(err);
@@ -83,10 +169,10 @@ export default function EventDeadlinesPage() {
   }, []);
 
   const toggleSelectAll = () => {
-    if (selectedEvents.size === events.length) {
+    if (selectedEvents.size === allEvents.length) {
       setSelectedEvents(new Set());
     } else {
-      setSelectedEvents(new Set(events.map(e => e.eventName)));
+      setSelectedEvents(new Set(allEvents.map((e) => e.eventName)));
     }
   };
 
@@ -109,19 +195,21 @@ export default function EventDeadlinesPage() {
 
     setIsBulkSaving(true);
     try {
-      const promises = Array.from(selectedEvents).map(eventName => 
+      const promises = Array.from(selectedEvents).map((eventName) =>
         fetch("/api/admin/blocks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            targetName: `Event: ${eventName}`, 
-            blockTime: bulkInput + "+05:30" 
-          })
-        })
+          body: JSON.stringify({
+            targetName: `Event: ${eventName}`,
+            blockTime: bulkInput + "+05:30",
+          }),
+        }),
       );
-      
+
       await Promise.all(promises);
-      alert(`Successfully updated deadlines for ${selectedEvents.size} events.`);
+      alert(
+        `Successfully updated deadlines for ${selectedEvents.size} events.`,
+      );
       fetchBlocks();
       setSelectedEvents(new Set());
     } catch (err) {
@@ -134,20 +222,27 @@ export default function EventDeadlinesPage() {
 
   const handleBulkDelete = async () => {
     if (selectedEvents.size === 0) return;
-    if (!confirm(`Are you sure you want to remove deadlines for ${selectedEvents.size} selected events?`)) return;
+    if (
+      !confirm(
+        `Are you sure you want to remove deadlines for ${selectedEvents.size} selected events?`,
+      )
+    )
+      return;
 
     setIsBulkSaving(true);
     try {
-      const promises = Array.from(selectedEvents).map(eventName => 
+      const promises = Array.from(selectedEvents).map((eventName) =>
         fetch("/api/admin/blocks", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ targetName: `Event: ${eventName}` })
-        })
+          body: JSON.stringify({ targetName: `Event: ${eventName}` }),
+        }),
       );
-      
+
       await Promise.all(promises);
-      alert(`Successfully removed deadlines for ${selectedEvents.size} events.`);
+      alert(
+        `Successfully removed deadlines for ${selectedEvents.size} events.`,
+      );
       fetchBlocks();
       setSelectedEvents(new Set());
     } catch (err) {
@@ -168,10 +263,10 @@ export default function EventDeadlinesPage() {
       const res = await fetch("/api/admin/blocks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          targetName: `Event: ${eventName}`, 
-          blockTime: datetimeStr + "+05:30" // Explicitly mark as IST
-        })
+        body: JSON.stringify({
+          targetName: `Event: ${eventName}`,
+          blockTime: datetimeStr + "+05:30", // Explicitly mark as IST
+        }),
       });
       if (res.ok) {
         alert("Deadline saved successfully for " + eventName);
@@ -186,18 +281,21 @@ export default function EventDeadlinesPage() {
   };
 
   const handleDeleteBlock = async (eventName: string) => {
-    if (!confirm(`Are you sure you want to remove the deadline for ${eventName}?`)) return;
+    if (
+      !confirm(`Are you sure you want to remove the deadline for ${eventName}?`)
+    )
+      return;
     try {
       const res = await fetch("/api/admin/blocks", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetName: `Event: ${eventName}` })
+        body: JSON.stringify({ targetName: `Event: ${eventName}` }),
       });
       if (res.ok) {
-        setInputs(prev => {
-            const next = { ...prev };
-            delete next[eventName];
-            return next;
+        setInputs((prev) => {
+          const next = { ...prev };
+          delete next[eventName];
+          return next;
         });
         fetchBlocks();
       }
@@ -209,40 +307,52 @@ export default function EventDeadlinesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 text-black">
       <div className="rounded-2xl border border-black/10 bg-white/80 px-4 py-8 shadow-sm">
-        <h2 className="text-3xl font-bold mb-2">Event Registration Deadlines</h2>
+        <h2 className="text-3xl font-bold mb-2">
+          Event Registration Deadlines
+        </h2>
         <p className="text-black/70 mb-8">
-            Manage the exact date and time registrations should visually and functionally close for each specific event. 
-            Events without a listed deadline will remain open indefinitely until overridden.
+          Manage the exact date and time registrations should visually and
+          functionally close for each specific event. Events without a listed
+          deadline will remain open indefinitely until overridden.
         </p>
 
         {/* Bulk Action Bar */}
-        <div className={`mb-6 p-4 rounded-xl border transition-all ${selectedEvents.size > 0 ? "bg-blue-50 border-blue-200 opacity-100" : "bg-gray-50 border-gray-100 opacity-50 pointer-events-none"}`}>
+        <div
+          className={`mb-6 p-4 rounded-xl border transition-all ${selectedEvents.size > 0 ? "bg-blue-50 border-blue-200 opacity-100" : "bg-gray-50 border-gray-100 opacity-50 pointer-events-none"}`}
+        >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-bold text-blue-900">{selectedEvents.size} Events Selected</span>
+              <span className="font-bold text-blue-900">
+                {selectedEvents.size} Events Selected
+              </span>
               {selectedEvents.size > 0 && (
-                <Button variant="ghost" size="sm" onClick={() => setSelectedEvents(new Set())} className="text-blue-700 hover:text-blue-900">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedEvents(new Set())}
+                  className="text-blue-700 hover:text-blue-900"
+                >
                   Clear Selection
                 </Button>
               )}
             </div>
             <div className="flex items-center gap-3 w-full md:w-auto">
-              <Input 
-                type="datetime-local" 
+              <Input
+                type="datetime-local"
                 value={bulkInput}
                 onChange={(e) => setBulkInput(e.target.value)}
                 className="bg-white"
               />
-              <Button 
-                onClick={handleBulkSave} 
+              <Button
+                onClick={handleBulkSave}
                 disabled={isBulkSaving || !bulkInput}
                 className="whitespace-nowrap"
               >
                 {isBulkSaving ? "Updating..." : "Set Deadline"}
               </Button>
-              <Button 
+              <Button
                 variant="destructive"
-                onClick={handleBulkDelete} 
+                onClick={handleBulkDelete}
                 disabled={isBulkSaving}
                 className="whitespace-nowrap"
               >
@@ -256,63 +366,123 @@ export default function EventDeadlinesPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[50px]">
-                <Checkbox 
-                  checked={selectedEvents.size === events.length && events.length > 0}
+                <Checkbox
+                  checked={
+                    selectedEvents.size === allEvents.length &&
+                    allEvents.length > 0
+                  }
                   onCheckedChange={toggleSelectAll}
                 />
               </TableHead>
-              <TableHead className="w-1/3">Event Name</TableHead>
-              <TableHead className="w-1/3">Deadline (Date & Time)</TableHead>
-              <TableHead className="w-1/3">Actions</TableHead>
+              <TableHead
+                className="w-1/4 cursor-pointer hover:text-blue-600 transition-colors"
+                onClick={() => requestSort("eventName")}
+              >
+                <div className="flex items-center gap-1">
+                  Event Name {getSortIcon("eventName")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="w-1/6 cursor-pointer hover:text-blue-600 transition-colors"
+                onClick={() => requestSort("category")}
+              >
+                <div className="flex items-center gap-1">
+                  Category {getSortIcon("category")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="w-1/6 cursor-pointer hover:text-blue-600 transition-colors"
+                onClick={() => requestSort("count")}
+              >
+                <div className="flex items-center gap-1">
+                  Registrations {getSortIcon("count")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="w-1/4 cursor-pointer hover:text-blue-600 transition-colors"
+                onClick={() => requestSort("date")}
+              >
+                <div className="flex items-center gap-1">
+                  Schedule {getSortIcon("date")}
+                </div>
+              </TableHead>
+              <TableHead className="w-1/4">Deadline (Date & Time)</TableHead>
+              <TableHead className="w-1/6">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-black/70 py-6">Loading events...</TableCell>
+                <TableCell
+                  colSpan={7}
+                  className="text-center text-black/70 py-6"
+                >
+                  Loading events...
+                </TableCell>
               </TableRow>
             ) : (
-                events.map(event => (
-                  <TableRow 
-                    key={event.eventId} 
-                    className={`cursor-pointer transition-colors ${selectedEvents.has(event.eventName) ? "bg-blue-50/50 hover:bg-blue-50" : "hover:bg-gray-50"}`}
-                    onClick={() => toggleSelect(event.eventName)}
-                  >
-                    <TableCell>
-                      <Checkbox 
-                        checked={selectedEvents.has(event.eventName)}
-                        onCheckedChange={() => toggleSelect(event.eventName)}
-                      />
-                    </TableCell>
-                    <TableCell className="font-medium">
-                        {event.eventName}
-                        <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
-                           {eventCounts[event.eventName] || 0} Registered
-                        </span>
-                        <div className="text-xs text-black/50 mt-1">Scheduled for: {event.date} - {event.timings}</div>
-                    </TableCell>
-                    <TableCell>
-                      <Input 
-                        type="datetime-local" 
-                        value={inputs[event.eventName] || ""}
-                        onChange={(e) => setInputs({ ...inputs, [event.eventName]: e.target.value })}
-                        className="w-full max-w-[250px]"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-row items-center gap-2">
-                        <Button size="sm" onClick={() => handleSaveBlock(event.eventName)}>
-                           Save
+              sortedEvents.map((event) => (
+                <TableRow
+                  key={event.eventId}
+                  className={`cursor-pointer transition-colors ${selectedEvents.has(event.eventName) ? "bg-blue-50/50 hover:bg-blue-50" : "hover:bg-gray-50"}`}
+                  onClick={() => toggleSelect(event.eventName)}
+                >
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selectedEvents.has(event.eventName)}
+                      onCheckedChange={() => toggleSelect(event.eventName)}
+                    />
+                  </TableCell>
+                  <TableCell className="font-bold text-base">
+                    {event.eventName}
+                  </TableCell>
+                  <TableCell className="text-sm text-black/70">
+                    {event.category}
+                  </TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
+                      {eventCounts[event.eventName] || 0} Registered
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-xs text-black/70">
+                    {event.date === "TBA"
+                      ? "TBA"
+                      : `${event.date} (${event.timings})`}
+                  </TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Input
+                      type="datetime-local"
+                      value={inputs[event.eventName] || ""}
+                      onChange={(e) =>
+                        setInputs({
+                          ...inputs,
+                          [event.eventName]: e.target.value,
+                        })
+                      }
+                      className="w-full max-w-[250px]"
+                    />
+                  </TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <div className="flex flex-row items-center gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleSaveBlock(event.eventName)}
+                      >
+                        Save
+                      </Button>
+                      {!!inputs[event.eventName] && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteBlock(event.eventName)}
+                        >
+                          Remove
                         </Button>
-                        {!!inputs[event.eventName] && (
-                            <Button size="sm" variant="destructive" onClick={() => handleDeleteBlock(event.eventName)}>
-                                Remove
-                            </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>

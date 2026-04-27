@@ -109,6 +109,7 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
   const [allRegisteredEvents, setAllRegisteredEvents] = useState<Event[]>([]);
   const [handleAddEventEffect, setHandleAddEventEffect] =
     useState<boolean>(false);
+  const [blockedEvents, setBlockedEvents] = useState<string[]>([]);
 
   const formatEventLabel = (event: Event) => {
     const dept = event.deptCode ? ` ${event.deptCode}` : "";
@@ -182,7 +183,8 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
           event.registeredParticipant < event.maxParticipant &&
           !mergedEvents.some(
             (events: Event) => events.eventNo === event.eventNo,
-          )
+          ) &&
+          !blockedEvents.includes(event.eventName)
         );
       });
 
@@ -196,6 +198,28 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
   useEffect(() => {
     fetchRegistrant();
   }, [handleAddEventEffect]);
+
+  useEffect(() => {
+    const fetchBlockedEvents = async () => {
+      try {
+        const response = await fetch("/api/get-blocked-events");
+        if (response.ok) {
+          const data = await response.json();
+          setBlockedEvents(data.blockedEvents);
+        }
+      } catch (error) {
+        console.error("Failed to fetch blocked events:", error);
+      }
+    };
+    fetchBlockedEvents();
+  }, []);
+
+  // Filter allRegisteredEvents when blockedEvents changes
+  useEffect(() => {
+    if (blockedEvents.length > 0) {
+      setAllRegisteredEvents(prev => prev.filter(event => !blockedEvents.includes(event.eventName)));
+    }
+  }, [blockedEvents]);
 
   // Handle save action
   const handleSave = async (formData: any) => {
@@ -515,9 +539,11 @@ const UpdateRegister: React.FC<UpdateRegisterProps> = ({ params }) => {
                                   <Button
                                     onClick={() => handleEventDelete(event)}
                                     variant="destructive"
-                                    className="bg-red-500  text-lg text-white hover:scale-105"
+                                    className="bg-red-500 text-lg text-white hover:scale-105"
+                                    disabled={blockedEvents.includes(event.eventName)}
                                   >
                                     Delete
+                                    {blockedEvents.includes(event.eventName) && " (Closed)"}
                                   </Button>
                                 </div>
                               </div>

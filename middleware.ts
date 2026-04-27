@@ -6,15 +6,15 @@ const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 if (!redisUrl || !redisToken) {
-  console.warn("[Redis] Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN. Rate limiting disabled.");
+    console.warn("[Redis] Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN. Rate limiting disabled.");
 }
 
-const redis = redisUrl && redisToken 
-  ? new Redis({ 
-      url: redisUrl, 
-      token: redisToken 
+const redis = redisUrl && redisToken
+    ? new Redis({
+        url: redisUrl,
+        token: redisToken
     })
-  : null;
+    : null;
 
 const GLOBAL_RATE_LIMIT_WINDOW = 60; // Time window in seconds
 const GLOBAL_RATE_LIMIT_MAX = 100; // Maximum requests allowed per window
@@ -33,6 +33,7 @@ const protectedRoutes: string[] = [
     "/api/updateroleinevent",
     "/api/deleteregistrantevent",
     "/api/addeventregister",
+    "/api/get-blocked-events",
     "/register",
     "/register/documentupload",
     "/register/eventregister",
@@ -113,10 +114,10 @@ export async function middleware(request: NextRequest) {
     }
 
 
-    if(protectedRoutes.includes(path) && session?.id && session?.paymentUrl){
+    if (protectedRoutes.includes(path) && session?.id && session?.paymentUrl) {
         return NextResponse.redirect(new URL("/auth/countdown", request.nextUrl));
     }
-    
+
     if (protectedRoutes.includes(path) && !session?.id) {
         return NextResponse.redirect(new URL("/auth/signin", request.nextUrl));
     }

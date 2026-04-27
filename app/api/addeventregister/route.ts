@@ -1,11 +1,13 @@
 import { AddEvent } from "@/app/prismaClient/queryFunction";
 import { NextResponse } from "next/server";
+import { checkRegistrationBlocks } from "@/lib/blockCheck";
 
 type ParticipantType = "PARTICIPANT";
 export interface AddEvent {
     registrantId: string;
     event: {
         id: string;
+        eventName: string;
     };
     type: ParticipantType;
 }
@@ -17,6 +19,15 @@ export async function POST(request: Request) {
     if (!registrantId || !event || !type) {
         return NextResponse.json(
             { success: false, message: "invalid input " },
+            { status: 400 }
+        );
+    }
+
+    // Check if the event is blocked due to deadline
+    const blockError = await checkRegistrationBlocks([event.eventName]);
+    if (blockError) {
+        return NextResponse.json(
+            { success: false, message: blockError },
             { status: 400 }
         );
     }

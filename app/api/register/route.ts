@@ -4,6 +4,8 @@ import { participantFormSchema } from "@/lib/schemas/register";
 import { checkUnique, checkUsnUnique, getUser, insertRegistrant } from "@/app/prismaClient/queryFunction";
 import { NextResponse } from "next/server";
 
+import { checkRegistrationBlocks } from "@/lib/blockCheck";
+
 export const maxDuration = 60; // This function can run for a maximum of 5 seconds
 
 // Define the Registrant type if not already defined
@@ -95,6 +97,14 @@ export async function POST(request: Request) {
             status: 400,
             headers: { "Content-Type": "application/json" },
         });
+    }
+
+    const blockError = await checkRegistrationBlocks(validation.data.events.map(e => e.eventName));
+    if (blockError) {
+        return new Response(
+            JSON.stringify({ message: blockError }),
+            { status: 400, headers: { "Content-Type": "application/json" } }
+        );
     }
 
     // Map incoming data to include all required Registrant fields
