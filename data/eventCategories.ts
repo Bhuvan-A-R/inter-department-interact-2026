@@ -88,7 +88,7 @@ export const interDepartmentEvents: EventCategory[] = [
         minParticipant: 2,
         maxParticipant: 14,
         id: "",
-        userId: "",
+        userId: "",       
         registeredParticipant: 0,
         amount: 1000,
     },
