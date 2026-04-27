@@ -41,7 +41,7 @@ export default function AuthContextProvider({
   const getNextNoon = () => {
     const now = new Date();
     const nextNoon = new Date(now);
-    nextNoon.setHours(19,27,0);
+    nextNoon.setHours(12,0,0,0)
     if (now >= nextNoon) {
       nextNoon.setDate(nextNoon.getDate() + 1);
     }
