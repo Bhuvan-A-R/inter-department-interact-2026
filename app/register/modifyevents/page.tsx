@@ -320,10 +320,10 @@ export default function EventRegister() {
                                 className={`p-4 border-2 rounded-lg shadow-md transition duration-300 ${
                                   isClosed
                                     ? "border-red-500 bg-red-50/30 opacity-90 cursor-not-allowed"
-                                    : isUpcoming
-                                      ? "border-yellow-500 bg-yellow-50/30 cursor-pointer"
-                                      : isSelected
-                                        ? "border-primary bg-primary/10 cursor-pointer"
+                                    : isSelected
+                                      ? "border-primary bg-primary/10 cursor-pointer"
+                                      : isUpcoming
+                                        ? "border-yellow-500 bg-yellow-50/30 cursor-pointer"
                                         : "border-border bg-card hover:border-primary/50 cursor-pointer"
                                 }`}
                                 whileHover={!isClosed ? { scale: 1.03 } : {}}

@@ -348,10 +348,10 @@ export default function SelectRolesAndEvents({
                               className={`p-4 border-2 rounded-lg cursor-pointer transition duration-300 flex flex-col h-full ${
                                 isClosed
                                   ? "border-red-500 bg-red-50/30 opacity-80 cursor-not-allowed"
-                                  : isUpcoming
-                                    ? "border-yellow-500 bg-yellow-50/30"
-                                    : isSelected
-                                      ? "border-primary bg-primary/10"
+                                  : isSelected
+                                    ? "border-primary bg-primary/10"
+                                    : isUpcoming
+                                      ? "border-yellow-500 bg-yellow-50/30"
                                       : "border-border bg-card"
                               }`}
                             >
