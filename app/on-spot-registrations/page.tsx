@@ -17,7 +17,7 @@ const links = [
     url: "/event-payment-details",
   },
   {
-    label: "INTERACT 2026 – On Spot Registration - DAY - 01",
+    label: "INTERACT 2026 – On Spot Registration - DAY - 02",
     url: "https://forms.gle/2E894wz2Ap7PRtsP6",
   },
   // { label: "INTERACT 2026 - ID - On - Spot Registartion Approved Data", url: "https://docs.google.com/spreadsheets/d/1DflVRV5w05uaj7QmBLmyNWHr_wBH_OBTwlrsFA71RJg/edit?usp=sharing" },
