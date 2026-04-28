@@ -10,6 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -53,6 +60,7 @@ type EventSummary = {
   registrations: RegistrationRow[];
   eventId: number | null;
   domain: string | null;
+  departmentTeams?: Record<string, number>;
 };
 
 type DepartmentSummary = {
@@ -190,7 +198,7 @@ export default function AdminDashboardPanel() {
   const registrations = data?.registrations ?? [];
 
   const eventSummaries = React.useMemo<EventSummary[]>(() => {
-    const map = new Map<string, { summary: EventSummary; teams: Set<string> }>();
+    const map = new Map<string, { summary: EventSummary; teams: Set<string>; deptTeams: Map<string, Set<string>> }>();
     registrations.forEach((row) => {
       const key = getBaseEventName(row.eventName || "");
       if (!map.has(key)) {
@@ -203,6 +211,7 @@ export default function AdminDashboardPanel() {
             registrations: [],
           },
           teams: new Set<string>(),
+          deptTeams: new Map<string, Set<string>>(),
         });
       }
       const entry = map.get(key)!;
@@ -216,15 +225,27 @@ export default function AdminDashboardPanel() {
       }
       if (row.eventName) {
         entry.teams.add(row.eventName);
+        const dept = row.department || "Unknown";
+        if (!entry.deptTeams.has(dept)) {
+          entry.deptTeams.set(dept, new Set<string>());
+        }
+        entry.deptTeams.get(dept)!.add(row.eventName);
       }
       if (!entry.summary.eventDate && row.eventDate) {
         entry.summary.eventDate = row.eventDate;
       }
     });
-    const summaries = Array.from(map.values()).map((e) => ({
-      ...e.summary,
-      count: e.teams.size,
-    }));
+    const summaries = Array.from(map.values()).map((e) => {
+      const departmentTeams: Record<string, number> = {};
+      e.deptTeams.forEach((teams, dept) => {
+        departmentTeams[dept] = teams.size;
+      });
+      return {
+        ...e.summary,
+        count: e.teams.size,
+        departmentTeams,
+      };
+    });
 
     if (sortConfig !== null) {
       summaries.sort((a, b) => {
@@ -519,7 +540,34 @@ export default function AdminDashboardPanel() {
                     <TableCell className="font-medium">
                       {event.eventName}
                     </TableCell>
-                    <TableCell>{event.count}</TableCell>
+                    <TableCell>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <span className="cursor-pointer underline decoration-dotted underline-offset-4 text-blue-600 hover:text-blue-800">
+                            {event.count}
+                          </span>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Department-wise Teams for {event.eventName}</DialogTitle>
+                          </DialogHeader>
+                          <div className="flex flex-col gap-2 mt-4 text-sm">
+                            {event.departmentTeams && Object.keys(event.departmentTeams).length > 0 ? (
+                              Object.entries(event.departmentTeams)
+                                .sort((a, b) => b[1] - a[1]) // Sort by count desc
+                                .map(([dept, count]) => (
+                                <div key={dept} className="flex justify-between items-center py-2 border-b last:border-0">
+                                  <span className="font-medium">{dept}</span>
+                                  <span className="bg-black/10 px-2 py-1 rounded-md font-semibold">{count}</span>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-muted-foreground">No departments found.</p>
+                            )}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
                     <TableCell>{event.participantCount}</TableCell>
                     <TableCell>{formatValue(event.eventDate)}</TableCell>
                     <TableCell>
