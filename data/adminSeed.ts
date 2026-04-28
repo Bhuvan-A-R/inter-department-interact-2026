@@ -144,4 +144,16 @@ export const adminDepartmentSeed: AdminDepartmentSeed[] = [
     password: "1GAAE@Admin-063",
     role: "SPOC",
   },
+  {
+    deptName: "Master of Business Administration",
+    deptCode: "1GAMBA",
+    collegeName: "GAT MBA",
+    region: "Bangalore",
+    email: "anithagh@gat.ac.in",
+    phone: "+918123496667",
+    spocName: "Dr. Anitha G",
+    spocNumber: "+918123496667",
+    password: "1GAMBA@Admin-667",
+    role: "SPOC",
+  },       ddd
 ];
