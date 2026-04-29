@@ -106,6 +106,16 @@ export async function middleware(request: NextRequest) {
         );
     }
 
+    const requestHeaders = new Headers(request.headers);
+    const referer = request.headers.get("referer") || "";
+    const isRegisterPage = path.startsWith("/register");
+    const isApiCall = path.startsWith("/api");
+    const isFromRegister = referer.includes("/register");
+
+    if (isRegisterPage || (isApiCall && isFromRegister)) {
+        requestHeaders.set("x-spoc-context", "true");
+    }
+
     const session = await verifySession();
 
     // Admin-only routes
@@ -121,20 +131,18 @@ export async function middleware(request: NextRequest) {
     if (protectedRoutes.includes(path) && !session?.id) {
         return NextResponse.redirect(new URL("/auth/signin", request.nextUrl));
     }
+
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
 }
 
 export const config = {
     matcher: [
-        "/api/register",
-        "/api/getallregister",
-        "/api/sendEmailOtp",
-        "/api/eventsregister",
-        "/register",
-        "/register/documentupload",
-        "/register/eventregister",
-        "/register/getallregister",
-        "/register/getregister",
-        "/register/updateregister",
-        "/adminDashboard",
+        "/api/:path*",
+        "/register/:path*",
+        "/adminDashboard/:path*",
     ],
 };

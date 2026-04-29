@@ -57,7 +57,7 @@ export async function decrypt(session: string | undefined = "") {
 
 // Utility function to parse time strings like "2h", "1d" into milliseconds
 
-export async function createSession(token: SessionPayload) {
+export async function createSession(token: SessionPayload, cookieName: string = "session") {
     if (!expiresIn) {
         throw new Error("JWT_EXPIRE is not defined");
     }
@@ -66,7 +66,7 @@ export async function createSession(token: SessionPayload) {
     const expiresInMs = parseTimeString(expiresIn);
     const expires = new Date(Date.now() + expiresInMs);
 
-    (await cookies()).set("session", session, {
+    (await cookies()).set(cookieName, session, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -75,9 +75,27 @@ export async function createSession(token: SessionPayload) {
     });
 }
 
+import { headers } from "next/headers";
+
 export const verifySession = cache(async () => {
     // console.log("verifying session is called");
-    const cookie = (await cookies()).get("session")?.value;
+    const cookieStore = await cookies();
+    const headersList = await headers();
+    
+    // Check if we are in a SPOC portal context
+    const spocHeader = headersList.get("x-spoc-context") || "";
+    const isSpocContext = spocHeader === "true";
+
+    if (isSpocContext) {
+        const spocCookie = cookieStore.get("spoc_session")?.value;
+        if (spocCookie) {
+            const spocSession = await decrypt(spocCookie);
+            if (spocSession?.id) return spocSession;
+        }
+    }
+
+    // Default admin/user session
+    const cookie = cookieStore.get("session")?.value;
     const session = await decrypt(cookie);
 
     if (!session?.id) {
@@ -89,6 +107,7 @@ export const verifySession = cache(async () => {
 export async function deleteSession() {
     const cookieStore = await cookies();
     cookieStore.delete("session");
+    cookieStore.delete("spoc_session");
 }
 
 // export async function updateSession() {

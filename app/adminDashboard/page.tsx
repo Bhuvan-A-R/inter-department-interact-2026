@@ -29,6 +29,9 @@ export default async function Page() {
           <Link href="/adminDashboard/deadlines">
             <Button>Manage Event Deadlines</Button>
           </Link>
+          <Link href="/adminDashboard/spoc-login">
+            <Button variant="outline">Login as Department SPOC</Button>
+          </Link>
           {/* Additional buttons can be placed here if needed */}
         </div>
         <AdminDashboardPanel />
