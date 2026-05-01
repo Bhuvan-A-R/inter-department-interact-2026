@@ -28,8 +28,13 @@ const DOMAIN_COLORS: Record<string, string> = {
   TECHNICAL: "#2563eb",
 };
 
-function trackForDate(dateKey: string) {
-  return TRACKS.find((t) => dateKey.includes(t.dateKey));
+function tracksForDate(dateKey: string) {
+  return TRACKS.filter((t) => {
+    // Split "5th May" → ["5th", "May"] and check both parts exist in the event date.
+    // This handles multi-day formats like "5th & 6th May" where "5th May" isn't a direct substring.
+    const [day, month] = t.dateKey.split(" ");
+    return dateKey.includes(day) && dateKey.includes(month);
+  });
 }
 
 const ALL_DOMAINS = ["All", ...Array.from(new Set(events.map((e) => e.domain)))];
@@ -39,8 +44,8 @@ export default function SchedulePage() {
   const [activeDomain, setActiveDomain] = useState("All");
 
   const filtered = events.filter((e) => {
-    const track = trackForDate(e.date);
-    const matchTrack = activeTrack === null || track?.trackNo === activeTrack;
+    const tracks = tracksForDate(e.date);
+    const matchTrack = activeTrack === null || tracks.some((t) => t.trackNo === activeTrack);
     const matchDomain = activeDomain === "All" || e.domain === activeDomain;
     return matchTrack && matchDomain;
   });
@@ -195,7 +200,7 @@ export default function SchedulePage() {
               </div>
             ) : (
               filtered.map((ev, idx) => {
-                const track = trackForDate(ev.date);
+                const tracks = tracksForDate(ev.date);
                 const domainColor = DOMAIN_COLORS[ev.domain] ?? "hsl(var(--foreground))";
                 const isEven = idx % 2 === 0;
 
@@ -227,14 +232,19 @@ export default function SchedulePage() {
                       <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: domainColor }} />
                       {ev.domain}
                     </span>
-                    {track ? (
-                      <span
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border w-fit"
-                        style={{ background: track.bg, borderColor: track.border, color: track.color }}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: track.color }} />
-                        {track.label}
-                      </span>
+                    {tracks.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {tracks.map((track) => (
+                          <span
+                            key={track.trackNo}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                            style={{ background: track.bg, borderColor: track.border, color: track.color }}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ background: track.color }} />
+                            {track.label}
+                          </span>
+                        ))}
+                      </div>
                     ) : (
                       <span className="text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>{ev.date}</span>
                     )}
@@ -255,7 +265,7 @@ export default function SchedulePage() {
             ) : (
               <div className="divide-y" style={{ borderColor: "hsl(var(--border) / 0.5)" }}>
                 {filtered.map((ev, idx) => {
-                  const track = trackForDate(ev.date);
+                  const tracks = tracksForDate(ev.date);
                   const domainColor = DOMAIN_COLORS[ev.domain] ?? "hsl(var(--foreground))";
                   return (
                     <motion.div
@@ -283,13 +293,21 @@ export default function SchedulePage() {
                       </div>
 
                       <div className="flex flex-wrap gap-3">
-                        {track && (
-                          <div
-                            className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border"
-                            style={{ background: track.bg, borderColor: track.border, color: track.color }}
-                          >
-                            <Calendar className="w-3 h-3" />
-                            {track.label}
+                        {tracks.length > 0 ? (
+                          tracks.map((track) => (
+                            <div
+                              key={track.trackNo}
+                              className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                              style={{ background: track.bg, borderColor: track.border, color: track.color }}
+                            >
+                              <Calendar className="w-3 h-3" />
+                              {track.label}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="flex items-center gap-1.5 text-[10px] font-medium" style={{ color: "hsl(var(--muted-foreground))" }}>
+                            <Calendar className="w-3 h-3 opacity-50" />
+                            {ev.date}
                           </div>
                         )}
                         <div className="flex items-center gap-1.5 text-[10px] font-medium" style={{ color: "hsl(var(--muted-foreground))" }}>
